@@ -48,11 +48,11 @@ INT_PTR WINAPI APLoginDialog(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             ini["Archipelago"]["Password"] = apInfo.pw;
             file.write(ini);
 
-            EndDialog(hwnd, 0);
-            return TRUE;
-        case IDC_NO_AP:
             EndDialog(hwnd, 1);
             return TRUE;
+        case IDC_NO_AP:
+            EndDialog(hwnd, 2);
+            return FALSE;
         }
         break;
     }
@@ -69,16 +69,13 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     {
     case DLL_PROCESS_ATTACH:
     {
-        if (DialogBox(hModule, MAKEINTRESOURCE(IDD_FORMVIEW), NULL, APLoginDialog))
-        {
-
-        }
-
-        if (MessageBox(NULL, L"Limit racers to a random guy?", L"Limit?", MB_YESNO) == IDYES)
+        if (DialogBox(hModule, MAKEINTRESOURCE(IDD_FORMVIEW), NULL, APLoginDialog) == 1)
         {
             DWORD threadID = 0;
             CreateThread(NULL, 0, ModThread, hModule, 0, &threadID);
         }
+        
+
         break;
     }
     case DLL_THREAD_ATTACH:
