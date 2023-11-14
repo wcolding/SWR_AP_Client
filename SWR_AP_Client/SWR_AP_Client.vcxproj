@@ -78,7 +78,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Archipelago.h" />
+    <ClInclude Include="Enums.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Structs.h" />
     <ClInclude Include="SWR.h" />
   </ItemGroup>
   <ItemGroup>
