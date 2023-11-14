@@ -80,12 +80,14 @@
   <ItemGroup>
     <ClInclude Include="Archipelago.h" />
     <ClInclude Include="Enums.h" />
+    <ClInclude Include="Patches.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="SWR.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Patches.cpp" />
     <ClCompile Include="SWR.cpp" />
   </ItemGroup>
   <ItemGroup>

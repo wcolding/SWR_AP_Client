@@ -30,12 +30,18 @@
     <ClInclude Include="Archipelago.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Patches.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SWR.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Patches.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
