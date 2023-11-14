@@ -3,6 +3,14 @@
 #define POD_PARTS_OFFSET 0xA35AA1
 #define DEFAULT_RACERS_OPCODE 0x3DA37
 
+struct APServerInfo
+{
+	char server[64];
+	char player[64];
+	char pw[64];
+};
+
+
 class SWRGame
 {
 private:
