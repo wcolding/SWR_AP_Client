@@ -26,3 +26,8 @@ enum RacerUnlocks : int
 	ToyDampner = 0x00200000,
 	BullseyeNavior = 0x00400000
 };
+
+enum PodStatus : char
+{
+	Destroyed = 0x10
+};

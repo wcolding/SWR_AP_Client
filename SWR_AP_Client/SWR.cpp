@@ -21,3 +21,11 @@ SWRGame::SWRGame()
 
 	Patches::LimitAvailableRacers((RacerUnlocks)randomSelection);
 }
+
+void SWRGame::KillPod() 
+{
+	// Function at SWE1RCR.EXE + 0x74970 checks this flag and destroys the pod if it is set
+
+	PodData* podDataAddr = *(PodData**)(baseAddress + POD_DATA_PTR_OFFSET);
+	podDataAddr->status |= PodStatus::Destroyed;
+}

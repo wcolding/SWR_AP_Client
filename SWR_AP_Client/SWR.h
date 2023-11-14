@@ -6,14 +6,14 @@
 #include "Patches.h"
 
 #define POD_PARTS_OFFSET 0xA35AA1
-#define DEFAULT_RACERS_OPCODE 0x3DA37
+#define POD_DATA_PTR_OFFSET 0xD78A8
 
 class SWRGame
 {
 private:
 	int baseAddress;
-
 public:
 	SWRGame();
+	void KillPod();
 };
 

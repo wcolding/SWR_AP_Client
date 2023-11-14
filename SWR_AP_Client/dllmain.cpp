@@ -9,6 +9,14 @@ DWORD WINAPI ModThread(LPVOID hModule)
 {
     SWRGame swr;
 
+    while (true)
+    {
+        if (GetAsyncKeyState(VK_NUMPAD0) & 1)
+        {
+            swr.KillPod();
+        }
+    }
+
     FreeLibraryAndExitThread((HMODULE)hModule, 0);
     return 0;
 }
