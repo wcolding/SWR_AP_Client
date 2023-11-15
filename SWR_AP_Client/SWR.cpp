@@ -20,6 +20,8 @@ SWRGame::SWRGame()
 	int randomSelection = 1 << random;
 
 	Patches::LimitAvailableRacers((RacerUnlocks)randomSelection);
+	Patches::DisablePitDroidShop();
+	Patches::DisablePartDegradation();
 }
 
 void SWRGame::KillPod() 

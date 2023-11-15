@@ -1,14 +1,15 @@
 #pragma once
 #include "Enums.h"
 
-#define DEFAULT_RACERS_OPCODE 0x3DA37
-
 static class Patches
 {
 private:
-	static void MakePageWritable(int offset);
 	static inline int cachedBaseAddress;
+	static void MakePageWritable(const void* addr);
+	static void WritePatch(int offset, const void* patchPtr, size_t len);
 public:
 	static void SetBaseAddress(int addr);
 	static void LimitAvailableRacers(RacerUnlocks racers);
+	static void DisablePitDroidShop();
+	static void DisablePartDegradation();
 };
