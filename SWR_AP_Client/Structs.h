@@ -32,3 +32,16 @@ private:
 public:
 	PodHealth healthVals;
 };
+
+struct RaceData
+{
+public:
+	float timerLap1; 
+	float timerLap2; 
+	float timerLap3;
+private:
+	float unk_00;
+	float unk_01;
+public:
+	float timer;
+};

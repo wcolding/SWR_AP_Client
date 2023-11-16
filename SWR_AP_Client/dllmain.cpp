@@ -13,8 +13,10 @@ DWORD WINAPI ModThread(LPVOID hModule)
     {
         if (GetAsyncKeyState(VK_NUMPAD0) & 1)
         {
-            swr.KillPod();
+            swr.QueueDeath();
         }
+
+        swr.Update();
     }
 
     FreeLibraryAndExitThread((HMODULE)hModule, 0);

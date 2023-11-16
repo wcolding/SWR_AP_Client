@@ -10,6 +10,8 @@ SWRGame::SWRGame()
 {
 	baseAddress = (int)GetModuleHandleA("SWEP1RCR.EXE");
 	Patches::SetBaseAddress(baseAddress);
+
+	queuedDeaths = 0;
 	
 	// Temporary, for testing purposes
 	// Limit character selection to a random racer
@@ -24,10 +26,62 @@ SWRGame::SWRGame()
 	Patches::DisablePartDegradation();
 }
 
+void SWRGame::Update()
+{
+	ProcessDeathQueue();
+}
+
+bool SWRGame::isPlayerInRace()
+{
+	PodData* playerPodData = *(PodData**)(baseAddress + POD_DATA_PTR_OFFSET);
+	if (playerPodData == nullptr)
+		return false;
+
+	RaceData* raceData = (RaceData*)(baseAddress + RACE_DATA_OFFSET);
+	if (raceData == nullptr)
+		return false;
+
+	if (raceData->timer > 0.0f)
+		return true;
+
+	return false;
+}
+
+bool SWRGame::isPlayerKillable()
+{
+	if (!isPlayerInRace())
+		return false;
+
+	PodData* playerPodData = *(PodData**)(baseAddress + POD_DATA_PTR_OFFSET);
+	if (playerPodData == nullptr)
+		return false;
+
+	int unkillable = PodStatus::Destroyed | PodStatus::Autopilot | PodStatus::Invincible;
+
+	if ((playerPodData->status & unkillable) != 0)
+		return false;
+
+	return true;
+}
+
 void SWRGame::KillPod() 
 {
 	// Function at SWE1RCR.EXE + 0x74970 checks this flag and destroys the pod if it is set
+	PodData* playerPodData = *(PodData**)(baseAddress + POD_DATA_PTR_OFFSET);
+	if (playerPodData == nullptr)
+		return;
 
-	PodData* podDataAddr = *(PodData**)(baseAddress + POD_DATA_PTR_OFFSET);
-	podDataAddr->status |= PodStatus::Destroyed;
+	playerPodData->status |= PodStatus::Destroyed;
+	queuedDeaths--;
+}
+
+void SWRGame::QueueDeath()
+{
+	queuedDeaths++;
+}
+
+void SWRGame::ProcessDeathQueue()
+{
+	if ((queuedDeaths > 0) && isPlayerKillable())
+		KillPod();
 }
