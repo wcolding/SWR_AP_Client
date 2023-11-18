@@ -12,6 +12,8 @@ SWRGame::SWRGame()
 	Patches::SetBaseAddress(baseAddress);
 
 	queuedDeaths = 0;
+
+	Log("Star Wars Episode I Racer Archipelago Client started");
 	
 	// Temporary, for testing purposes
 	// Limit character selection to a random racer
@@ -21,14 +23,27 @@ SWRGame::SWRGame()
 	int random = distribution(gen);
 	int randomSelection = 1 << random;
 
+	Log("Applying patch: Limit Available Racers");
 	Patches::LimitAvailableRacers((RacerUnlocks)randomSelection);
+	Log("Applying patch: Disable Pit Droid Shop");
 	Patches::DisablePitDroidShop();
+	Log("Applying patch: Disable Part Degredation");
 	Patches::DisablePartDegradation();
 }
 
 void SWRGame::Update()
 {
 	ProcessDeathQueue();
+}
+
+void SWRGame::Log(const char* format, ...)
+{
+	auto now = std::chrono::system_clock::now();
+	std::string newFormat = std::format("[{0:%T}] {1}\n", now, format);
+	va_list args;
+	va_start(args, format);
+	vprintf(newFormat.c_str(), args);
+	va_end(args);
 }
 
 bool SWRGame::isPlayerInRace()
@@ -73,11 +88,17 @@ void SWRGame::KillPod()
 
 	playerPodData->status |= PodStatus::Destroyed;
 	queuedDeaths--;
+
+	Log("Killing player");
+	Log("Queued deaths: %i", queuedDeaths);
 }
 
 void SWRGame::QueueDeath()
 {
 	queuedDeaths++;
+
+	Log("Deathlink received! Queueing death");
+	Log("Queued deaths: %i", queuedDeaths);
 }
 
 void SWRGame::ProcessDeathQueue()

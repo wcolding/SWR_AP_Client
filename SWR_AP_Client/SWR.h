@@ -16,6 +16,7 @@ private:
 	int baseAddress;
 	int queuedDeaths;
 
+	void Log(const char* format, ...);
 	void ProcessDeathQueue();
 	void KillPod();
 public:

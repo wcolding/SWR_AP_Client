@@ -5,8 +5,23 @@
 
 #include "mini/ini.h"
 
+struct ThreadParams
+{
+    APServerInfo apInfo;
+    bool debugConsole = false;
+};
+
+ThreadParams threadParams;
+
 DWORD WINAPI ModThread(LPVOID hModule)
 {
+    if (threadParams.debugConsole)
+    {
+        FILE* pFile = nullptr;
+        AllocConsole();
+        freopen_s(&pFile, "CONOUT$", "w", stdout);
+    }
+
     SWRGame swr;
 
     while (true)
@@ -18,6 +33,9 @@ DWORD WINAPI ModThread(LPVOID hModule)
 
         swr.Update();
     }
+
+    if (threadParams.debugConsole)
+        FreeConsole();
 
     FreeLibraryAndExitThread((HMODULE)hModule, 0);
     return 0;
@@ -36,6 +54,12 @@ INT_PTR WINAPI APLoginDialog(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             std::string serverStr = ini.get("Archipelago").get("Server");
             std::string playerStr = ini.get("Archipelago").get("Player");
             std::string pwStr = ini.get("Archipelago").get("Password");
+            std::string consoleStr = ini.get("Client").get("UseDebugConsole");
+            if (!consoleStr.empty())
+            {
+                if ((consoleStr.compare("True") == 0) || (consoleStr.compare("true") == 0) || (consoleStr.compare("TRUE") == 0))
+                    threadParams.debugConsole = true;
+            }
 
             SetDlgItemTextA(hwnd, IDC_SERVER_BOX, serverStr.c_str());
             SetDlgItemTextA(hwnd, IDC_PLAYER_BOX, playerStr.c_str());
@@ -47,15 +71,15 @@ INT_PTR WINAPI APLoginDialog(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         switch (wParam) {
         case IDC_LOGIN:
             // Store config
-            APServerInfo apInfo;
 
-            GetDlgItemTextA(hwnd, IDC_SERVER_BOX, apInfo.server, 64);
-            GetDlgItemTextA(hwnd, IDC_PLAYER_BOX, apInfo.player, 64);
-            GetDlgItemTextA(hwnd, IDC_PASSWORD_BOX, apInfo.pw, 64);
+            GetDlgItemTextA(hwnd, IDC_SERVER_BOX, threadParams.apInfo.server, 64);
+            GetDlgItemTextA(hwnd, IDC_PLAYER_BOX, threadParams.apInfo.player, 64);
+            GetDlgItemTextA(hwnd, IDC_PASSWORD_BOX, threadParams.apInfo.pw, 64);
 
-            ini["Archipelago"]["Server"] = apInfo.server;
-            ini["Archipelago"]["Player"] = apInfo.player;
-            ini["Archipelago"]["Password"] = apInfo.pw;
+            ini["Archipelago"]["Server"] = threadParams.apInfo.server;
+            ini["Archipelago"]["Player"] = threadParams.apInfo.player;
+            ini["Archipelago"]["Password"] = threadParams.apInfo.pw;
+            ini["Client"]["UseDebugConsole"] = threadParams.debugConsole ? "true" : "false";
             file.write(ini);
 
             EndDialog(hwnd, 1);
