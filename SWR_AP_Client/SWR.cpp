@@ -12,6 +12,7 @@ SWRGame::SWRGame()
 	Patches::SetBaseAddress(baseAddress);
 
 	queuedDeaths = 0;
+	requiredPlacement = RacePlacement::First;
 
 	Log("Star Wars Episode I Racer Archipelago Client started");
 	
@@ -33,7 +34,14 @@ SWRGame::SWRGame()
 
 void SWRGame::Update()
 {
+	if (isSaveFileLoaded())
+	{
+		ScanLocationChecks();
+	}
+
 	ProcessDeathQueue();
+
+	Sleep(50);
 }
 
 void SWRGame::Log(const char* format, ...)
@@ -44,6 +52,12 @@ void SWRGame::Log(const char* format, ...)
 	va_start(args, format);
 	vprintf(newFormat.c_str(), args);
 	va_end(args);
+}
+
+bool SWRGame::isSaveFileLoaded()
+{
+	char* firstChar = (char*)(baseAddress + SAVE_DATA_OFFSET);
+	return firstChar[0] != 0;
 }
 
 bool SWRGame::isPlayerInRace()
@@ -99,6 +113,46 @@ void SWRGame::QueueDeath()
 
 	Log("Deathlink received! Queueing death");
 	Log("Queued deaths: %i", queuedDeaths);
+}
+
+void SWRGame::ScanLocationChecks()
+{
+	SaveData* saveData = (SaveData*)(baseAddress + SAVE_DATA_OFFSET);
+
+	// Race progress
+	if (requiredPlacement == RacePlacement::Fourth)
+	{
+		// Check unlocked courses
+
+	}
+	else
+	{
+		// Check placement flags
+		int flag;
+
+		for (int i = 0; i < completedCourses.size(); i++)
+		{
+			if (completedCourses[i].completed)
+				continue;
+
+			flag = saveData->racePlacements >> (completedCourses[i].slot * 2);
+			flag &= 0x03;
+
+			if (flag >= (int)requiredPlacement)
+			{
+				completedCourses[i].completed = true;
+
+				// Notify of location check
+				Log("Location checked: %s", completedCourses[i].name.c_str());
+			}
+		}
+	}
+
+	// Watto Shop
+
+	// Junkyard
+
+	// Pit Droid Shop
 }
 
 void SWRGame::ProcessDeathQueue()

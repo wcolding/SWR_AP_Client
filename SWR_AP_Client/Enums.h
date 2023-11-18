@@ -33,3 +33,11 @@ enum PodStatus : int
 	Invincible = 0x20, // used on respawn
 	Autopilot  = 0x40  // used on respawn
 };
+
+enum RacePlacement : int
+{
+	First  = 0b11,
+	Second = 0b10,
+	Third  = 0b01,
+	Fourth = 0b00 // also used for incomplete
+};

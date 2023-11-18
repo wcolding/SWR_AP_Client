@@ -1,4 +1,8 @@
 #pragma once
+#pragma pack(1)
+
+#include <stdint.h>
+#include "Enums.h"
 
 struct PodParts
 {
@@ -44,4 +48,38 @@ private:
 	float unk_01;
 public:
 	float timer;
+};
+
+struct TrackUnlocks
+{
+	char amateur;
+	char semipro;
+	char galactic;
+	char invitational;
+};
+
+struct SaveData
+{
+public:
+	char profileName[0x18];    // 0x00
+private:
+	char unk_00[0x0C];         // 0x18
+public:
+	char selectedRacer;        // 0x24
+	TrackUnlocks trackUnlocks; // 0x25
+private:
+	char unk_01;               // 0x29
+public:
+	uint64_t racePlacements;   // 0x2A
+private:
+	char unk_02[0x02];         // 0x32
+public:
+	RacerUnlocks racerUnlocks; // 0x34
+	int money;                 // 0x38
+private:
+	char unk_03[0x04];         // 0x3C
+public:
+	char pitDroids;            // 0x40
+	PodParts parts;            // 0x41
+	PodParts partsHealth;      // 0x48
 };
