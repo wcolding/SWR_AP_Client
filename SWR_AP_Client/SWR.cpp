@@ -16,20 +16,22 @@ SWRGame::SWRGame()
 
 	Log("Star Wars Episode I Racer Archipelago Client started");
 	
+	Log("Applying patch: Limit Available Racers");
+	Patches::LimitAvailableRacers();
+	Log("Applying patch: Disable Pit Droid Shop");
+	Patches::DisablePitDroidShop();
+	Log("Applying patch: Disable Part Degredation");
+	Patches::DisablePartDegradation();
+
+	APSaveData::Init();
+
 	// Temporary, for testing purposes
 	// Limit character selection to a random racer
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::default_random_engine gen(seed);
 	std::uniform_int_distribution<int> distribution(0, 22);
 	int random = distribution(gen);
-	int randomSelection = 1 << random;
-
-	Log("Applying patch: Limit Available Racers");
-	Patches::LimitAvailableRacers((RacerUnlocks)randomSelection);
-	Log("Applying patch: Disable Pit Droid Shop");
-	Patches::DisablePitDroidShop();
-	Log("Applying patch: Disable Part Degredation");
-	Patches::DisablePartDegradation();
+	APSaveData::unlockedRacers = (RacerUnlocks)(1 << random);
 }
 
 void SWRGame::Update()
@@ -130,20 +132,20 @@ void SWRGame::ScanLocationChecks()
 		// Check placement flags
 		int flag;
 
-		for (int i = 0; i < completedCourses.size(); i++)
+		for (int i = 0; i < APSaveData::completedCourses.size(); i++)
 		{
-			if (completedCourses[i].completed)
+			if (APSaveData::completedCourses[i].completed)
 				continue;
 
-			flag = saveData->racePlacements >> (completedCourses[i].slot * 2);
+			flag = saveData->racePlacements >> (APSaveData::completedCourses[i].slot * 2);
 			flag &= 0x03;
 
 			if (flag >= (int)requiredPlacement)
 			{
-				completedCourses[i].completed = true;
+				APSaveData::completedCourses[i].completed = true;
 
 				// Notify of location check
-				Log("Location checked: %s", completedCourses[i].name.c_str());
+				Log("Location checked: %s", APSaveData::completedCourses[i].name.c_str());
 			}
 		}
 	}

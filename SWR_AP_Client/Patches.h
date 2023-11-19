@@ -9,7 +9,7 @@ private:
 	static void WritePatch(int offset, const void* patchPtr, size_t len);
 public:
 	static void SetBaseAddress(int addr);
-	static void LimitAvailableRacers(RacerUnlocks racers);
+	static void LimitAvailableRacers();
 	static void DisablePitDroidShop();
 	static void DisablePartDegradation();
 };

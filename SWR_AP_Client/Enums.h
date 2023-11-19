@@ -2,6 +2,7 @@
 
 enum RacerUnlocks : int
 {
+	None            = 0x00000000,
 	AnakinSkywalker = 0x00000001,
 	TeemtoPagalies  = 0x00000002,
 	Sebulba         = 0x00000004,

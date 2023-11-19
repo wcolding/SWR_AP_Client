@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 
+#include "Enums.h"
+
 struct APServerInfo
 {
 	char server[64];
@@ -17,8 +19,16 @@ struct CourseData
 	bool completed;
 };
 
-static std::vector<CourseData> completedCourses
+static class APSaveData
 {
+public:
+	static inline RacerUnlocks unlockedRacers;
+	static inline std::vector<CourseData> completedCourses;
+
+	static void Init()
+{
+		unlockedRacers = RacerUnlocks::None;
+		completedCourses = {
 	{"Amateur Race 1", 0, false},
 	{"Amateur Race 2", 1, false},
 	{"Amateur Race 3", 2, false},
@@ -47,4 +57,7 @@ static std::vector<CourseData> completedCourses
 	{"Invitational Race 2", 25, false},
 	{"Invitational Race 3", 26, false},
 	{"Invitational Race 4", 27, false}
+};
+	}
+	
 };

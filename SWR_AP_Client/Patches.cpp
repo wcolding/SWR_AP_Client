@@ -11,6 +11,8 @@
 #define CHECK_PITDROID_SHOP_FROM_UPGRADES_MENU 0x39C07
 #define DAMAGE_APPLY_OPCODE 0x3D7B6
 
+RacerUnlocks* unlockedRacersPtr = &APSaveData::unlockedRacers;
+
 void Patches::SetBaseAddress(int addr)
 {
 	cachedBaseAddress = addr;
@@ -33,17 +35,16 @@ void Patches::WritePatch(int offset, const void* patchPtr, size_t len)
 
 // Game hardcodes initially unlocked racers in a function before ORing them with the save file's unlocks
 // Overwrite the bitfield and change `or` to `mov` to explicitly set who is available
-void Patches::LimitAvailableRacers(RacerUnlocks racers)
+void Patches::LimitAvailableRacers()
 {
-	char limitRacersPatch[6] = { 
-		0xBE, 0x00, 0x00, 0x00, 0x00, // mov esi, 0
-		0x90                          // nop
+	char limitRacers[6] = { 
+		0x8B, 0x35, 0x00, 0x00, 0x00, 0x00 // mov esi, [00000000]
 	};                 
 
 	// Overwrite 0 with racers value
-	memcpy(&limitRacersPatch[1], &racers, sizeof(racers));
+	memcpy(&limitRacers[2], &unlockedRacersPtr, 4);
 
-	WritePatch(DEFAULT_RACERS_OPCODE, &limitRacersPatch, 6);
+	WritePatch(DEFAULT_RACERS_OPCODE, &limitRacers, 6);
 }
 
 // Game checks number of owned pit droids to determine whether to show the shop
