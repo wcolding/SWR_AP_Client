@@ -131,21 +131,22 @@ void SWRGame::ScanLocationChecks()
 	{
 		// Check placement flags
 		int flag;
-
+		CourseData* course;
 		for (int i = 0; i < APSaveData::completedCourses.size(); i++)
 		{
-			if (APSaveData::completedCourses[i].completed)
+			course = &APSaveData::completedCourses[i];
+			if (course->completed)
 				continue;
 
-			flag = saveData->racePlacements >> (APSaveData::completedCourses[i].slot * 2);
+			flag = saveData->racePlacements >> (course->slot * 2);
 			flag &= 0x03;
 
 			if (flag >= (int)requiredPlacement)
 			{
-				APSaveData::completedCourses[i].completed = true;
+				course->completed = true;
 
 				// Notify of location check
-				Log("Location checked: %s", APSaveData::completedCourses[i].name.c_str());
+				Log("Location checked: %s", course->name.c_str());
 			}
 		}
 	}
