@@ -15,7 +15,7 @@ enum RacerUnlocks : int
 	DudBolt         = 0x00000400,
 	Gasgano         = 0x00000800,
 	CleggHoldfast   = 0x00001000,
-	ElenMak         = 0x00002000,
+	ElanMak         = 0x00002000,
 	NevaKee         = 0x00004000,
 	BozzieBaranta   = 0x00008000,
 	BolesRoor       = 0x00010000,
