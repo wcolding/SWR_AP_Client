@@ -11,8 +11,6 @@
 #define CHECK_PITDROID_SHOP_FROM_UPGRADES_MENU 0x39C07
 #define DAMAGE_APPLY_OPCODE 0x3D7B6
 
-RacerUnlocks* unlockedRacersPtr = &APSaveData::unlockedRacers;
-
 void Patches::SetBaseAddress(int addr)
 {
 	cachedBaseAddress = addr;
@@ -42,6 +40,7 @@ void Patches::LimitAvailableRacers()
 	};                 
 
 	// Overwrite 0 with racers value
+	RacerUnlocks* unlockedRacersPtr = &APSaveData::unlockedRacers;
 	memcpy(&limitRacers[2], &unlockedRacersPtr, 4);
 
 	WritePatch(DEFAULT_RACERS_OPCODE, &limitRacers, 6);
