@@ -2,7 +2,7 @@
 
 #include "Enums.h"
 #include "Structs.h"
-#include "Archipelago.h"
+#include "APInfo.h"
 #include "Patches.h"
 
 #define POD_PARTS_OFFSET 0xA35AA1
