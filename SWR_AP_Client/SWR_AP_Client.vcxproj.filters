@@ -27,7 +27,7 @@
     <ClInclude Include="Structs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Archipelago.h">
+    <ClInclude Include="APInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Patches.h">
