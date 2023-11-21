@@ -7,7 +7,14 @@
 #include <chrono>
 
 SWRGame::SWRGame()
+namespace SWRGame
 {
+	int baseAddress;
+	int queuedDeaths;
+	RacePlacement requiredPlacement;
+
+	void Init()
+	{
 	baseAddress = (int)GetModuleHandleA("SWEP1RCR.EXE");
 	Patches::SetBaseAddress(baseAddress);
 
@@ -34,7 +41,7 @@ SWRGame::SWRGame()
 	APSaveData::unlockedRacers = (RacerUnlocks)(1 << random);
 }
 
-void SWRGame::Update()
+	void Update()
 {
 	if (isSaveFileLoaded())
 	{
@@ -46,7 +53,7 @@ void SWRGame::Update()
 	Sleep(50);
 }
 
-void SWRGame::Log(const char* format, ...)
+	void Log(const char* format, ...)
 {
 	auto now = std::chrono::system_clock::now();
 	std::string newFormat = std::format("[{0:%T}] {1}\n", now, format);
@@ -56,13 +63,13 @@ void SWRGame::Log(const char* format, ...)
 	va_end(args);
 }
 
-bool SWRGame::isSaveFileLoaded()
+	bool isSaveFileLoaded()
 {
 	char* firstChar = (char*)(baseAddress + SAVE_DATA_OFFSET);
 	return firstChar[0] != 0;
 }
 
-bool SWRGame::isPlayerInRace()
+	bool isPlayerInRace()
 {
 	PodData* playerPodData = *(PodData**)(baseAddress + POD_DATA_PTR_OFFSET);
 	if (playerPodData == nullptr)
@@ -78,7 +85,7 @@ bool SWRGame::isPlayerInRace()
 	return false;
 }
 
-bool SWRGame::isPlayerKillable()
+	bool isPlayerKillable()
 {
 	if (!isPlayerInRace())
 		return false;
@@ -95,7 +102,7 @@ bool SWRGame::isPlayerKillable()
 	return true;
 }
 
-void SWRGame::KillPod() 
+	void KillPod()
 {
 	// Function at SWE1RCR.EXE + 0x74970 checks this flag and destroys the pod if it is set
 	PodData* playerPodData = *(PodData**)(baseAddress + POD_DATA_PTR_OFFSET);
@@ -109,7 +116,7 @@ void SWRGame::KillPod()
 	Log("Queued deaths: %i", queuedDeaths);
 }
 
-void SWRGame::QueueDeath()
+	void QueueDeath()
 {
 	queuedDeaths++;
 
@@ -117,7 +124,7 @@ void SWRGame::QueueDeath()
 	Log("Queued deaths: %i", queuedDeaths);
 }
 
-void SWRGame::ScanLocationChecks()
+	void ScanLocationChecks()
 {
 	SaveData* saveData = (SaveData*)(baseAddress + SAVE_DATA_OFFSET);
 
@@ -162,4 +169,5 @@ void SWRGame::ProcessDeathQueue()
 {
 	if ((queuedDeaths > 0) && isPlayerKillable())
 		KillPod();
+}
 }

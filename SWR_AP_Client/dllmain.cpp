@@ -22,16 +22,16 @@ DWORD WINAPI ModThread(LPVOID hModule)
         freopen_s(&pFile, "CONOUT$", "w", stdout);
     }
 
-    SWRGame swr;
+    SWRGame::Init();
 
     while (true)
     {
         if (GetAsyncKeyState(VK_NUMPAD0) & 1)
         {
-            swr.QueueDeath();
+            SWRGame::QueueDeath();
         }
 
-        swr.Update();
+        SWRGame::Update();
     }
 
     if (threadParams.debugConsole)

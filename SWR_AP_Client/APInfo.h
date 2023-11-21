@@ -4,7 +4,6 @@
 #include <string>
 
 #include "Enums.h"
-#include "APCpp/Archipelago.h"
 
 struct APServerInfo
 {
