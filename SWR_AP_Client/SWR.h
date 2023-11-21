@@ -25,6 +25,7 @@ namespace SWRGame
 
 	void QueueDeath();
 
+	int baseAddress;
 	APServerInfo serverInfo;
 	APSaveData saveData;
 

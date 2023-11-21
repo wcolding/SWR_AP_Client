@@ -8,14 +8,12 @@
 
 namespace SWRGame
 {
-	int baseAddress;
 	int queuedDeaths;
 	RacePlacement requiredPlacement;
 
 	void Init()
 	{
 		baseAddress = (int)GetModuleHandleA("SWEP1RCR.EXE");
-		Patches::SetBaseAddress(baseAddress);
 
 		queuedDeaths = 0;
 		requiredPlacement = RacePlacement::First;
