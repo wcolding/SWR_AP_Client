@@ -1,5 +1,11 @@
 #pragma once
 #include "Enums.h"
+#include "Structs.h"
+
+namespace SWRGame
+{
+	extern APSaveData saveData;
+}
 
 static class Patches
 {

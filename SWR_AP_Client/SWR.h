@@ -2,7 +2,6 @@
 
 #include "Enums.h"
 #include "Structs.h"
-#include "APInfo.h"
 #include "Patches.h"
 
 #define POD_PARTS_OFFSET 0xA35AA1
@@ -25,5 +24,11 @@ namespace SWRGame
 	bool isPlayerKillable();
 
 	void QueueDeath();
+
+	APServerInfo serverInfo;
+	APSaveData saveData;
+
+	void ResetSaveData();
+
 }
 

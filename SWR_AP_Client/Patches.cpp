@@ -3,7 +3,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-#include "SWR.h"
+using SWRGame::saveData;
 
 #define DEFAULT_RACERS_OPCODE 0x3DA37
 #define CHECK_PIT_DROIDS_OPCODE 0x3D845
@@ -40,7 +40,7 @@ void Patches::LimitAvailableRacers()
 	};                 
 
 	// Overwrite 0 with racers value
-	RacerUnlocks* unlockedRacersPtr = &APSaveData::unlockedRacers;
+	RacerUnlocks* unlockedRacersPtr = &saveData.unlockedRacers;
 	memcpy(&limitRacers[2], &unlockedRacersPtr, 4);
 
 	WritePatch(DEFAULT_RACERS_OPCODE, &limitRacers, 6);

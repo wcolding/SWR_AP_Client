@@ -1,21 +1,13 @@
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include "SWR.h"
-#include "resource.h"
+#include "dllmain.h"
 
-#include "mini/ini.h"
+using SWRGame::saveData;
+using SWRGame::serverInfo;
 
-struct ThreadParams
-{
-    APServerInfo apInfo;
-    bool debugConsole = false;
-};
-
-ThreadParams threadParams;
+bool debugConsole = false;
 
 DWORD WINAPI ModThread(LPVOID hModule)
 {
-    if (threadParams.debugConsole)
+    if (debugConsole)
     {
         FILE* pFile = nullptr;
         AllocConsole();
@@ -34,7 +26,7 @@ DWORD WINAPI ModThread(LPVOID hModule)
         SWRGame::Update();
     }
 
-    if (threadParams.debugConsole)
+    if (debugConsole)
         FreeConsole();
 
     FreeLibraryAndExitThread((HMODULE)hModule, 0);
@@ -58,7 +50,7 @@ INT_PTR WINAPI APLoginDialog(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             if (!consoleStr.empty())
             {
                 if ((consoleStr.compare("True") == 0) || (consoleStr.compare("true") == 0) || (consoleStr.compare("TRUE") == 0))
-                    threadParams.debugConsole = true;
+                    debugConsole = true;
             }
 
             SetDlgItemTextA(hwnd, IDC_SERVER_BOX, serverStr.c_str());
@@ -72,14 +64,14 @@ INT_PTR WINAPI APLoginDialog(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         case IDC_LOGIN:
             // Store config
 
-            GetDlgItemTextA(hwnd, IDC_SERVER_BOX, threadParams.apInfo.server, 64);
-            GetDlgItemTextA(hwnd, IDC_PLAYER_BOX, threadParams.apInfo.player, 64);
-            GetDlgItemTextA(hwnd, IDC_PASSWORD_BOX, threadParams.apInfo.pw, 64);
+            GetDlgItemTextA(hwnd, IDC_SERVER_BOX, SWRGame::serverInfo.server, 64);
+            GetDlgItemTextA(hwnd, IDC_PLAYER_BOX, SWRGame::serverInfo.player, 64);
+            GetDlgItemTextA(hwnd, IDC_PASSWORD_BOX, SWRGame::serverInfo.pw, 64);
 
-            ini["Archipelago"]["Server"] = threadParams.apInfo.server;
-            ini["Archipelago"]["Player"] = threadParams.apInfo.player;
-            ini["Archipelago"]["Password"] = threadParams.apInfo.pw;
-            ini["Client"]["UseDebugConsole"] = threadParams.debugConsole ? "true" : "false";
+            ini["Archipelago"]["Server"] = SWRGame::serverInfo.server;
+            ini["Archipelago"]["Player"] = SWRGame::serverInfo.player;
+            ini["Archipelago"]["Password"] = SWRGame::serverInfo.pw;
+            ini["Client"]["UseDebugConsole"] = debugConsole ? "true" : "false";
             file.write(ini);
 
             EndDialog(hwnd, 1);

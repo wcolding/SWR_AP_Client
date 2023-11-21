@@ -81,7 +81,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="APInfo.h" />
+    <ClInclude Include="dllmain.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Patches.h" />
     <ClInclude Include="resource.h" />
