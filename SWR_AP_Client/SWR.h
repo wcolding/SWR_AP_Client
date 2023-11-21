@@ -28,8 +28,5 @@ namespace SWRGame
 	int baseAddress;
 	APServerInfo serverInfo;
 	APSaveData saveData;
-
-	void ResetSaveData();
-
 }
 

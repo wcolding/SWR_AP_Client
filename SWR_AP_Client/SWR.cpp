@@ -6,37 +6,12 @@
 #include <random>
 #include <chrono>
 
+#include "APCpp/Archipelago.h"
+
 namespace SWRGame
 {
 	int queuedDeaths;
 	RacePlacement requiredPlacement;
-
-	void Init()
-	{
-		baseAddress = (int)GetModuleHandleA("SWEP1RCR.EXE");
-
-		queuedDeaths = 0;
-		requiredPlacement = RacePlacement::First;
-
-		Log("Star Wars Episode I Racer Archipelago Client started");
-
-		Log("Applying patch: Limit Available Racers");
-		Patches::LimitAvailableRacers();
-		Log("Applying patch: Disable Pit Droid Shop");
-		Patches::DisablePitDroidShop();
-		Log("Applying patch: Disable Part Degredation");
-		Patches::DisablePartDegradation();
-
-		ResetSaveData();
-
-		// Temporary, for testing purposes
-		// Limit character selection to a random racer
-		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-		std::default_random_engine gen(seed);
-		std::uniform_int_distribution<int> distribution(0, 22);
-		int random = distribution(gen);
-		saveData.unlockedRacers = (RacerUnlocks)(1 << random);
-	}
 
 	void Update()
 	{
@@ -203,5 +178,63 @@ namespace SWRGame
 		};
 	}
 
+	void ReceiveItem(int64_t itemID, bool notify)
+	{
 
+	}
+
+	void SetLocationChecked(int64_t locID)
+	{
+
+	}
+
+	void SetDisablePartDegradation(int value) 
+	{
+		if (value)
+		{
+			Log("Applying patch: Disable Part Degredation");
+			Patches::DisablePartDegradation();
+			Log("Applying patch: Disable Pit Droid Shop");
+			Patches::DisablePitDroidShop();
+		}
+	}
+
+	void SetStartingRacers(int value)
+	{
+		saveData.unlockedRacers = (RacerUnlocks)value;
+
+		Log("Applying patch: Limit Available Racers");
+		Patches::LimitAvailableRacers();
+	}
+
+	void APSetup()
+	{
+		AP_Init(serverInfo.server, "Star Wars Episode I Racer", serverInfo.player, serverInfo.pw);
+
+		AP_NetworkVersion version = { 0,4,2 };
+		AP_SetClientVersion(&version);
+
+		AP_SetItemClearCallback(&ResetSaveData);
+		AP_SetItemRecvCallback(&ReceiveItem);
+		AP_SetLocationCheckedCallback(&SetLocationChecked);
+
+		AP_RegisterSlotDataIntCallback("StartingRacers", &SetStartingRacers);
+		AP_RegisterSlotDataIntCallback("DisablePartDegradation", &SetDisablePartDegradation);
+
+		AP_Start();
+	}
+
+	void Init()
+	{
+		baseAddress = (int)GetModuleHandleA("SWEP1RCR.EXE");
+
+		APSetup();
+
+		queuedDeaths = 0;
+		requiredPlacement = RacePlacement::First;
+
+		Log("Star Wars Episode I Racer Archipelago Client started");
+
+		ResetSaveData();
+	}
 }

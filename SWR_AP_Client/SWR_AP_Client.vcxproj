@@ -75,9 +75,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>$(ProjectDir)external\APCpp\build\lib\APCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(TargetPath)" "$(SolutionDir)dist\$(ProjectName).asi*" /f /y </Command>
+      <Command>xcopy "$(TargetPath)" "$(SolutionDir)dist\$(ProjectName).asi*" /f /y &amp;&amp; xcopy "$(ProjectDir)external\APCpp\build\bin\APCpp.dll" "$(SolutionDir)dist\APCpp.dll*"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
