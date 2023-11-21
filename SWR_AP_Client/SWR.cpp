@@ -5,6 +5,7 @@
 
 #include <random>
 #include <chrono>
+#include <map>
 
 #include "APCpp/Archipelago.h"
 
@@ -12,6 +13,7 @@ namespace SWRGame
 {
 	int queuedDeaths;
 	RacePlacement requiredPlacement;
+	std::map<int, int> courseLayout;
 
 	void Update()
 	{
@@ -207,6 +209,18 @@ namespace SWRGame
 		Patches::LimitAvailableRacers();
 	}
 
+	void SetCourses(std::map<int, int> courseValues)
+	{
+		courseLayout = courseValues;
+
+		for (int i = 0; i < courseLayout.size(); i++)
+		{
+			memcpy((void*)(baseAddress + COURSE_MAPPINGS_OFFSET + 4 * i), &courseLayout[i], 4);
+		}
+		
+		Log("Courses set");
+	}
+
 	void APSetup()
 	{
 		AP_Init(serverInfo.server, "Star Wars Episode I Racer", serverInfo.player, serverInfo.pw);
@@ -220,6 +234,7 @@ namespace SWRGame
 
 		AP_RegisterSlotDataIntCallback("StartingRacers", &SetStartingRacers);
 		AP_RegisterSlotDataIntCallback("DisablePartDegradation", &SetDisablePartDegradation);
+		AP_RegisterSlotDataMapIntIntCallback("Courses", &SetCourses);
 
 		AP_Start();
 	}
