@@ -14,12 +14,18 @@ namespace SWRGame
 	int queuedDeaths;
 	RacePlacement requiredPlacement;
 	std::map<int, int> courseLayout;
+	DeathState deathState = DeathState::Alive;
 
 	void Update()
 	{
 		if (isSaveFileLoaded())
 		{
 			ScanLocationChecks();
+		}
+
+		if (isPlayerInRace())
+		{
+			CheckPodKilled();
 		}
 
 		ProcessDeathQueue();
@@ -64,6 +70,10 @@ namespace SWRGame
 		if (!isPlayerInRace())
 			return false;
 
+		int paused = *(int*)(baseAddress + IS_PAUSED_OFFSET);
+		if (paused == 1)
+			return false;
+
 		PodData* playerPodData = *(PodData**)(baseAddress + POD_DATA_PTR_OFFSET);
 		if (playerPodData == nullptr)
 			return false;
@@ -78,16 +88,39 @@ namespace SWRGame
 
 	void KillPod()
 	{
-		// Function at SWE1RCR.EXE + 0x74970 checks this flag and destroys the pod if it is set
+		// Function at SWEP1RCR.EXE + 0x74970 checks this flag and destroys the pod if it is set
 		PodData* playerPodData = *(PodData**)(baseAddress + POD_DATA_PTR_OFFSET);
 		if (playerPodData == nullptr)
 			return;
 
 		playerPodData->status |= PodStatus::Destroyed;
 		queuedDeaths--;
+		deathState = DeathState::Deathlink;
 
 		Log("Killing player");
 		Log("Queued deaths: %i", queuedDeaths);
+	}
+
+	void CheckPodKilled()
+	{
+		PodData* playerPodData = *(PodData**)(baseAddress + POD_DATA_PTR_OFFSET);
+		if (playerPodData == nullptr)
+			return;
+
+		PodStatus respawning = (PodStatus)(PodStatus::Autopilot | PodStatus::Invincible);
+		if ((playerPodData->status & respawning) != 0)
+		{
+			if (deathState == DeathState::Alive)
+			{
+				AP_DeathLinkSend();
+				Log("Pod destroyed!");
+				deathState = DeathState::Local;
+			}
+		}
+		else
+		{
+			deathState = DeathState::Alive;
+		}
 	}
 
 	void QueueDeath()
@@ -227,10 +260,12 @@ namespace SWRGame
 
 		AP_NetworkVersion version = { 0, 4, 2 };
 		AP_SetClientVersion(&version);
+		AP_SetDeathLinkSupported(true);
 
 		AP_SetItemClearCallback(&ResetSaveData);
 		AP_SetItemRecvCallback(&ReceiveItem);
 		AP_SetLocationCheckedCallback(&SetLocationChecked);
+		AP_SetDeathLinkRecvCallback(&QueueDeath);
 
 		AP_RegisterSlotDataIntCallback("StartingRacers", &SetStartingRacers);
 		AP_RegisterSlotDataIntCallback("DisablePartDegradation", &SetDisablePartDegradation);

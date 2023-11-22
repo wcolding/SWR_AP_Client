@@ -9,13 +9,17 @@
 #define SAVE_DATA_OFFSET 0xA35A60
 #define RACE_DATA_OFFSET 0xA29C20
 #define COURSE_MAPPINGS_OFFSET 0xC0018
+#define IS_PAUSED_OFFSET 0xD6B58
 
 namespace SWRGame
 {
 	void Log(const char* format, ...);
 	void ScanLocationChecks();
+
+	void QueueDeath();
 	void ProcessDeathQueue();
 	void KillPod();
+	void CheckPodKilled();
 
 	void Init();
 	void Update();
@@ -23,8 +27,6 @@ namespace SWRGame
 	bool isSaveFileLoaded();
 	bool isPlayerInRace();
 	bool isPlayerKillable();
-
-	void QueueDeath();
 
 	int baseAddress;
 	APServerInfo serverInfo;

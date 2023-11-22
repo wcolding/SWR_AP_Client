@@ -33,7 +33,7 @@ enum PodStatus : int
 	Unknown    = 0x08, // cheat related? causes "KA-POW" to be written to the screen
 	Destroyed  = 0x10,
 	Invincible = 0x20, // used on respawn
-	Autopilot  = 0x40  // used on respawn
+	Autopilot  = 0x40 // used on respawn
 };
 
 enum RacePlacement : int
@@ -42,4 +42,11 @@ enum RacePlacement : int
 	Second = 0b10,
 	Third  = 0b01,
 	Fourth = 0b00 // also used for incomplete
+};
+
+enum DeathState : int
+{
+	Alive     = 0,
+	Local     = 1,
+	Deathlink = 2	
 };
