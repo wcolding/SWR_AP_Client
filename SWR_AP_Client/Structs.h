@@ -2,7 +2,29 @@
 #pragma pack(1)
 
 #include <stdint.h>
+#include <string>
+#include <vector>
 #include "Enums.h"
+
+struct APServerInfo
+{
+	char server[64];
+	char player[64];
+	char pw[64];
+};
+
+struct CourseData
+{
+	std::string name;
+	int slot;
+	bool completed;
+};
+
+struct APSaveData
+{
+	RacerUnlocks unlockedRacers;
+	std::vector<CourseData> completedCourses;
+};
 
 struct PodParts
 {
@@ -58,7 +80,7 @@ struct TrackUnlocks
 	char invitational;
 };
 
-struct SaveData
+struct RacerSaveData
 {
 public:
 	char profileName[0x18];    // 0x00

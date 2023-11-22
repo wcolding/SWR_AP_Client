@@ -3,20 +3,14 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-#include "SWR.h"
+using SWRGame::baseAddress;
+using SWRGame::saveData;
 
 #define DEFAULT_RACERS_OPCODE 0x3DA37
 #define CHECK_PIT_DROIDS_OPCODE 0x3D845
 #define CHECK_PITDROID_SHOP_FROM_MENU 0x36A3E
 #define CHECK_PITDROID_SHOP_FROM_UPGRADES_MENU 0x39C07
 #define DAMAGE_APPLY_OPCODE 0x3D7B6
-
-RacerUnlocks* unlockedRacersPtr = &APSaveData::unlockedRacers;
-
-void Patches::SetBaseAddress(int addr)
-{
-	cachedBaseAddress = addr;
-}
 
 void Patches::MakePageWritable(const void* addr)
 {
@@ -28,7 +22,7 @@ void Patches::MakePageWritable(const void* addr)
 
 void Patches::WritePatch(int offset, const void* patchPtr, size_t len)
 {
-	void* funcPtr = (void*)(cachedBaseAddress + offset);
+	void* funcPtr = (void*)(SWRGame::baseAddress + offset);
 	MakePageWritable(funcPtr);
 	memcpy(funcPtr, patchPtr, len);
 }
@@ -42,6 +36,7 @@ void Patches::LimitAvailableRacers()
 	};                 
 
 	// Overwrite 0 with racers value
+	RacerUnlocks* unlockedRacersPtr = &saveData.unlockedRacers;
 	memcpy(&limitRacers[2], &unlockedRacersPtr, 4);
 
 	WritePatch(DEFAULT_RACERS_OPCODE, &limitRacers, 6);
