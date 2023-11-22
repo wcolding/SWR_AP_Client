@@ -30,6 +30,7 @@ enum RacerUnlocks : int
 
 enum PodStatus : int
 {
+	Unknown    = 0x08, // cheat related? causes "KA-POW" to be written to the screen
 	Destroyed  = 0x10,
 	Invincible = 0x20, // used on respawn
 	Autopilot  = 0x40  // used on respawn
