@@ -12,6 +12,7 @@
 #define IS_PAUSED_OFFSET 0xD6B58
 
 #define SWR_AP_BASE_ID 11380000
+#define RACERS_COUNT 22
 
 namespace SWRGame
 {
@@ -26,6 +27,7 @@ namespace SWRGame
 	void Init();
 	void Update();
 	void InitSaveData();
+	void CopySaveData(RacerSaveData* racerSaveData);
 
 	bool isSaveFileLoaded();
 	bool isPlayerInRace();

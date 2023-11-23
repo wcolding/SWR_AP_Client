@@ -28,8 +28,8 @@ namespace SWRGame
 			}
 			else
 			{
-			ScanLocationChecks();
-		}
+				ScanLocationChecks();
+			}
 		}
 
 		if (isPlayerInRace())
@@ -87,12 +87,12 @@ namespace SWRGame
 		if (playerPodData == nullptr)
 			return false;
 
-		int unkillable = PodStatus::Destroyed | PodStatus::Autopilot | PodStatus::Invincible;
+int unkillable = PodStatus::Destroyed | PodStatus::Autopilot | PodStatus::Invincible;
 
-		if ((playerPodData->status & unkillable) != 0)
-			return false;
+if ((playerPodData->status & unkillable) != 0)
+return false;
 
-		return true;
+return true;
 	}
 
 	void KillPod()
@@ -178,6 +178,26 @@ namespace SWRGame
 			}
 		}
 
+		// Racer Unlock Checks
+		if (racerSaveData->racerUnlocks != saveData.racerSaveDataCopy.racerUnlocks)
+		{
+			RacerUnlocks curRacer;
+			for (int i = 0; i < RACERS_COUNT; i++)
+			{
+				curRacer = (RacerUnlocks)(1 << i);
+				if ((racerSaveData->racerUnlocks & curRacer) != 0)
+				{
+					if (racerUnlockTable.contains(curRacer))
+					{
+						int locID = racerUnlockTable[curRacer] + SWR_AP_BASE_ID;
+						AP_SendItem(locID);
+					}
+				}
+			}
+
+			CopySaveData(racerSaveData);
+		}
+
 		// Watto Shop
 
 		// Junkyard
@@ -191,6 +211,12 @@ namespace SWRGame
 			KillPod();
 	}
 
+
+	void CopySaveData(RacerSaveData* racerSaveData)
+	{
+		memcpy(&saveData.racerSaveDataCopy, racerSaveData, sizeof(RacerSaveData));
+	}
+
 	void InitSaveData()
 	{
 		RacerSaveData* racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
@@ -201,7 +227,7 @@ namespace SWRGame
 		racerSaveData->trackUnlocks.semipro = 0;
 		racerSaveData->trackUnlocks.galactic = 0;
 
-		memcpy(&saveData.racerSaveDataCopy, racerSaveData, sizeof(RacerSaveData));
+		CopySaveData(racerSaveData);
 
 		saveData.completedCourses.clear();
 		saveData.completedCourses = {
@@ -246,7 +272,7 @@ namespace SWRGame
 		{
 			course = &saveData.completedCourses[i];
 			course->completed = false;
-	}
+		}
 	}
 
 	void ReceiveItem(int64_t itemID, bool notify)
@@ -265,7 +291,7 @@ namespace SWRGame
 		Patches::LimitAvailableRacers();
 	}
 
-	void SetDisablePartDegradation(int value) 
+	void SetDisablePartDegradation(int value)
 	{
 		if (value)
 		{
@@ -277,7 +303,7 @@ namespace SWRGame
 	void SetRequiredPlacement(int value)
 	{
 		switch (value)
-	{
+		{
 		case 0:
 			requiredPlacement = RacePlacement::First;
 			break;
