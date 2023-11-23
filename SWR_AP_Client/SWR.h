@@ -11,6 +11,8 @@
 #define COURSE_MAPPINGS_OFFSET 0xC0018
 #define IS_PAUSED_OFFSET 0xD6B58
 
+#define SWR_AP_BASE_ID 11380000
+
 namespace SWRGame
 {
 	void Log(const char* format, ...);

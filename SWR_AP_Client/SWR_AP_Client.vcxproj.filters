@@ -27,10 +27,16 @@
     <ClInclude Include="Structs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="APInfo.h">
+    <ClInclude Include="Patches.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Patches.h">
+    <ClInclude Include="dllmain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Items.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Locations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

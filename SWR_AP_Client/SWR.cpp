@@ -1,4 +1,5 @@
 #include "SWR.h"
+#include "Locations.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -134,6 +135,8 @@ namespace SWRGame
 	void ScanLocationChecks()
 	{
 		RacerSaveData* racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
+		if (racerSaveData == nullptr)
+			return;
 
 		// Race progress
 		if (requiredPlacement == RacePlacement::Fourth)
@@ -161,6 +164,8 @@ namespace SWRGame
 
 					// Notify of location check
 					Log("Location checked: %s", course->name.c_str());
+					int locID = courseSlotToId[course->slot] + SWR_AP_BASE_ID;
+					AP_SendItem(locID);
 				}
 			}
 		}
