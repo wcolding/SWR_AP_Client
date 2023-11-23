@@ -25,6 +25,7 @@ namespace SWRGame
 
 	void Init();
 	void Update();
+	void InitSaveData();
 
 	bool isSaveFileLoaded();
 	bool isPlayerInRace();

@@ -20,12 +20,6 @@ struct CourseData
 	bool completed;
 };
 
-struct APSaveData
-{
-	RacerUnlocks unlockedRacers;
-	std::vector<CourseData> completedCourses;
-};
-
 struct PodParts
 {
 	char traction;
@@ -104,4 +98,11 @@ public:
 	char pitDroids;            // 0x40
 	PodParts parts;            // 0x41
 	PodParts partsHealth;      // 0x48
+};
+
+struct APSaveData
+{
+	RacerUnlocks unlockedRacers;
+	std::vector<CourseData> completedCourses;
+	RacerSaveData racerSaveDataCopy;
 };

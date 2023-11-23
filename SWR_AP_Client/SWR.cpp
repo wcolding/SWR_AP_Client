@@ -16,12 +16,20 @@ namespace SWRGame
 	RacePlacement requiredPlacement;
 	std::map<int, int> courseLayout;
 	DeathState deathState = DeathState::Alive;
+	bool initSave = false;
 
 	void Update()
 	{
 		if (isSaveFileLoaded())
 		{
+			if (initSave)
+			{
+				InitSaveData();
+			}
+			else
+			{
 			ScanLocationChecks();
+		}
 		}
 
 		if (isPlayerInRace())
@@ -183,8 +191,18 @@ namespace SWRGame
 			KillPod();
 	}
 
-	void ResetSaveData()
+	void InitSaveData()
 	{
+		RacerSaveData* racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
+		if (racerSaveData == nullptr)
+			return;
+
+		racerSaveData->racerUnlocks = RacerUnlocks::None;
+		racerSaveData->trackUnlocks.semipro = 0;
+		racerSaveData->trackUnlocks.galactic = 0;
+
+		memcpy(&saveData.racerSaveDataCopy, racerSaveData, sizeof(RacerSaveData));
+
 		saveData.completedCourses.clear();
 		saveData.completedCourses = {
 				{"Amateur Race 1", 0, false},
@@ -216,6 +234,19 @@ namespace SWRGame
 				{"Invitational Race 3", 26, false},
 				{"Invitational Race 4", 27, false}
 		};
+
+		initSave = false;
+		Log("Save data initialized");
+	}
+
+	void ResetSaveData()
+	{
+		CourseData* course;
+		for (int i = 0; i < saveData.completedCourses.size(); i++)
+		{
+			course = &saveData.completedCourses[i];
+			course->completed = false;
+	}
 	}
 
 	void ReceiveItem(int64_t itemID, bool notify)
@@ -301,10 +332,7 @@ namespace SWRGame
 		APSetup();
 
 		queuedDeaths = 0;
-		requiredPlacement = RacePlacement::First;
 
-		Log("Star Wars Episode I Racer Archipelago Client started");
-
-		ResetSaveData();
+		initSave = true;
 	}
 }
