@@ -2,7 +2,6 @@
 #pragma pack(1)
 
 #include <stdint.h>
-#include <string>
 #include <vector>
 #include "Enums.h"
 
@@ -15,7 +14,6 @@ struct APServerInfo
 
 struct CourseData
 {
-	std::string name;
 	int slot;
 	bool completed;
 };

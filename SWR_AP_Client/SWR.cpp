@@ -87,12 +87,12 @@ namespace SWRGame
 		if (playerPodData == nullptr)
 			return false;
 
-int unkillable = PodStatus::Destroyed | PodStatus::Autopilot | PodStatus::Invincible;
+		int unkillable = PodStatus::Destroyed | PodStatus::Autopilot | PodStatus::Invincible;
 
-if ((playerPodData->status & unkillable) != 0)
-return false;
+		if ((playerPodData->status & unkillable) != 0)
+		return false;
 
-return true;
+		return true;
 	}
 
 	void KillPod()
@@ -171,8 +171,9 @@ return true;
 					course->completed = true;
 
 					// Notify of location check
-					Log("Location checked: %s", course->name.c_str());
-					int locID = courseSlotToId[course->slot] + SWR_AP_BASE_ID;
+					int locID = courseSlotToId[course->slot];
+					Log("Location checked: %s", locationTable[locID].c_str());
+					locID += SWR_AP_BASE_ID;
 					AP_SendItem(locID);
 				}
 			}
@@ -231,34 +232,34 @@ return true;
 
 		saveData.completedCourses.clear();
 		saveData.completedCourses = {
-				{"Amateur Race 1", 0, false},
-				{"Amateur Race 2", 1, false},
-				{"Amateur Race 3", 2, false},
-				{"Amateur Race 4", 3, false},
-				{"Amateur Race 5", 4, false},
-				{"Amateur Race 6", 5, false},
-				{"Amateur Race 7", 6, false},
+				{0, false},
+				{1, false},
+				{2, false},
+				{3, false},
+				{4, false},
+				{5, false},
+				{6, false},
 
-				{"Semi-Pro Race 1", 8, false},
-				{"Semi-Pro Race 2", 9, false},
-				{"Semi-Pro Race 3", 10, false},
-				{"Semi-Pro Race 4", 11, false},
-				{"Semi-Pro Race 5", 12, false},
-				{"Semi-Pro Race 6", 13, false},
-				{"Semi-Pro Race 7", 14, false},
+				{8, false},
+				{9, false},
+				{10, false},
+				{11, false},
+				{12, false},
+				{13, false},
+				{14, false},
 
-				{"Galactic Race 1", 16, false},
-				{"Galactic Race 2", 17, false},
-				{"Galactic Race 3", 18, false},
-				{"Galactic Race 4", 19, false},
-				{"Galactic Race 5", 20, false},
-				{"Galactic Race 6", 21, false},
-				{"Galactic Race 7", 22, false},
+				{16, false},
+				{17, false},
+				{18, false},
+				{19, false},
+				{20, false},
+				{21, false},
+				{22, false},
 
-				{"Invitational Race 1", 24, false},
-				{"Invitational Race 2", 25, false},
-				{"Invitational Race 3", 26, false},
-				{"Invitational Race 4", 27, false}
+				{24, false},
+				{25, false},
+				{26, false},
+				{27, false}
 		};
 
 		initSave = false;
