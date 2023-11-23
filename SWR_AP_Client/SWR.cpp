@@ -228,6 +228,12 @@ namespace SWRGame
 
 	}
 
+	void SetStartingRacers(int value)
+	{
+		saveData.unlockedRacers = (RacerUnlocks)value;
+		Patches::LimitAvailableRacers();
+	}
+
 	void SetDisablePartDegradation(int value) 
 	{
 		if (value)
@@ -237,10 +243,21 @@ namespace SWRGame
 		}
 	}
 
-	void SetStartingRacers(int value)
+	void SetRequiredPlacement(int value)
 	{
-		saveData.unlockedRacers = (RacerUnlocks)value;
-		Patches::LimitAvailableRacers();
+		switch (value)
+	{
+		case 0:
+			requiredPlacement = RacePlacement::First;
+			break;
+		case 1:
+			requiredPlacement = RacePlacement::Second;
+			break;
+		case 2:
+			requiredPlacement = RacePlacement::Third;
+			break;
+		}
+		
 	}
 
 	void SetCourses(std::map<int, int> courseValues)
@@ -270,6 +287,7 @@ namespace SWRGame
 
 		AP_RegisterSlotDataIntCallback("StartingRacers", &SetStartingRacers);
 		AP_RegisterSlotDataIntCallback("DisablePartDegradation", &SetDisablePartDegradation);
+		AP_RegisterSlotDataIntCallback("RequiredPlacement", &SetRequiredPlacement);
 		AP_RegisterSlotDataMapIntIntCallback("Courses", &SetCourses);
 
 		AP_Start();
@@ -277,6 +295,7 @@ namespace SWRGame
 
 	void Init()
 	{
+		Log("Star Wars Episode I Racer Archipelago Client started");
 		baseAddress = (int)GetModuleHandleA("SWEP1RCR.EXE");
 
 		APSetup();
