@@ -190,7 +190,9 @@ namespace SWRGame
 				{
 					if (racerUnlockTable.contains(curRacer))
 					{
-						int locID = racerUnlockTable[curRacer] + SWR_AP_BASE_ID;
+						int locID = racerUnlockTable[curRacer];
+						Log("Location checked: %s", locationTable[locID].c_str());
+						locID += SWR_AP_BASE_ID;
 						AP_SendItem(locID);
 					}
 				}
