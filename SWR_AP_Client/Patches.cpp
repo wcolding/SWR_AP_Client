@@ -31,6 +31,7 @@ void Patches::WritePatch(int offset, const void* patchPtr, size_t len)
 // Overwrite the bitfield and change `or` to `mov` to explicitly set who is available
 void Patches::LimitAvailableRacers()
 {
+	SWRGame::Log("Applying patch: Limit Available Racers");
 	char limitRacers[6] = { 
 		0x8B, 0x35, 0x00, 0x00, 0x00, 0x00 // mov esi, [00000000]
 	};                 
@@ -46,6 +47,7 @@ void Patches::LimitAvailableRacers()
 // Skip over the parts that tell it to
 void Patches::DisablePitDroidShop()
 {
+	SWRGame::Log("Applying patch: Disable Pit Droid Shop");
 	char disableFromMenu[2] = {
 		0xEB, 0x0C	// jmp 0C
 	};
@@ -62,6 +64,7 @@ void Patches::DisablePitDroidShop()
 // Trick it into thinking every part is a base part
 void Patches::DisablePartDegradation()
 {
+	SWRGame::Log("Applying patch: Disable Part Degredation");
 	char forceUnupgraded[6] = {
 		0xB1, 0x00, // mov cl, 00
 		0x90,       // nop

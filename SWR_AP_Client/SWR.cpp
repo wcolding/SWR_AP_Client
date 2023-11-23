@@ -227,9 +227,7 @@ namespace SWRGame
 	{
 		if (value)
 		{
-			Log("Applying patch: Disable Part Degredation");
 			Patches::DisablePartDegradation();
-			Log("Applying patch: Disable Pit Droid Shop");
 			Patches::DisablePitDroidShop();
 		}
 	}
@@ -237,8 +235,6 @@ namespace SWRGame
 	void SetStartingRacers(int value)
 	{
 		saveData.unlockedRacers = (RacerUnlocks)value;
-
-		Log("Applying patch: Limit Available Racers");
 		Patches::LimitAvailableRacers();
 	}
 
