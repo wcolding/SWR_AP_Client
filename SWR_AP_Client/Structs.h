@@ -18,16 +18,7 @@ struct CourseData
 	bool completed;
 };
 
-struct PodParts
-{
-	char traction;
-	char turning;
-	char acceleration;
-	char topspeed;
-	char airbrake;
-	char cooling;
-	char repair;
-};
+typedef char PodParts[7];
 
 struct PodHealth
 {
