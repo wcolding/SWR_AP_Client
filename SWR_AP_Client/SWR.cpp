@@ -1,5 +1,6 @@
 #include "SWR.h"
 #include "Locations.h"
+#include "Items.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -268,6 +269,80 @@ namespace SWRGame
 		Log("Save data initialized");
 	}
 
+	void GivePart(int type, int part)
+	{
+		RacerSaveData* racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
+		if (racerSaveData == nullptr)
+			return;
+		
+		char partVal = racerSaveData->parts[type];
+		if (partVal >= 5)
+			return;
+
+		if (part == -1) // Progressive
+		{
+			partVal++;
+			racerSaveData->parts[type] = partVal;
+		}
+		else
+		{
+			if (partVal > part)
+				return;
+			racerSaveData->parts[type] = (char)part;
+		}
+	}
+
+	void GiveRacer(int racerID)
+	{
+		saveData.unlockedRacers = (RacerUnlocks)(saveData.unlockedRacers | racerID);
+	}
+
+	void GivePitDroid()
+	{
+		RacerSaveData* racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
+		if (racerSaveData == nullptr)
+			return;
+
+		racerSaveData->pitDroids++;
+	}
+
+	void GiveCircuitPass(int type)
+	{
+		RacerSaveData* racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
+		if (racerSaveData == nullptr)
+			return;
+
+		switch (type)
+		{
+		case 1:
+			racerSaveData->trackUnlocks.semipro |= 0x01;
+			break;
+		case 2:
+			racerSaveData->trackUnlocks.galactic |= 0x01;
+			break;
+		case 3:
+			racerSaveData->trackUnlocks.invitational |= 0x01;
+			break;
+		case -1:
+		{
+			// Progressive
+			// Make this nice somehow
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
+	void GiveMoney(int amount)
+	{
+		RacerSaveData* racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
+		if (racerSaveData == nullptr)
+			return;
+
+		racerSaveData->money += amount;
+	}
+
 	void ResetSaveData()
 	{
 		CourseData* course;
@@ -280,7 +355,34 @@ namespace SWRGame
 
 	void ReceiveItem(int64_t itemID, bool notify)
 	{
+		int localID = (int)itemID - SWR_AP_BASE_ID;
 
+		if (itemTable.contains(localID))
+		{
+			ItemInfo* itemInfo = &itemTable[localID];
+			Log("Received item \'%s\'", itemInfo->name.c_str());
+
+			switch (itemInfo->type)
+			{
+			case ItemType::PodPart:
+				GivePart(itemInfo->param1, itemInfo->param2);
+				break;
+			case ItemType::Racer:
+				GiveRacer(itemInfo->param1);
+				break;
+			case ItemType::PitDroid:
+				GivePitDroid();
+				break;
+			case ItemType::CircuitPass:
+				GiveCircuitPass(itemInfo->param1);
+				break;
+			case ItemType::Money:
+				GiveMoney(itemInfo->param1);
+				break;
+			default:
+				break;
+			}
+		}
 	}
 
 	void SetLocationChecked(int64_t locID)

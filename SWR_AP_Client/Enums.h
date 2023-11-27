@@ -50,3 +50,12 @@ enum DeathState : int
 	Local     = 1,
 	Deathlink = 2	
 };
+
+enum ItemType : int
+{
+	PodPart     = 0,
+	Racer       = 1,
+	PitDroid    = 2,
+	CircuitPass = 3,
+	Money       = 4
+};

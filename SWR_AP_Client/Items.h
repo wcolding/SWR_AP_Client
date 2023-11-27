@@ -3,133 +3,158 @@
 #include <map>
 #include <string>
 
-static std::map<int, std::string> itemNameTable
+#include "Enums.h"
+
+struct ItemInfo
+{
+	std::string name;
+	ItemType type;
+	int param1;
+	int param2;
+	int modelID;
+};
+
+
+static std::map<int, ItemInfo> itemTable
 {
 	// Pod parts
 	// Progressive
-	{0, "Progressive Traction"},
-	{1, "Progressive Turning"},
-	{2, "Progressive Acceleration"},
-	{3, "Progressive Top Speed"},
-	{4, "Progressive Air Brake"},
-	{5, "Progressive Cooling"},
-	{6, "Progressive Repair"},
+	{ 0, ItemInfo("Progressive Traction",     ItemType::PodPart, 0, -1, -1)	},
+	{ 1, ItemInfo("Progressive Turning",      ItemType::PodPart, 1, -1, -1)	},
+	{ 2, ItemInfo("Progressive Acceleration", ItemType::PodPart, 2, -1, -1)	},
+	{ 3, ItemInfo("Progressive Top Speed",    ItemType::PodPart, 3, -1, -1)	},
+	{ 4, ItemInfo("Progressive Air Brake",    ItemType::PodPart, 4, -1, -1)	},
+	{ 5, ItemInfo("Progressive Cooling",      ItemType::PodPart, 5, -1, -1)	},
+	{ 6, ItemInfo("Progressive Repair",       ItemType::PodPart, 6, -1, -1)	},
 
 	// Traction
-	{7, "R-60 Repulsorgrip"},
-	{8, "R-80 Repulsorgrip"},
-	{9, "R-100 Repulsorgrip"},
-	{10, "R-300 Repulsorgrip"},
-	{11, "R-600 Repulsorgrip"},
+	{ 7, ItemInfo("R-60 Repulsorgrip",        ItemType::PodPart, 0, 1, 0xCD) },
+	{ 8, ItemInfo("R-80 Repulsorgrip",        ItemType::PodPart, 0, 2, 0xCE) },
+	{ 9, ItemInfo("R-100 Repulsorgrip",       ItemType::PodPart, 0, 3, 0xE6) },
+	{ 10, ItemInfo("R-300 Repulsorgrip",      ItemType::PodPart, 0, 4, 0xF1) },
+	{ 11, ItemInfo("R-600 Repulsorgrip",      ItemType::PodPart, 0, 5, 0xF2) },
 
 	// Turning
-	{12, "Control Shift Plate"},
-	{13, "Control Vectro Jet"},
-	{14, "Control Coupling"},
-	{15, "Control Nozzle"},
-	{16, "Control Stabilizer"},
+	{ 12, ItemInfo("Control Shift Plate",     ItemType::PodPart, 1, 1, 0x33) },
+	{ 13, ItemInfo("Control Vectro Jet",      ItemType::PodPart, 1, 2, 0x34) },
+	{ 14, ItemInfo("Control Coupling",        ItemType::PodPart, 1, 3, 0x35) },
+	{ 15, ItemInfo("Control Nozzle",          ItemType::PodPart, 1, 4, 0x36) },
+	{ 16, ItemInfo("Control Stabilizer",      ItemType::PodPart, 1, 5, 0xF0) },
 
 	// Acceleration
-	{17, "44 PCX Injector"},
-	{18, "Dual 32PCX Injector"},
-	{19, "Quad 32PCX Injector"},
-	{20, "Quad 44PCX Injector"},
-	{21, "Mag-6 Injector"},
+	{ 17, ItemInfo("44 PCX Injector",         ItemType::PodPart, 2, 1, 0xC7) },
+	{ 18, ItemInfo("Dual 32PCX Injector",     ItemType::PodPart, 2, 2, 0xC8) },
+	{ 19, ItemInfo("Quad 32PCX Injector",     ItemType::PodPart, 2, 3, 0xC9) },
+	{ 20, ItemInfo("Quad 44PCX Injector",     ItemType::PodPart, 2, 4, 0xCA) },
+	{ 21, ItemInfo("Mag-6 Injector",          ItemType::PodPart, 2, 5, 0xCB) },
 
 	// Top Speed
-	{22, "Plug3 Thrust Coil"},
-	{23, "Plug5 Thrust Coil"},
-	{24, "Plug8 Thrust Coil"},
-	{25, "Block5 Thrust Coil"},
-	{26, "Block6 Thrust Coil"},
+	{ 22, ItemInfo("Plug3 Thrust Coil",       ItemType::PodPart, 3, 1, 0xAA) },
+	{ 23, ItemInfo("Plug5 Thrust Coil",       ItemType::PodPart, 3, 2, 0xAB) },
+	{ 24, ItemInfo("Plug8 Thrust Coil",       ItemType::PodPart, 3, 3, 0xAC) },
+	{ 25, ItemInfo("Block5 Thrust Coil",      ItemType::PodPart, 3, 4, 0xAD) },
+	{ 26, ItemInfo("Block6 Thrust Coil",      ItemType::PodPart, 3, 5, 0xAE) },
 
 	// Air Brake
-	{27, "Mark III Air Brake"},
-	{28, "Mark IV Air Brake"},
-	{29, "Mark V Air Brake"},
-	{30, "Tri-Jet Air Brake"},
-	{31, "Quadrijet Air Brake"},
+	{ 27, ItemInfo("Mark III Air Brake",      ItemType::PodPart, 4, 1, 0x9E) },
+	{ 28, ItemInfo("Mark IV Air Brake",       ItemType::PodPart, 4, 2, 0x9F) },
+	{ 29, ItemInfo("Mark V Air Brake",        ItemType::PodPart, 4, 3, 0xA0) },
+	{ 30, ItemInfo("Tri-Jet Air Brake",       ItemType::PodPart, 4, 4, 0xA1) },
+	{ 31, ItemInfo("Quadrijet Air Brake",     ItemType::PodPart, 4, 5, 0xA2) },
 
 	// Cooling
-	{32, "Stack-3 Radiator"},
-	{33, "Stack-6 Radiator"},
-	{34, "Rod Coolant Pump"},
-	{35, "Dual Coolant Pump"},
-	{36, "Turbo Coolant Pump"},
+	{ 32, ItemInfo("Stack-3 Radiator",        ItemType::PodPart, 5, 1, 0xA4) },
+	{ 33, ItemInfo("Stack-6 Radiator",        ItemType::PodPart, 5, 2, 0xA5) },
+	{ 34, ItemInfo("Rod Coolant Pump",        ItemType::PodPart, 5, 3, 0xA6) },
+	{ 35, ItemInfo("Dual Coolant Pump",       ItemType::PodPart, 5, 4, 0xA7) },
+	{ 36, ItemInfo("Turbo Coolant Pump",      ItemType::PodPart, 5, 5, 0xA8) },
 
 	// Repair
-	{37, "Dual Power Cell"},
-	{38, "Quad Power Cell"},
-	{39, "Cluster Power Plug"},
-	{40, "Rotary Power Plug"},
-	{41, "Cluster2 Power Plug"},
-
-
+	{ 37, ItemInfo("Dual Power Cell",         ItemType::PodPart, 6, 1, 0xEB) },
+	{ 38, ItemInfo("Quad Power Cell",         ItemType::PodPart, 6, 2, 0xED) },
+	{ 39, ItemInfo("Cluster Power Plug",      ItemType::PodPart, 6, 3, 0xEE) },
+	{ 40, ItemInfo("Rotary Power Plug",       ItemType::PodPart, 6, 4, 0xEF) },
+	{ 41, ItemInfo("Cluster2 Power Plug",     ItemType::PodPart, 6, 5, 0xF3) },
+	
+	
 	// Racers
-	{42, "Anakin Skywalker"},
-	{43, "Teemto Pagalies"},
-	{44, "Sebulba"},
-	{45, "Ratts Tyerell"},
-	{46, "Aldar Beedo"},
+	{ 42, ItemInfo("Anakin Skywalker",     ItemType::Racer, RacerUnlocks::AnakinSkywalker, NULL, 0x57) },
+	{ 43, ItemInfo("Teemto Pagalies",      ItemType::Racer, RacerUnlocks::TeemtoPagalies,  NULL, 0x56) },
+	{ 44, ItemInfo("Sebulba",              ItemType::Racer, RacerUnlocks::Sebulba,         NULL, 0x5B) },
+	{ 45, ItemInfo("Ratts Tyerell",        ItemType::Racer, RacerUnlocks::RattsTyerell,    NULL, 0x5D) },
+	{ 46, ItemInfo("Aldar Beedo",          ItemType::Racer, RacerUnlocks::AldarBeedo,      NULL, 0x69) },
 
-	{47, "Mawhonic"},
-	{48, "Ark 'Bumpy' Roose"},
-	{49, "Wan Sandage"},
-	{50, "Mars Guo"},
-	{51, "Ebe Endocott"},
+	{ 47, ItemInfo("Mawhonic",             ItemType::Racer, RacerUnlocks::Mawhonic,        NULL, 0x59) },
+	{ 48, ItemInfo("Ark 'Bumpy' Roose",    ItemType::Racer, RacerUnlocks::ArkBumpyRoose,   NULL, 0x60) },
+	{ 49, ItemInfo("Wan Sandage",          ItemType::Racer, RacerUnlocks::WanSandage,      NULL, 0x63) },
+	{ 50, ItemInfo("Mars Guo",             ItemType::Racer, RacerUnlocks::MarsGuo,         NULL, 0x5C) },
+	{ 51, ItemInfo("Ebe Endocott",         ItemType::Racer, RacerUnlocks::EbeEndocott,     NULL, 0x5F) },
 
-	{52, "Dud Bolt"},
-	{53, "Gasgano"},
-	{54, "Clegg Holdfast"},
-	{55, "Elan Mak"},
-	{56, "Neva Kee"},
+	{ 52, ItemInfo("Dud Bolt",             ItemType::Racer, RacerUnlocks::DudBolt,         NULL, 0x62) },
+	{ 53, ItemInfo("Gasgano",              ItemType::Racer, RacerUnlocks::Gasgano,         NULL, 0x58) },
+	{ 54, ItemInfo("Clegg Holdfast",       ItemType::Racer, RacerUnlocks::CleggHoldfast,   NULL, 0x61) },
+	{ 55, ItemInfo("Elan Mak",             ItemType::Racer, RacerUnlocks::ElanMak,         NULL, 0x64) },
+	{ 56, ItemInfo("Neva Kee",             ItemType::Racer, RacerUnlocks::NevaKee,         NULL, 0x67) },
 
-	{57, "Bozzie Baranta"},
-	{58, "Boles Roor"},
-	{59, "Ody Mandrell"},
-	{60, "Fud Sang"},
-	{61, "Ben Quadrinaros"},
+	{ 57, ItemInfo("Bozzie Baranta",       ItemType::Racer, RacerUnlocks::BozzieBaranta,   NULL, 0x6A) },
+	{ 58, ItemInfo("Boles Roor",           ItemType::Racer, RacerUnlocks::BolesRoor,       NULL, 0x6B) },
+	{ 59, ItemInfo("Ody Mandrell",         ItemType::Racer, RacerUnlocks::OdyMandrell,     NULL, 0x5A) },
+	{ 60, ItemInfo("Fud Sang",             ItemType::Racer, RacerUnlocks::FudSang,         NULL, 0x66) },
+	{ 61, ItemInfo("Ben Quadrinaros",      ItemType::Racer, RacerUnlocks::BenQuadrinaros,  NULL, 0x5E) },
 
-	{62, "Slide Paramita"},
-	{63, "Toy Dampner"},
-	{64, "Bullseye Navior"},
-
+	{ 62, ItemInfo("Slide Paramita",       ItemType::Racer, RacerUnlocks::SlideParamita,   NULL, 0x68) },
+	{ 63, ItemInfo("Toy Dampner",          ItemType::Racer, RacerUnlocks::ToyDampner,      NULL, 0x65) },
+	{ 64, ItemInfo("'Bullseye' Navior",    ItemType::Racer, RacerUnlocks::BullseyeNavior,  NULL, 0x6C) },
 
 	// Misc
-	{65, "Pit Droid"},
-	{66, "Semi Pro Circuit Pass"},
-	{67, "Galactic Circuit Pass"},
-	{68, "Invitational Circuit Pass"},
-	{69, "Progressive Circuit Pass"},
+	{ 65, ItemInfo("Pit Droid",                 ItemType::PitDroid, NULL,  NULL, 0x6D) },
+	{ 66, ItemInfo("Semi Pro Circuit Pass",     ItemType::CircuitPass, 1,  NULL, -1) },
+	{ 67, ItemInfo("Galactic Circuit Pass",     ItemType::CircuitPass, 2,  NULL, -1) },
+	{ 68, ItemInfo("Invitational Circuit Pass", ItemType::CircuitPass, 3,  NULL, -1) },
+	{ 69, ItemInfo("Progressive Circuit Pass",  ItemType::CircuitPass, -1, NULL, -1) },
 
 
 	// Money
-	{ 70, "100 Truguts" },
-	{ 71, "150 Truguts" },
-	{ 72, "200 Truguts" },
-	{ 73, "300 Truguts" },
-	{ 74, "450 Truguts" },
+	{ 70, ItemInfo("100 Truguts",  ItemType::Money, 100,  NULL, -1) },
+	{ 71, ItemInfo("150 Truguts",  ItemType::Money, 150,  NULL, -1) },
+	{ 72, ItemInfo("200 Truguts",  ItemType::Money, 200,  NULL, -1) },
+	{ 73, ItemInfo("300 Truguts",  ItemType::Money, 300,  NULL, -1) },
+	{ 74, ItemInfo("450 Truguts",  ItemType::Money, 450,  NULL, -1) },
 
-	{ 75, "600 Truguts" },
-	{ 76, "700 Truguts" },
-	{ 77, "750 Truguts" },
-	{ 78, "800 Truguts" },
-	{ 79, "900 Truguts" },
+	{ 75, ItemInfo("600 Truguts",  ItemType::Money, 600,  NULL, -1) },
+	{ 76, ItemInfo("700 Truguts",  ItemType::Money, 700,  NULL, -1) },
+	{ 77, ItemInfo("750 Truguts",  ItemType::Money, 750,  NULL, -1) },
+	{ 78, ItemInfo("800 Truguts",  ItemType::Money, 800,  NULL, -1) },
+	{ 79, ItemInfo("900 Truguts",  ItemType::Money, 900,  NULL, -1) },
 
-	{ 80, "1050 Truguts" },
-	{ 81, "1200 Truguts" },
-	{ 82, "1400 Truguts" },
-	{ 83, "1500 Truguts" },
-	{ 84, "1600 Truguts" },
+	{ 80, ItemInfo("1050 Truguts", ItemType::Money, 1050, NULL, -1) },
+	{ 81, ItemInfo("1200 Truguts", ItemType::Money, 1200, NULL, -1) },
+	{ 82, ItemInfo("1400 Truguts", ItemType::Money, 1400, NULL, -1) },
+	{ 83, ItemInfo("1500 Truguts", ItemType::Money, 1500, NULL, -1) },
+	{ 84, ItemInfo("1600 Truguts", ItemType::Money, 1600, NULL, -1) },
 
-	{ 85, "1750 Truguts" },
-	{ 86, "1800 Truguts" },
-	{ 87, "2000 Truguts" },
-	{ 88, "2200 Truguts" },
-	{ 89, "2400 Truguts" },
+	{ 85, ItemInfo("1750 Truguts", ItemType::Money, 1750, NULL, -1) },
+	{ 86, ItemInfo("1800 Truguts", ItemType::Money, 1800, NULL, -1) },
+	{ 87, ItemInfo("2000 Truguts", ItemType::Money, 2000, NULL, -1) },
+	{ 88, ItemInfo("2200 Truguts", ItemType::Money, 2200, NULL, -1) },
+	{ 89, ItemInfo("2400 Truguts", ItemType::Money, 2400, NULL, -1) },
 
-	{ 90, "3000 Truguts" },
-	{ 91, "3300 Truguts" },
-	{ 92, "4400 Truguts" },
-	{ 93, "5500 Truguts" }
+	{ 90, ItemInfo("3000 Truguts", ItemType::Money, 3000, NULL, -1) },
+	{ 91, ItemInfo("3300 Truguts", ItemType::Money, 3300, NULL, -1) },
+	{ 92, ItemInfo("4400 Truguts", ItemType::Money, 4400, NULL, -1) },
+	{ 93, ItemInfo("5500 Truguts", ItemType::Money, 4500, NULL, -1) },
 };
+
+
+// possible models for AP Items
+// watto = 0x6E
+// dewback = 0x6F
+// brotosaurus thing = 0x70
+// jabba = 0x71
+// ithorian = 0xf4
+// very tiny c3p0 = 0xf5
+// very tiny jar jar = 0xf6
+// very tiny jawa = 0xf7
+// very tiny r2d2 = 0xf8
+
+// invalid/invisible 0x49
