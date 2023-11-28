@@ -228,8 +228,10 @@ namespace SWRGame
 			return;
 
 		racerSaveData->racerUnlocks = RacerUnlocks::None;
-		racerSaveData->trackUnlocks.semipro = 0;
-		racerSaveData->trackUnlocks.galactic = 0;
+		racerSaveData->trackUnlocks[0] = 1;
+		racerSaveData->trackUnlocks[1] = 0;
+		racerSaveData->trackUnlocks[2] = 0;
+		racerSaveData->trackUnlocks[3] = 0;
 
 		CopySaveData(racerSaveData);
 
@@ -312,26 +314,20 @@ namespace SWRGame
 		if (racerSaveData == nullptr)
 			return;
 
-		switch (type)
-		{
-		case 1:
-			racerSaveData->trackUnlocks.semipro |= 0x01;
-			break;
-		case 2:
-			racerSaveData->trackUnlocks.galactic |= 0x01;
-			break;
-		case 3:
-			racerSaveData->trackUnlocks.invitational |= 0x01;
-			break;
-		case -1:
+		if (type == -1)
 		{
 			// Progressive
-			// Make this nice somehow
-			break;
+			for (int i = 1; i < 4; i++)
+			{
+				if (racerSaveData->trackUnlocks[i] == 0)
+				{
+					racerSaveData->trackUnlocks[i] |= 0x01;
+					return;
+				}
+			}
 		}
-		default:
-			break;
-		}
+		else
+			racerSaveData->trackUnlocks[type] |= 0x01;
 	}
 
 	void GiveMoney(int amount)

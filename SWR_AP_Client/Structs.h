@@ -55,13 +55,7 @@ public:
 	float timer;
 };
 
-struct TrackUnlocks
-{
-	char amateur;
-	char semipro;
-	char galactic;
-	char invitational;
-};
+typedef char TrackUnlocks[4];
 
 struct RacerSaveData
 {
