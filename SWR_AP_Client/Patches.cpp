@@ -13,6 +13,8 @@ using SWRGame::saveData;
 #define DAMAGE_APPLY_OPCODE 0x3D7B6
 #define ERROR_CURSOR_OPCODE 0x3B195
 
+#define DEFAULT_FIRST_COURSE_INJECT 0x3B379
+
 void Patches::MakePageWritable(const void* addr)
 {
 	MEMORY_BASIC_INFORMATION mbi;
@@ -116,13 +118,12 @@ void Patches::FixCourseSelection()
 		0x90,                         // nop
 	};
 
-	int injectOffset = 0x3B379;
 	int defaultToFirstInt = (int)&DefaultToFirstCourse;
-	int offset = SWRGame::baseAddress + injectOffset + 5;
+	int offset = SWRGame::baseAddress + DEFAULT_FIRST_COURSE_INJECT + 5;
 
 	// Overwrite 0 with call offset
 	void* defaultToFirstPtr = (void*)(defaultToFirstInt-offset);
 	memcpy(&jmpDefaultToFirstCourse[1], &defaultToFirstPtr, 4);
 
-	WritePatch(injectOffset, &jmpDefaultToFirstCourse, 7);
+	WritePatch(DEFAULT_FIRST_COURSE_INJECT, &jmpDefaultToFirstCourse, 7);
 }
