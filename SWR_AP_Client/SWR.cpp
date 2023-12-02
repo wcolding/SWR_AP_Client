@@ -17,13 +17,13 @@ namespace SWRGame
 	RacePlacement requiredPlacement;
 	std::map<int, int> courseLayout;
 	DeathState deathState = DeathState::Alive;
-	bool initSave = false;
+	bool doInitSave = false;
 
 	void Update()
 	{
 		if (isSaveFileLoaded())
 		{
-			if (initSave)
+			if (doInitSave)
 			{
 				InitSaveData();
 			}
@@ -267,7 +267,7 @@ namespace SWRGame
 				{27, false}
 		};
 
-		initSave = false;
+		doInitSave = false;
 		Log("Save data initialized");
 	}
 
@@ -463,6 +463,6 @@ namespace SWRGame
 
 		queuedDeaths = 0;
 
-		initSave = true;
+		doInitSave = true;
 	}
 }
