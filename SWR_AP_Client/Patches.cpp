@@ -82,6 +82,9 @@ void Patches::DisablePartDegradation()
 void __declspec(naked) DefaultToFirstCourse()
 {
 	// eax row # / circuit
+	// ecx used to calc offset in course list
+	// edx cursor value
+
 	__asm 
 	{
 		cmp edx, 0xFFFFFFFF;
