@@ -81,10 +81,11 @@ void Patches::DisablePartDegradation()
 
 void __declspec(naked) DefaultToFirstCourse()
 {
+	// eax row # / circuit
 	__asm 
 	{
 		cmp edx, 0xFFFFFFFF;
-		jne[Vanilla];
+		jne [Vanilla];
 		xor edx, edx;
 		ret;
 
@@ -106,11 +107,6 @@ void Patches::FixCourseSelection()
 	};
 
 	WritePatch(ERROR_CURSOR_OPCODE, &forceSkipErrorCursor, 2);
-
-	// +3B37C
-	// eax row # / circuit
-	// ecx used to calc offset in course list
-	// edx cursor value
 
 	char jmpDefaultToFirstCourse[7] = {
 		0xE8, 0x00, 0x00, 0x00, 0x00, // call 0
