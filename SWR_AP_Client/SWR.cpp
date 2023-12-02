@@ -459,6 +459,7 @@ namespace SWRGame
 		APSetup();
 
 		Patches::FixCourseSelection();
+		Patches::RewriteWattoShop();
 
 		queuedDeaths = 0;
 

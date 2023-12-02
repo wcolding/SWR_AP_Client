@@ -14,6 +14,7 @@ using SWRGame::saveData;
 #define ERROR_CURSOR_OPCODE 0x3B195
 
 #define DEFAULT_FIRST_COURSE_INJECT 0x3B379
+#define SKIP_ITEM_INJECT 0x3E8EF
 
 void Patches::MakePageWritable(const void* addr)
 {
@@ -125,4 +126,40 @@ void Patches::FixCourseSelection()
 	memcpy(&jmpDefaultToFirstCourse[1], &defaultToFirstPtr, 4);
 
 	WritePatch(DEFAULT_FIRST_COURSE_INJECT, &jmpDefaultToFirstCourse, 7);
+}
+
+void __declspec(naked) SkipAcquiredItems()
+{
+	// Vanilla behavior subtracts 3 from the total unlocked courses to account for the defaults
+	// In AP we start with 1 so we will subtract 1
+	// We also need to mask ecx to ensure a correct cmp result
+	__asm
+	{
+		movsx eax, bl;
+		sub eax, 01; 
+		or ecx, 0xFFFFFF00;
+		xor ecx, 0xFFFFFF00;
+		ret;
+	}
+}
+
+void Patches::RewriteWattoShop()
+{
+	SWRGame::Log("Applying patch: Rewrite Watto Shop");
+
+	// Don't show items marked as acquired
+	// We're using the flag 0x80 to mark an item
+	char jmpSkipAcquiredItems[6] = {
+		0xE8, 0x00, 0x00, 0x00, 0x00, // call 0
+		0x90,                         // nop
+	};
+
+	int skipAcquiredItemsInt = (int)&SkipAcquiredItems;
+	int offset = SWRGame::baseAddress + SKIP_ITEM_INJECT + 5;
+
+	// Overwrite 0 with call offset
+	void* skipAcquiredItemsPtr = (void*)(skipAcquiredItemsInt - offset);
+	memcpy(&jmpSkipAcquiredItems[1], &skipAcquiredItemsPtr, 4);
+
+	WritePatch(SKIP_ITEM_INJECT, &jmpSkipAcquiredItems, 6);
 }

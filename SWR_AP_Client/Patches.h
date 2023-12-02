@@ -19,4 +19,5 @@ public:
 	static void DisablePitDroidShop();
 	static void DisablePartDegradation();
 	static void FixCourseSelection();
+	static void RewriteWattoShop();
 };
