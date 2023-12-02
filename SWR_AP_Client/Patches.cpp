@@ -11,6 +11,7 @@ using SWRGame::saveData;
 #define CHECK_PITDROID_SHOP_FROM_MENU 0x36A3E
 #define CHECK_PITDROID_SHOP_FROM_UPGRADES_MENU 0x39C07
 #define DAMAGE_APPLY_OPCODE 0x3D7B6
+#define ERROR_CURSOR_OPCODE 0x3B195
 
 void Patches::MakePageWritable(const void* addr)
 {
@@ -74,4 +75,54 @@ void Patches::DisablePartDegradation()
 	};
 
 	WritePatch(DAMAGE_APPLY_OPCODE, &forceUnupgraded, 6);
+}
+
+void __declspec(naked) DefaultToFirstCourse()
+{
+	__asm 
+	{
+		cmp edx, 0xFFFFFFFF;
+		jne[Vanilla];
+		xor edx, edx;
+		ret;
+
+	Vanilla:
+		shl ecx, 03;
+		sub ecx, eax;
+		add edx, ecx;
+		ret;
+	}
+}
+
+// Avoid player being able to select locked courses
+// Default to first course on locked circuits
+void Patches::FixCourseSelection()
+{
+	SWRGame::Log("Applying patch: Fix Course Selection");
+	char forceSkipErrorCursor[2] = {
+		0xEB, 0x05 // jmp 5
+	};
+
+	WritePatch(ERROR_CURSOR_OPCODE, &forceSkipErrorCursor, 2);
+
+	// +3B37C
+	// eax row # / circuit
+	// ecx used to calc offset in course list
+	// edx cursor value
+
+	char jmpDefaultToFirstCourse[7] = {
+		0xE8, 0x00, 0x00, 0x00, 0x00, // call 0
+		0x90,                         // nop
+		0x90,                         // nop
+	};
+
+	int injectOffset = 0x3B379;
+	int defaultToFirstInt = (int)&DefaultToFirstCourse;
+	int offset = SWRGame::baseAddress + injectOffset + 5;
+
+	// Overwrite 0 with call offset
+	void* defaultToFirstPtr = (void*)(defaultToFirstInt-offset);
+	memcpy(&jmpDefaultToFirstCourse[1], &defaultToFirstPtr, 4);
+
+	WritePatch(injectOffset, &jmpDefaultToFirstCourse, 7);
 }

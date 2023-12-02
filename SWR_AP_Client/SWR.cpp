@@ -458,6 +458,8 @@ namespace SWRGame
 
 		APSetup();
 
+		Patches::FixCourseSelection();
+
 		queuedDeaths = 0;
 
 		initSave = true;

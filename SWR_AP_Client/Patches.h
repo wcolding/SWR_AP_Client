@@ -18,4 +18,5 @@ public:
 	static void LimitAvailableRacers();
 	static void DisablePitDroidShop();
 	static void DisablePartDegradation();
+	static void FixCourseSelection();
 };
