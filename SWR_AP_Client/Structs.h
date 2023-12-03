@@ -57,6 +57,17 @@ public:
 
 typedef char TrackUnlocks[4];
 
+struct ItemShopEntry
+{
+	char globalId;
+	char seriesId;
+	char requiredRaces;
+	char itemType;
+	int cost;
+	int modelId;
+	char* displayText;
+};
+
 struct RacerSaveData
 {
 public:

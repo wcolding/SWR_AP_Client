@@ -11,9 +11,8 @@ struct ItemInfo
 	ItemType type;
 	int param1;
 	int param2;
-	int modelID;
+	int modelId;
 };
-
 
 static std::map<int, ItemInfo> itemTable
 {
@@ -108,41 +107,41 @@ static std::map<int, ItemInfo> itemTable
 
 	// Misc
 	{ 65, ItemInfo("Pit Droid",                 ItemType::PitDroid, NULL,  NULL, 0x6D) },
-	{ 66, ItemInfo("Semi Pro Circuit Pass",     ItemType::CircuitPass, 1,  NULL, -1) },
-	{ 67, ItemInfo("Galactic Circuit Pass",     ItemType::CircuitPass, 2,  NULL, -1) },
-	{ 68, ItemInfo("Invitational Circuit Pass", ItemType::CircuitPass, 3,  NULL, -1) },
+	{ 66, ItemInfo("Semi Pro Circuit Pass",     ItemType::CircuitPass, 1,  NULL, 0x6F) },
+	{ 67, ItemInfo("Galactic Circuit Pass",     ItemType::CircuitPass, 2,  NULL, 0x6F) },
+	{ 68, ItemInfo("Invitational Circuit Pass", ItemType::CircuitPass, 3,  NULL, 0x6F) },
 	{ 69, ItemInfo("Progressive Circuit Pass",  ItemType::CircuitPass, -1, NULL, -1) },
 
 
 	// Money
-	{ 70, ItemInfo("100 Truguts",  ItemType::Money, 100,  NULL, -1) },
-	{ 71, ItemInfo("150 Truguts",  ItemType::Money, 150,  NULL, -1) },
-	{ 72, ItemInfo("200 Truguts",  ItemType::Money, 200,  NULL, -1) },
-	{ 73, ItemInfo("300 Truguts",  ItemType::Money, 300,  NULL, -1) },
-	{ 74, ItemInfo("450 Truguts",  ItemType::Money, 450,  NULL, -1) },
+	{ 70, ItemInfo("100 Truguts",  ItemType::Money, 100,  NULL, 0x6F) },
+	{ 71, ItemInfo("150 Truguts",  ItemType::Money, 150,  NULL, 0x6F) },
+	{ 72, ItemInfo("200 Truguts",  ItemType::Money, 200,  NULL, 0x6F) },
+	{ 73, ItemInfo("300 Truguts",  ItemType::Money, 300,  NULL, 0x6F) },
+	{ 74, ItemInfo("450 Truguts",  ItemType::Money, 450,  NULL, 0x6F) },
 
-	{ 75, ItemInfo("600 Truguts",  ItemType::Money, 600,  NULL, -1) },
-	{ 76, ItemInfo("700 Truguts",  ItemType::Money, 700,  NULL, -1) },
-	{ 77, ItemInfo("750 Truguts",  ItemType::Money, 750,  NULL, -1) },
-	{ 78, ItemInfo("800 Truguts",  ItemType::Money, 800,  NULL, -1) },
-	{ 79, ItemInfo("900 Truguts",  ItemType::Money, 900,  NULL, -1) },
+	{ 75, ItemInfo("600 Truguts",  ItemType::Money, 600,  NULL, 0x6F) },
+	{ 76, ItemInfo("700 Truguts",  ItemType::Money, 700,  NULL, 0x6F) },
+	{ 77, ItemInfo("750 Truguts",  ItemType::Money, 750,  NULL, 0x6F) },
+	{ 78, ItemInfo("800 Truguts",  ItemType::Money, 800,  NULL, 0x6F) },
+	{ 79, ItemInfo("900 Truguts",  ItemType::Money, 900,  NULL, 0x6F) },
 
-	{ 80, ItemInfo("1050 Truguts", ItemType::Money, 1050, NULL, -1) },
-	{ 81, ItemInfo("1200 Truguts", ItemType::Money, 1200, NULL, -1) },
-	{ 82, ItemInfo("1400 Truguts", ItemType::Money, 1400, NULL, -1) },
-	{ 83, ItemInfo("1500 Truguts", ItemType::Money, 1500, NULL, -1) },
-	{ 84, ItemInfo("1600 Truguts", ItemType::Money, 1600, NULL, -1) },
+	{ 80, ItemInfo("1050 Truguts", ItemType::Money, 1050, NULL, 0x6F) },
+	{ 81, ItemInfo("1200 Truguts", ItemType::Money, 1200, NULL, 0x6F) },
+	{ 82, ItemInfo("1400 Truguts", ItemType::Money, 1400, NULL, 0x6F) },
+	{ 83, ItemInfo("1500 Truguts", ItemType::Money, 1500, NULL, 0x6F) },
+	{ 84, ItemInfo("1600 Truguts", ItemType::Money, 1600, NULL, 0x6F) },
 
-	{ 85, ItemInfo("1750 Truguts", ItemType::Money, 1750, NULL, -1) },
-	{ 86, ItemInfo("1800 Truguts", ItemType::Money, 1800, NULL, -1) },
-	{ 87, ItemInfo("2000 Truguts", ItemType::Money, 2000, NULL, -1) },
-	{ 88, ItemInfo("2200 Truguts", ItemType::Money, 2200, NULL, -1) },
-	{ 89, ItemInfo("2400 Truguts", ItemType::Money, 2400, NULL, -1) },
+	{ 85, ItemInfo("1750 Truguts", ItemType::Money, 1750, NULL, 0x6F) },
+	{ 86, ItemInfo("1800 Truguts", ItemType::Money, 1800, NULL, 0x6F) },
+	{ 87, ItemInfo("2000 Truguts", ItemType::Money, 2000, NULL, 0x6F) },
+	{ 88, ItemInfo("2200 Truguts", ItemType::Money, 2200, NULL, 0x6F) },
+	{ 89, ItemInfo("2400 Truguts", ItemType::Money, 2400, NULL, 0x6F) },
 
-	{ 90, ItemInfo("3000 Truguts", ItemType::Money, 3000, NULL, -1) },
-	{ 91, ItemInfo("3300 Truguts", ItemType::Money, 3300, NULL, -1) },
-	{ 92, ItemInfo("4400 Truguts", ItemType::Money, 4400, NULL, -1) },
-	{ 93, ItemInfo("5500 Truguts", ItemType::Money, 4500, NULL, -1) },
+	{ 90, ItemInfo("3000 Truguts", ItemType::Money, 3000, NULL, 0x6F) },
+	{ 91, ItemInfo("3300 Truguts", ItemType::Money, 3300, NULL, 0x6F) },
+	{ 92, ItemInfo("4400 Truguts", ItemType::Money, 4400, NULL, 0x6F) },
+	{ 93, ItemInfo("5500 Truguts", ItemType::Money, 4500, NULL, 0x6F) },
 };
 
 

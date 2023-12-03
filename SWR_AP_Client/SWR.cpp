@@ -20,6 +20,9 @@ namespace SWRGame
 	bool doInitSave = false;
 	RacerSaveData* racerSaveData;
 
+	std::vector<ItemShopEntry*> wattoShopData;
+	std::vector<std::string> wattoShopItemNames;
+
 	void Update()
 	{
 		if (isSaveFileLoaded())
@@ -27,6 +30,7 @@ namespace SWRGame
 			if (doInitSave)
 			{
 				InitSaveData();
+				ScoutWattoShop();
 			}
 			else
 			{
@@ -344,6 +348,16 @@ namespace SWRGame
 		}
 	}
 
+	void ScoutWattoShop()
+	{
+		std::vector<int64_t> locations;
+
+		for (int i = 100; i < 135; i++)
+			locations.push_back(i + SWR_AP_BASE_ID);
+
+		AP_SendLocationScouts(locations, 0);
+	}
+
 	void ReceiveItem(int64_t itemID, bool notify)
 	{
 		int localID = (int)itemID - SWR_AP_BASE_ID;
@@ -379,6 +393,62 @@ namespace SWRGame
 	void SetLocationChecked(int64_t locID)
 	{
 
+	}
+
+	void UpdateProgressiveItemModels()
+	{
+		// todo
+	}
+
+	void RecvLocationInfo(std::vector<AP_NetworkItem> items)
+	{
+		Log("Received location info: %i items", items.size());
+
+		int curLocId;
+		int curItemId;
+
+		for (auto item : items)
+		{
+			curItemId = item.item - SWR_AP_BASE_ID;
+			curLocId = item.location - SWR_AP_BASE_ID;
+			if (wattoShopLocationToOffset.contains(curLocId))
+			{
+				ItemShopEntry* curEntry = wattoShopData[wattoShopLocationToOffset[curLocId]];
+				wattoShopItemNames.push_back(std::format("{} [{}]", item.itemName.c_str(), item.playerName.c_str()));
+				curEntry->displayText = (char*)wattoShopItemNames.back().c_str();
+
+				if (itemTable.contains(curItemId))
+				{
+					ItemInfo curItem = itemTable[curItemId];
+					if (curItem.modelId != -1)
+						curEntry->modelId = curItem.modelId;
+					else
+					{
+						// Item is progressive
+						int curPartValue;
+						int nextPartId;
+
+						switch (curItem.type)
+						{
+						case ItemType::PodPart:
+							curPartValue = (int)racerSaveData->parts[curItemId];
+							nextPartId = 7 + 5 * curItemId + curPartValue;
+							if (curPartValue == 5)
+								nextPartId--;
+							curEntry->modelId = itemTable[nextPartId].modelId;
+							break;
+						case ItemType::CircuitPass:
+							curEntry->modelId = 0x6F; // dewback for undiscovered model ids
+							break;
+						default:
+							break;
+						}
+					}
+				}
+				else
+					curEntry->modelId = 0x71; // Jabba for AP Items
+			}
+		}
 	}
 
 	void SetStartingRacers(int value)
@@ -435,7 +505,8 @@ namespace SWRGame
 
 		AP_SetItemClearCallback(&ResetSaveData);
 		AP_SetItemRecvCallback(&ReceiveItem);
-		AP_SetLocationCheckedCallback(&SetLocationChecked);
+		AP_SetLocationCheckedCallback(&SetLocationChecked); 
+		AP_SetLocationInfoCallback(&RecvLocationInfo);
 		AP_SetDeathLinkRecvCallback(&QueueDeath);
 
 		AP_RegisterSlotDataIntCallback("StartingRacers", &SetStartingRacers);
@@ -452,6 +523,10 @@ namespace SWRGame
 		baseAddress = (int)GetModuleHandleA("SWEP1RCR.EXE");
 
 		racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
+
+		for (int i = 0; i < 42; i++)
+			wattoShopData.push_back((ItemShopEntry*)(baseAddress + SHOP_DATA_START + sizeof(ItemShopEntry) * i));
+
 		APSetup();
 
 		Patches::FixCourseSelection();
