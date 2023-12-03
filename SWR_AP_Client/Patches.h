@@ -14,6 +14,7 @@ static class Patches
 private:
 	static void MakePageWritable(const void* addr);
 	static void WritePatch(int offset, const void* patchPtr, size_t len);
+	static void HookFunction(int injectOffset, const void* function, size_t trailingNOP = 0);
 public:
 	static void LimitAvailableRacers();
 	static void DisablePitDroidShop();

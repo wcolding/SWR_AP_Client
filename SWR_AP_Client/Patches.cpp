@@ -31,6 +31,22 @@ void Patches::WritePatch(int offset, const void* patchPtr, size_t len)
 	memcpy(funcPtr, patchPtr, len);
 }
 
+void Patches::HookFunction(int injectOffset, const void* function, size_t trailingNOP)
+{
+	size_t payloadSize = 5 + trailingNOP;
+	char payload[32];
+	int functionInt = (int)function;
+	int offset = SWRGame::baseAddress + injectOffset + 5;
+
+	memset(payload, 0x90, payloadSize); // fill with NOP
+	payload[0] = 0xE8; // call
+
+	void* functionPtr = (void*)(functionInt - offset);
+	memcpy(&payload[1], &functionPtr, 4);
+
+	WritePatch(injectOffset, &payload, payloadSize);
+}
+
 // Game hardcodes initially unlocked racers in a function before ORing them with the save file's unlocks
 // Overwrite the bitfield and change `or` to `mov` to explicitly set who is available
 void Patches::LimitAvailableRacers()
@@ -112,20 +128,7 @@ void Patches::FixCourseSelection()
 
 	WritePatch(ERROR_CURSOR_OPCODE, &forceSkipErrorCursor, 2);
 
-	char jmpDefaultToFirstCourse[7] = {
-		0xE8, 0x00, 0x00, 0x00, 0x00, // call 0
-		0x90,                         // nop
-		0x90,                         // nop
-	};
-
-	int defaultToFirstInt = (int)&DefaultToFirstCourse;
-	int offset = SWRGame::baseAddress + DEFAULT_FIRST_COURSE_INJECT + 5;
-
-	// Overwrite 0 with call offset
-	void* defaultToFirstPtr = (void*)(defaultToFirstInt-offset);
-	memcpy(&jmpDefaultToFirstCourse[1], &defaultToFirstPtr, 4);
-
-	WritePatch(DEFAULT_FIRST_COURSE_INJECT, &jmpDefaultToFirstCourse, 7);
+	HookFunction(DEFAULT_FIRST_COURSE_INJECT, &DefaultToFirstCourse, 2);
 }
 
 void __declspec(naked) SkipAcquiredItems()
@@ -149,17 +152,5 @@ void Patches::RewriteWattoShop()
 
 	// Don't show items marked as acquired
 	// We're using the flag 0x80 to mark an item
-	char jmpSkipAcquiredItems[6] = {
-		0xE8, 0x00, 0x00, 0x00, 0x00, // call 0
-		0x90,                         // nop
-	};
-
-	int skipAcquiredItemsInt = (int)&SkipAcquiredItems;
-	int offset = SWRGame::baseAddress + SKIP_ITEM_INJECT + 5;
-
-	// Overwrite 0 with call offset
-	void* skipAcquiredItemsPtr = (void*)(skipAcquiredItemsInt - offset);
-	memcpy(&jmpSkipAcquiredItems[1], &skipAcquiredItemsPtr, 4);
-
-	WritePatch(SKIP_ITEM_INJECT, &jmpSkipAcquiredItems, 6);
+	HookFunction(SKIP_ITEM_INJECT, &SkipAcquiredItems, 1);
 }
