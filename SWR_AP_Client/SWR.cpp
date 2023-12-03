@@ -18,6 +18,7 @@ namespace SWRGame
 	std::map<int, int> courseLayout;
 	DeathState deathState = DeathState::Alive;
 	bool doInitSave = false;
+	RacerSaveData* racerSaveData;
 
 	void Update()
 	{
@@ -143,7 +144,6 @@ namespace SWRGame
 
 	void ScanLocationChecks()
 	{
-		RacerSaveData* racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
 		if (racerSaveData == nullptr)
 			return;
 
@@ -223,7 +223,6 @@ namespace SWRGame
 
 	void InitSaveData()
 	{
-		RacerSaveData* racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
 		if (racerSaveData == nullptr)
 			return;
 
@@ -273,7 +272,6 @@ namespace SWRGame
 
 	void GivePart(int type, int part)
 	{
-		RacerSaveData* racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
 		if (racerSaveData == nullptr)
 			return;
 		
@@ -301,7 +299,6 @@ namespace SWRGame
 
 	void GivePitDroid()
 	{
-		RacerSaveData* racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
 		if (racerSaveData == nullptr)
 			return;
 
@@ -310,7 +307,6 @@ namespace SWRGame
 
 	void GiveCircuitPass(int type)
 	{
-		RacerSaveData* racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
 		if (racerSaveData == nullptr)
 			return;
 
@@ -332,7 +328,6 @@ namespace SWRGame
 
 	void GiveMoney(int amount)
 	{
-		RacerSaveData* racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
 		if (racerSaveData == nullptr)
 			return;
 
@@ -456,6 +451,7 @@ namespace SWRGame
 		Log("Star Wars Episode I Racer Archipelago Client started");
 		baseAddress = (int)GetModuleHandleA("SWEP1RCR.EXE");
 
+		racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
 		APSetup();
 
 		Patches::FixCourseSelection();
