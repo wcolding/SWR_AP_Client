@@ -10,6 +10,9 @@
 
 #include "APCpp/Archipelago.h"
 
+#define LOAD_PROFILE_FUNC 0x21850
+typedef void(__cdecl* _LoadProfile)(const char* profileName);
+
 namespace SWRGame
 {
 	int queuedDeaths;
@@ -21,6 +24,8 @@ namespace SWRGame
 
 	std::vector<ItemShopEntry*> wattoShopData;
 	std::vector<std::string> wattoShopItemNames;
+
+	_LoadProfile LoadProfile;
 
 	void Update()
 	{
@@ -526,6 +531,7 @@ namespace SWRGame
 		Log("Star Wars Episode I Racer Archipelago Client started");
 		baseAddress = (int)GetModuleHandleA("SWEP1RCR.EXE");
 
+		LoadProfile = (_LoadProfile)(baseAddress + LOAD_PROFILE_FUNC);
 		racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
 
 		for (int i = 0; i < 42; i++)
