@@ -32,6 +32,7 @@ namespace SWRGame
 
 	void ScoutWattoShop();
 
+	bool isConnectedToAP();
 	bool isSaveFileLoaded();
 	bool isPlayerInRace();
 	bool isPlayerKillable();

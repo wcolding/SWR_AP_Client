@@ -14,5 +14,5 @@ namespace SWRGame
     extern APServerInfo serverInfo;
     extern void Init();
     extern void Update();
-    extern void QueueDeath();
+    extern bool isConnectedToAP();
 }

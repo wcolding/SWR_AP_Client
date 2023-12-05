@@ -57,6 +57,11 @@ namespace SWRGame
 		va_end(args);
 	}
 
+	bool isConnectedToAP()
+	{
+		return AP_GetConnectionStatus() == AP_ConnectionStatus::Authenticated;
+	}
+
 	bool isSaveFileLoaded()
 	{
 		char* firstChar = (char*)(baseAddress + SAVE_DATA_OFFSET);

@@ -16,14 +16,12 @@ DWORD WINAPI ModThread(LPVOID hModule)
 
     SWRGame::Init();
 
-    while (true)
-    {
-        if (GetAsyncKeyState(VK_NUMPAD0) & 1)
-        {
-            SWRGame::QueueDeath();
-        }
+    while (!SWRGame::isConnectedToAP()) {}
 
+    while (SWRGame::isConnectedToAP())
+    {
         SWRGame::Update();
+        Sleep(50);
     }
 
     if (debugConsole)
