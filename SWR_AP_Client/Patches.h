@@ -21,4 +21,7 @@ public:
 	static void DisablePartDegradation();
 	static void FixCourseSelection();
 	static void RewriteWattoShop();
+
+	static void RedirectSaveFiles();
+	static void ResizeSaveFiles();
 };

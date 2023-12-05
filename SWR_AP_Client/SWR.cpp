@@ -531,10 +531,12 @@ namespace SWRGame
 		for (int i = 0; i < 42; i++)
 			wattoShopData.push_back((ItemShopEntry*)(baseAddress + SHOP_DATA_START + sizeof(ItemShopEntry) * i));
 
-		APSetup();
-
+		Patches::RedirectSaveFiles(); 
+		Patches::ResizeSaveFiles();
 		Patches::FixCourseSelection();
 		Patches::RewriteWattoShop();
+
+		APSetup();
 
 		queuedDeaths = 0;
 

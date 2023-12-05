@@ -16,6 +16,13 @@ using SWRGame::saveData;
 #define DEFAULT_FIRST_COURSE_INJECT 0x3B379
 #define SKIP_ITEM_INJECT 0x3E8EF
 
+#define SAVE_PATH_OFFSET 0xB4F6C
+#define EXPANDED_SAVE_FILE_SIZE 0x60
+#define FIRST_LOAD_FILE_OPCODE 0x218FF
+#define SECOND_LOAD_FILE_OPCODE 0x4E506
+#define FIRST_SAVE_FILE_OPCODE 0x4E536
+#define SECOND_SAVE_FILE_OPCODE 0x219E0
+
 void Patches::MakePageWritable(const void* addr)
 {
 	MEMORY_BASIC_INFORMATION mbi;
@@ -153,4 +160,29 @@ void Patches::RewriteWattoShop()
 	// Don't show items marked as acquired
 	// We're using the flag 0x80 to mark an item
 	HookFunction(SKIP_ITEM_INJECT, &SkipAcquiredItems, 1);
+}
+
+void Patches::RedirectSaveFiles()
+{
+	SWRGame::Log("Applying patch: Redirect Save Files");
+
+	const char* newDir = ".\\data\\APSave\\";
+	memcpy((void*)(baseAddress + SAVE_PATH_OFFSET), newDir, 14);
+}
+
+void Patches::ResizeSaveFiles()
+{
+	SWRGame::Log("Applying patch: Resize Save Files");
+	int dwordCount = EXPANDED_SAVE_FILE_SIZE / 4;
+
+	char loadNewCount[5] = {
+		0xB9, 0x00, 0x00, 0x00, 0x00
+	};
+
+	memcpy(&loadNewCount[1], &dwordCount, 4);
+
+	WritePatch(FIRST_LOAD_FILE_OPCODE, &loadNewCount, 5);
+	WritePatch(SECOND_LOAD_FILE_OPCODE, &loadNewCount, 5);
+	WritePatch(FIRST_SAVE_FILE_OPCODE, &loadNewCount, 5);
+	WritePatch(SECOND_SAVE_FILE_OPCODE, &loadNewCount, 5);
 }
