@@ -1,5 +1,4 @@
 #pragma once
-#pragma pack(1)
 
 #include <stdint.h>
 #include <vector>
@@ -17,6 +16,9 @@ struct CourseData
 	int slot;
 	bool completed;
 };
+
+#pragma pack(push)
+#pragma pack(1)
 
 typedef char PodParts[7];
 
@@ -93,6 +95,8 @@ public:
 private:
 	char pad;                  // 0x4F
 };
+
+#pragma pack(pop)
 
 struct APSaveData
 {
