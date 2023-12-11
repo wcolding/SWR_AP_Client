@@ -86,12 +86,12 @@ private:
 public:
 	RacerUnlocks racerUnlocks; // 0x34
 	int money;                 // 0x38
-private:
-	char unk_03[0x04];         // 0x3C
-public:
+	int cutscenesBitfield;     // 0x3C
 	char pitDroids;            // 0x40
 	PodParts parts;            // 0x41
 	PodParts partsHealth;      // 0x48
+private:
+	char pad;                  // 0x4F
 };
 
 struct APSaveData
