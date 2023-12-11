@@ -153,6 +153,27 @@ void __declspec(naked) SkipAcquiredItems()
 	}
 }
 
+   //Item shop
+   //3EB6D
+   //Gets cost of part for shop
+
+   //37862
+   //Sets part stat display in bottom left (can be invalid)
+   // call +5cf60
+   // cdecl (ecx, eax, edx) (?, podPartType, ?) (9, 2, 1)
+
+   //56017
+   //Gets model of item to replace (call can be jumped)
+
+   //3EF60
+   //->3EF80
+   //Gets name of item to replace
+
+
+// profiles
+// +17FF writes string on profile page?
+
+
 void Patches::RewriteWattoShop()
 {
 	SWRGame::Log("Applying patch: Rewrite Watto Shop");
@@ -165,6 +186,7 @@ void Patches::RewriteWattoShop()
 void Patches::RedirectSaveFiles()
 {
 	SWRGame::Log("Applying patch: Redirect Save Files");
+	// +2195F
 
 	const char* newDir = ".\\data\\APSave\\";
 	memcpy((void*)(baseAddress + SAVE_PATH_OFFSET), newDir, 14);
