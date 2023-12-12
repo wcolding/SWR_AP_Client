@@ -21,6 +21,7 @@ namespace SWRGame
 	DeathState deathState = DeathState::Alive;
 	bool doInitSave = false;
 	RacerSaveData* racerSaveData;
+	RacerSaveData** saveDataPtr;
 
 	std::vector<ItemShopEntry*> wattoShopData;
 	std::vector<std::string> wattoShopItemNames;
@@ -71,6 +72,17 @@ namespace SWRGame
 	{
 		char* firstChar = (char*)(baseAddress + SAVE_DATA_OFFSET);
 		return firstChar[0] != 0;
+	}
+
+	bool isSaveDataReady()
+	{
+		if (saveDataPtr == nullptr)
+			return false;
+		else
+		{
+			racerSaveData = *saveDataPtr;
+			return true;
+		}
 	}
 
 	bool isPlayerInRace()
@@ -157,7 +169,7 @@ namespace SWRGame
 
 	void ScanLocationChecks()
 	{
-		if (racerSaveData == nullptr)
+		if (!isSaveDataReady())
 			return;
 
 		// Race progress
@@ -229,14 +241,14 @@ namespace SWRGame
 	}
 
 
-	void CopySaveData(RacerSaveData* racerSaveData)
+	void CopySaveData(RacerSaveData* inGameSaveData)
 	{
-		memcpy(&saveData.racerSaveDataCopy, racerSaveData, sizeof(RacerSaveData));
+		memcpy(&saveData.racerSaveDataCopy, inGameSaveData, sizeof(RacerSaveData));
 	}
 
 	void InitSaveData()
 	{
-		if (racerSaveData == nullptr)
+		if (!isSaveDataReady())
 			return;
 
 		racerSaveData->racerUnlocks = RacerUnlocks::None;
@@ -285,7 +297,7 @@ namespace SWRGame
 
 	void GivePart(int type, int part)
 	{
-		if (racerSaveData == nullptr)
+		if (!isSaveDataReady())
 			return;
 		
 		char partVal = racerSaveData->parts[type];
@@ -312,7 +324,7 @@ namespace SWRGame
 
 	void GivePitDroid()
 	{
-		if (racerSaveData == nullptr)
+		if (!isSaveDataReady())
 			return;
 
 		racerSaveData->pitDroids++;
@@ -320,7 +332,7 @@ namespace SWRGame
 
 	void GiveCircuitPass(int type)
 	{
-		if (racerSaveData == nullptr)
+		if (!isSaveDataReady())
 			return;
 
 		if (type == -1)
@@ -341,7 +353,7 @@ namespace SWRGame
 
 	void GiveMoney(int amount)
 	{
-		if (racerSaveData == nullptr)
+		if (!isSaveDataReady())
 			return;
 
 		racerSaveData->money += amount;
@@ -532,7 +544,9 @@ namespace SWRGame
 		baseAddress = (int)GetModuleHandleA("SWEP1RCR.EXE");
 
 		LoadProfile = (_LoadProfile)(baseAddress + LOAD_PROFILE_FUNC);
-		racerSaveData = (RacerSaveData*)(baseAddress + SAVE_DATA_OFFSET);
+
+		saveDataPtr = (RacerSaveData**)(baseAddress + SAVE_DATA_PTR_OFFSET);
+		racerSaveData = nullptr;
 
 		for (int i = 0; i < 42; i++)
 			wattoShopData.push_back((ItemShopEntry*)(baseAddress + SHOP_DATA_START + sizeof(ItemShopEntry) * i));

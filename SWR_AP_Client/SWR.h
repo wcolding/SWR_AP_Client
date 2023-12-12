@@ -7,6 +7,7 @@
 #define POD_PARTS_OFFSET 0xA35AA1
 #define POD_DATA_PTR_OFFSET 0xA29C44
 #define SAVE_DATA_OFFSET 0xA35A60
+#define SAVE_DATA_PTR_OFFSET 0xA29BCC
 #define RACE_DATA_OFFSET 0xA29C20
 #define COURSE_MAPPINGS_OFFSET 0xC0018
 #define IS_PAUSED_OFFSET 0xD6B58
@@ -34,6 +35,7 @@ namespace SWRGame
 
 	bool isConnectedToAP();
 	bool isSaveFileLoaded();
+	bool isSaveDataReady();
 	bool isPlayerInRace();
 	bool isPlayerKillable();
 
