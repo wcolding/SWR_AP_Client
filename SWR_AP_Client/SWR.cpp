@@ -385,25 +385,25 @@ namespace SWRGame
 
 		if (itemTable.contains(localID))
 		{
-			ItemInfo* itemInfo = &itemTable[localID];
-			Log("Received item \'%s\'", itemInfo->name.c_str());
+			ItemInfo itemInfo = itemTable[localID];
+			Log("Received item \'%s\'", itemInfo.name.c_str());
 
-			switch (itemInfo->type)
+			switch (itemInfo.type)
 			{
 			case ItemType::PodPart:
-				GivePart(itemInfo->param1, itemInfo->param2);
+				GivePart(itemInfo.param1, itemInfo.param2);
 				break;
 			case ItemType::Racer:
-				GiveRacer(itemInfo->param1);
+				GiveRacer(itemInfo.param1);
 				break;
 			case ItemType::PitDroid:
 				GivePitDroid();
 				break;
 			case ItemType::CircuitPass:
-				GiveCircuitPass(itemInfo->param1);
+				GiveCircuitPass(itemInfo.param1);
 				break;
 			case ItemType::Money:
-				GiveMoney(itemInfo->param1);
+				GiveMoney(itemInfo.param1);
 				break;
 			default:
 				break;
