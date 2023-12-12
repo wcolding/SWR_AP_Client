@@ -1,6 +1,5 @@
 #include "APCallbacks.h"
 
-#include "Items.h"
 #include "Locations.h"
 #include "Patches.h"
 
@@ -25,31 +24,7 @@ namespace SWRGame
 		int localID = (int)itemID - SWR_AP_BASE_ID;
 
 		if (itemTable.contains(localID))
-		{
-			ItemInfo itemInfo = itemTable[localID];
-			Log("Received item \'%s\'", itemInfo.name.c_str());
-
-			switch (itemInfo.type)
-			{
-			case ItemType::PodPart:
-				GivePart(itemInfo.param1, itemInfo.param2);
-				break;
-			case ItemType::Racer:
-				GiveRacer(itemInfo.param1);
-				break;
-			case ItemType::PitDroid:
-				GivePitDroid();
-				break;
-			case ItemType::CircuitPass:
-				GiveCircuitPass(itemInfo.param1);
-				break;
-			case ItemType::Money:
-				GiveMoney(itemInfo.param1);
-				break;
-			default:
-				break;
-			}
-		}
+			itemQueue.push_back(itemTable[localID]);
 	}
 
 	void SetLocationChecked(int64_t locID)

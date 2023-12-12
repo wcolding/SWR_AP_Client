@@ -1,5 +1,6 @@
 #pragma once
 #include "Structs.h"
+#include "Items.h"
 #include "APCpp/Archipelago.h"
 
 #define COURSE_MAPPINGS_OFFSET 0xC0018
@@ -12,13 +13,7 @@ namespace SWRGame
 	extern std::vector<std::string> wattoShopItemNames;
 	extern int queuedDeaths;
 	extern RacePlacement requiredPlacement;
-
-	// Temporary, will implement item queue
-	extern void GivePart(int type, int part);
-	extern void GiveRacer(int racerID);
-	extern void GivePitDroid();
-	extern void GiveCircuitPass(int type);
-	extern void GiveMoney(int amount);
+	extern std::vector <ItemInfo> itemQueue;
 
 	void ResetSaveData();
 	void ReceiveItem(int64_t itemID, bool notify);

@@ -3,6 +3,7 @@
 #include "Enums.h"
 #include "Structs.h"
 #include "Patches.h"
+#include "Items.h"
 #include "APCpp/Archipelago.h"
 
 #define POD_PARTS_OFFSET 0xA35AA1
@@ -20,10 +21,11 @@ namespace SWRGame
 	void Log(const char* format, ...);
 	void ScanLocationChecks();
 
-	void QueueDeath();
 	void ProcessDeathQueue();
 	void KillPod();
 	void CheckPodKilled();
+
+	void ProcessItemQueue();
 
 	void Init();
 	void StartupSequenceLoop();
@@ -44,6 +46,7 @@ namespace SWRGame
 	RacePlacement requiredPlacement;
 
 	SWRGameState gamestate;
+	std::vector <ItemInfo> itemQueue;
 
 	// Callbacks
 	extern void ResetSaveData();

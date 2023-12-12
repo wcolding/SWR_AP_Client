@@ -1,6 +1,5 @@
 #include "SWR.h"
 #include "Locations.h"
-#include "Items.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -32,6 +31,7 @@ namespace SWRGame
 			CheckPodKilled();
 
 		ProcessDeathQueue();
+		ProcessItemQueue();
 
 		Sleep(50);
 	}
@@ -328,6 +328,37 @@ namespace SWRGame
 		racerSaveData->money += amount;
 	}
 
+	void ProcessItemQueue()
+	{
+		if (!itemQueue.empty() && isSaveDataReady())
+		{
+			ItemInfo itemInfo = itemQueue.front();
+			itemQueue.erase(itemQueue.begin());
+			Log("Received item \'%s\'", itemInfo.name.c_str());
+
+			switch (itemInfo.type)
+			{
+			case ItemType::PodPart:
+				GivePart(itemInfo.param1, itemInfo.param2);
+				break;
+			case ItemType::Racer:
+				GiveRacer(itemInfo.param1);
+				break;
+			case ItemType::PitDroid:
+				GivePitDroid();
+				break;
+			case ItemType::CircuitPass:
+				GiveCircuitPass(itemInfo.param1);
+				break;
+			case ItemType::Money:
+				GiveMoney(itemInfo.param1);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
 	void ScoutWattoShop()
 	{
 		std::vector<int64_t> locations;
@@ -385,7 +416,6 @@ namespace SWRGame
 
 	void StartupSequenceLoop()
 	{
-
 		if (gamestate == SWRGameState::Starting)
 		{
 			// Wait for AP to fully connect to the server
