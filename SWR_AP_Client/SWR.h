@@ -3,17 +3,16 @@
 #include "Enums.h"
 #include "Structs.h"
 #include "Patches.h"
+#include "APCpp/Archipelago.h"
 
 #define POD_PARTS_OFFSET 0xA35AA1
 #define POD_DATA_PTR_OFFSET 0xA29C44
 #define SAVE_DATA_OFFSET 0xA35A60
 #define SAVE_DATA_PTR_OFFSET 0xA29BCC
 #define RACE_DATA_OFFSET 0xA29C20
-#define COURSE_MAPPINGS_OFFSET 0xC0018
 #define IS_PAUSED_OFFSET 0xD6B58
 #define SHOP_DATA_START 0xC1CB8
 
-#define SWR_AP_BASE_ID 11380000
 #define RACERS_COUNT 22
 
 namespace SWRGame
@@ -42,7 +41,20 @@ namespace SWRGame
 	int baseAddress;
 	APServerInfo serverInfo;
 	APSaveData saveData;
+	RacePlacement requiredPlacement;
 
 	SWRGameState gamestate;
+
+	// Callbacks
+	extern void ResetSaveData();
+	extern void ReceiveItem(int64_t itemID, bool notify);
+	extern void SetLocationChecked(int64_t locID);
+	extern void RecvLocationInfo(std::vector<AP_NetworkItem> items);
+	extern void QueueDeath();
+
+	extern void SetStartingRacers(int value);
+	extern void SetDisablePartDegradation(int value);
+	extern void SetRequiredPlacement(int value);
+	extern void SetCourses(std::map<int, int> courseValues);
 }
 

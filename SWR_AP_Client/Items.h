@@ -5,6 +5,8 @@
 
 #include "Enums.h"
 
+#define SWR_AP_BASE_ID 11380000
+
 struct ItemInfo
 {
 	std::string name;

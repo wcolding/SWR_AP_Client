@@ -8,16 +8,12 @@
 #include <chrono>
 #include <map>
 
-#include "APCpp/Archipelago.h"
-
 #define LOAD_PROFILE_FUNC 0x21850
 typedef void(__cdecl* _LoadProfile)(const char* profileName);
 
 namespace SWRGame
 {
 	int queuedDeaths;
-	RacePlacement requiredPlacement;
-	std::map<int, int> courseLayout;
 	DeathState deathState = DeathState::Alive;
 	bool doInitSave = false;
 	RacerSaveData* racerSaveData; 
@@ -141,14 +137,6 @@ namespace SWRGame
 		}
 	}
 
-	void QueueDeath()
-	{
-		queuedDeaths++;
-
-		Log("Deathlink received! Queueing death");
-		Log("Queued deaths: %i", queuedDeaths);
-	}
-
 	void ScanLocationChecks()
 	{
 		if (!isSaveDataReady())
@@ -221,7 +209,6 @@ namespace SWRGame
 		if ((queuedDeaths > 0) && isPlayerKillable())
 			KillPod();
 	}
-
 
 	void CopySaveData(RacerSaveData* inGameSaveData)
 	{
@@ -341,16 +328,6 @@ namespace SWRGame
 		racerSaveData->money += amount;
 	}
 
-	void ResetSaveData()
-	{
-		CourseData* course;
-		for (int i = 0; i < saveData.completedCourses.size(); i++)
-		{
-			course = &saveData.completedCourses[i];
-			course->completed = false;
-		}
-	}
-
 	void ScoutWattoShop()
 	{
 		std::vector<int64_t> locations;
@@ -359,143 +336,6 @@ namespace SWRGame
 			locations.push_back(i + SWR_AP_BASE_ID);
 
 		AP_SendLocationScouts(locations, 0);
-	}
-
-	void ReceiveItem(int64_t itemID, bool notify)
-	{
-		int localID = (int)itemID - SWR_AP_BASE_ID;
-
-		if (itemTable.contains(localID))
-		{
-			ItemInfo itemInfo = itemTable[localID];
-			Log("Received item \'%s\'", itemInfo.name.c_str());
-
-			switch (itemInfo.type)
-			{
-			case ItemType::PodPart:
-				GivePart(itemInfo.param1, itemInfo.param2);
-				break;
-			case ItemType::Racer:
-				GiveRacer(itemInfo.param1);
-				break;
-			case ItemType::PitDroid:
-				GivePitDroid();
-				break;
-			case ItemType::CircuitPass:
-				GiveCircuitPass(itemInfo.param1);
-				break;
-			case ItemType::Money:
-				GiveMoney(itemInfo.param1);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-
-	void SetLocationChecked(int64_t locID)
-	{
-
-	}
-
-	void UpdateProgressiveItemModels()
-	{
-		// todo
-	}
-
-	void RecvLocationInfo(std::vector<AP_NetworkItem> items)
-	{
-		Log("Received location info: %i items", items.size());
-
-		int curLocId;
-		int curItemId;
-
-		for (auto item : items)
-		{
-			curItemId = item.item - SWR_AP_BASE_ID;
-			curLocId = item.location - SWR_AP_BASE_ID;
-			if (wattoShopLocationToOffset.contains(curLocId))
-			{
-				ItemShopEntry* curEntry = wattoShopData[wattoShopLocationToOffset[curLocId]];
-				wattoShopItemNames.push_back(std::format("{} [{}]", item.itemName.c_str(), item.playerName.c_str()));
-				curEntry->displayText = (char*)wattoShopItemNames.back().c_str();
-
-				if (itemTable.contains(curItemId))
-				{
-					ItemInfo curItem = itemTable[curItemId];
-					if (curItem.modelId != -1)
-						curEntry->modelId = curItem.modelId;
-					else
-					{
-						// Item is progressive
-						int curPartValue;
-						int nextPartId;
-
-						switch (curItem.type)
-						{
-						case ItemType::PodPart:
-							curPartValue = (int)racerSaveData->parts[curItemId];
-							nextPartId = 7 + 5 * curItemId + curPartValue;
-							if (curPartValue == 5)
-								nextPartId--;
-							curEntry->modelId = itemTable[nextPartId].modelId;
-							break;
-						case ItemType::CircuitPass:
-							curEntry->modelId = 0x6F; // dewback for undiscovered model ids
-							break;
-						default:
-							break;
-						}
-					}
-				}
-				else
-					curEntry->modelId = 0x71; // Jabba for AP Items
-			}
-		}
-	}
-
-	void SetStartingRacers(int value)
-	{
-		saveData.unlockedRacers = (RacerUnlocks)value;
-		Patches::LimitAvailableRacers();
-	}
-
-	void SetDisablePartDegradation(int value)
-	{
-		if (value)
-		{
-			Patches::DisablePartDegradation();
-			Patches::DisablePitDroidShop();
-		}
-	}
-
-	void SetRequiredPlacement(int value)
-	{
-		switch (value)
-		{
-		case 0:
-			requiredPlacement = RacePlacement::First;
-			break;
-		case 1:
-			requiredPlacement = RacePlacement::Second;
-			break;
-		case 2:
-			requiredPlacement = RacePlacement::Third;
-			break;
-		}
-		
-	}
-
-	void SetCourses(std::map<int, int> courseValues)
-	{
-		courseLayout = courseValues;
-
-		for (int i = 0; i < courseLayout.size(); i++)
-		{
-			memcpy((void*)(baseAddress + COURSE_MAPPINGS_OFFSET + 4 * i), &courseLayout[i], 4);
-		}
-		
-		Log("Courses set");
 	}
 
 	void APSetup()
