@@ -59,3 +59,12 @@ enum ItemType : int
 	CircuitPass = 3,
 	Money       = 4
 };
+
+enum SWRGameState : int
+{
+	Starting = 0,
+	AP_Authenticated = 1,
+	Save_Initialized = 2,
+	Ready = 3,
+	Closed = 4
+};

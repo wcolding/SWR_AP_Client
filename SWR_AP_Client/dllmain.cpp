@@ -16,9 +16,13 @@ DWORD WINAPI ModThread(LPVOID hModule)
 
     SWRGame::Init();
 
-    while (!SWRGame::isConnectedToAP()) {}
+    while (SWRGame::gamestate != SWRGameState::Ready) 
+    {
+        SWRGame::StartupSequenceLoop();
+        Sleep(50);
+    }
 
-    while (SWRGame::isConnectedToAP())
+    while (SWRGame::gamestate == SWRGameState::Ready)
     {
         SWRGame::Update();
         Sleep(50);

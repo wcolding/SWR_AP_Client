@@ -20,7 +20,7 @@ namespace SWRGame
 	std::map<int, int> courseLayout;
 	DeathState deathState = DeathState::Alive;
 	bool doInitSave = false;
-	RacerSaveData* racerSaveData;
+	RacerSaveData* racerSaveData; 
 	RacerSaveData** saveDataPtr;
 
 	std::vector<ItemShopEntry*> wattoShopData;
@@ -30,23 +30,10 @@ namespace SWRGame
 
 	void Update()
 	{
-		if (isSaveFileLoaded())
-		{
-			if (doInitSave)
-			{
-				InitSaveData();
-				ScoutWattoShop();
-			}
-			else
-			{
-				ScanLocationChecks();
-			}
-		}
+		ScanLocationChecks();
 
 		if (isPlayerInRace())
-		{
 			CheckPodKilled();
-		}
 
 		ProcessDeathQueue();
 
@@ -61,11 +48,6 @@ namespace SWRGame
 		va_start(args, format);
 		vprintf(newFormat.c_str(), args);
 		va_end(args);
-	}
-
-	bool isConnectedToAP()
-	{
-		return AP_GetConnectionStatus() == AP_ConnectionStatus::Authenticated;
 	}
 
 	bool isSaveFileLoaded()
@@ -542,24 +524,51 @@ namespace SWRGame
 	{
 		Log("Star Wars Episode I Racer Archipelago Client started");
 		baseAddress = (int)GetModuleHandleA("SWEP1RCR.EXE");
+		gamestate = SWRGameState::Starting;
 
 		LoadProfile = (_LoadProfile)(baseAddress + LOAD_PROFILE_FUNC);
 
 		saveDataPtr = (RacerSaveData**)(baseAddress + SAVE_DATA_PTR_OFFSET);
 		racerSaveData = nullptr;
 
+		queuedDeaths = 0;
+
 		for (int i = 0; i < 42; i++)
 			wattoShopData.push_back((ItemShopEntry*)(baseAddress + SHOP_DATA_START + sizeof(ItemShopEntry) * i));
 
 		Patches::RedirectSaveFiles(); 
-		Patches::ResizeSaveFiles();
 		Patches::FixCourseSelection();
 		Patches::RewriteWattoShop();
 
 		APSetup();
+	}
 
-		queuedDeaths = 0;
+	void StartupSequenceLoop()
+	{
 
-		doInitSave = true;
+		if (gamestate == SWRGameState::Starting)
+		{
+			// Wait for AP to fully connect to the server
+			if (AP_GetConnectionStatus() == AP_ConnectionStatus::Authenticated)
+				gamestate = SWRGameState::AP_Authenticated;
+		}
+
+		if (gamestate == SWRGameState::AP_Authenticated)
+		{
+			// Wait for game to load
+			if (isSaveDataReady())
+			{
+				InitSaveData();
+				gamestate = SWRGameState::Save_Initialized;
+			}
+		}
+
+		if (gamestate == SWRGameState::Save_Initialized)
+		{
+			// Scout locations, do any other things we want done before we start the update loop
+			ScoutWattoShop();
+
+			gamestate = SWRGameState::Ready;
+		}
 	}
 }

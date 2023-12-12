@@ -27,13 +27,13 @@ namespace SWRGame
 	void CheckPodKilled();
 
 	void Init();
+	void StartupSequenceLoop();
 	void Update();
 	void InitSaveData();
 	void CopySaveData(RacerSaveData* racerSaveData);
 
 	void ScoutWattoShop();
 
-	bool isConnectedToAP();
 	bool isSaveFileLoaded();
 	bool isSaveDataReady();
 	bool isPlayerInRace();
@@ -42,5 +42,7 @@ namespace SWRGame
 	int baseAddress;
 	APServerInfo serverInfo;
 	APSaveData saveData;
+
+	SWRGameState gamestate;
 }
 

@@ -12,7 +12,8 @@ namespace SWRGame
 {
     extern APSaveData saveData;
     extern APServerInfo serverInfo;
+    extern SWRGameState gamestate;
     extern void Init();
     extern void Update();
-    extern bool isConnectedToAP();
+    extern void StartupSequenceLoop();
 }
