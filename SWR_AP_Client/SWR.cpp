@@ -76,7 +76,7 @@ namespace SWRGame
 
 	bool isSaveDataReady()
 	{
-		if (saveDataPtr == nullptr)
+		if (*saveDataPtr == nullptr)
 			return false;
 		else
 		{
