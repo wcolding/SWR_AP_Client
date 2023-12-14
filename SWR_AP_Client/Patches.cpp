@@ -16,7 +16,6 @@ using SWRGame::saveData;
 #define DEFAULT_FIRST_COURSE_INJECT 0x3B379
 #define SKIP_ITEM_INJECT 0x3E8EF
 
-#define SAVE_PATH_OFFSET 0xB4F6C
 #define EXPANDED_SAVE_FILE_SIZE 0x60
 #define FIRST_LOAD_FILE_OPCODE 0x218FF
 #define SECOND_LOAD_FILE_OPCODE 0x4E506
@@ -186,10 +185,27 @@ void Patches::RewriteWattoShop()
 void Patches::RedirectSaveFiles()
 {
 	SWRGame::Log("Applying patch: Redirect Save Files");
-	// +2195F
+	
+	char loadNewDir[5] = {
+		0x68, 0x00, 0x00, 0x00, 0x00 // push 0
+	};
 
-	const char* newDir = ".\\data\\APSave\\";
-	memcpy((void*)(baseAddress + SAVE_PATH_OFFSET), newDir, 14);
+	void* dirPtr = &SWRGame::saveDirectory;
+	memcpy(&loadNewDir[1], &dirPtr, 4);
+
+	// This game is hardcoded to push the pointer of the default save path to the stack in several spots
+	std::vector<int> opcodeOffsets = {
+		0xC518,
+		0x21861,
+		0x2195F,
+		0x21A14,
+		0x21B9D,
+		0x21CBE,
+		0x21CD4
+	};
+
+	for (auto offset : opcodeOffsets)
+		WritePatch(offset, &loadNewDir, 5);
 }
 
 void Patches::ResizeSaveFiles()

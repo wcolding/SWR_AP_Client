@@ -407,10 +407,6 @@ namespace SWRGame
 		for (int i = 0; i < 42; i++)
 			wattoShopData.push_back((ItemShopEntry*)(baseAddress + SHOP_DATA_START + sizeof(ItemShopEntry) * i));
 
-		Patches::RedirectSaveFiles(); 
-		Patches::FixCourseSelection();
-		Patches::RewriteWattoShop();
-
 		APSetup();
 	}
 
@@ -420,7 +416,20 @@ namespace SWRGame
 		{
 			// Wait for AP to fully connect to the server
 			if (AP_GetConnectionStatus() == AP_ConnectionStatus::Authenticated)
+			{
 				gamestate = SWRGameState::AP_Authenticated;
+
+				//// Apply patches we don't need an AP callback for
+				Patches::FixCourseSelection();
+				Patches::RewriteWattoShop();
+
+				// Set save directory
+				AP_RoomInfo roomInfo;
+				AP_GetRoomInfo(&roomInfo);
+				std::string saveDirStr = R"(.\data\player\AP_)" + roomInfo.seed_name + R"(\)";
+				memcpy((void*) &saveDirectory, saveDirStr.c_str(), saveDirStr.size());
+				Patches::RedirectSaveFiles();
+			}
 		}
 
 		if (gamestate == SWRGameState::AP_Authenticated)

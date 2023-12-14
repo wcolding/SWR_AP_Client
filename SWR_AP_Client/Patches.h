@@ -7,6 +7,7 @@ namespace SWRGame
 	extern int baseAddress;
 	extern APSaveData saveData;
 	extern void Log(const char* format, ...);
+	extern char saveDirectory[64];
 }
 
 static class Patches

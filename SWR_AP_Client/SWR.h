@@ -45,6 +45,8 @@ namespace SWRGame
 	APSaveData saveData;
 	RacePlacement requiredPlacement;
 
+	char saveDirectory[64];
+
 	SWRGameState gamestate;
 	std::vector <ItemInfo> itemQueue;
 
