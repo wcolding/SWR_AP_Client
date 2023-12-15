@@ -8,20 +8,21 @@
 #include <map>
 
 #define LOAD_PROFILE_FUNC 0x21850
-typedef void(__cdecl* _LoadProfile)(const char* profileName);
+#define SAVE_PROFILE_FUNC 0x219D0
+typedef bool(__cdecl* _SaveLoadProfile)(const char* profileName);
 
 namespace SWRGame
 {
 	int queuedDeaths;
 	DeathState deathState = DeathState::Alive;
-	bool doInitSave = false;
 	RacerSaveData* racerSaveData; 
 	RacerSaveData** saveDataPtr;
 
 	std::vector<ItemShopEntry*> wattoShopData;
 	std::vector<std::string> wattoShopItemNames;
 
-	_LoadProfile LoadProfile;
+	_SaveLoadProfile LoadProfile;
+	_SaveLoadProfile SaveProfile;
 
 	void Update()
 	{
@@ -217,14 +218,32 @@ namespace SWRGame
 
 	void InitSaveData()
 	{
-		if (!isSaveDataReady())
-			return;
+		bool saveExists = LoadProfile(serverInfo.player);
 
-		racerSaveData->racerUnlocks = RacerUnlocks::None;
-		racerSaveData->trackUnlocks[0] = 1;
-		racerSaveData->trackUnlocks[1] = 0;
-		racerSaveData->trackUnlocks[2] = 0;
-		racerSaveData->trackUnlocks[3] = 0;
+		// Reset values of progressive/stackable items (except circuit pass)
+		// AP will send items on connect so we will recalculate from the base values
+		racerSaveData->money = 400;
+		racerSaveData->pitDroids = 1;
+		memset(&racerSaveData->parts, 0, 7);
+
+		if (!saveExists)
+		{
+			// Set actual initial data
+			// todo: figure out handling progressive circuit pass
+			memcpy(&racerSaveData->profileName, &serverInfo.player, 24);
+			racerSaveData->racerUnlocks = RacerUnlocks::None;
+			racerSaveData->trackUnlocks[0] = 1;
+			racerSaveData->trackUnlocks[1] = 0;
+			racerSaveData->trackUnlocks[2] = 0;
+			racerSaveData->trackUnlocks[3] = 0;
+			racerSaveData->cutscenesBitfield = 0xFFFFFFFF;
+			memset(&racerSaveData->partsHealth, 0xFF, 7);
+
+			// Saving once appears to write to the "live" save area of tgfd.dat
+			// Saving twice appears to make an actual .sav file
+			SaveProfile(serverInfo.player);
+			SaveProfile(serverInfo.player);
+		}
 
 		CopySaveData(racerSaveData);
 
@@ -260,7 +279,6 @@ namespace SWRGame
 				{27, false}
 		};
 
-		doInitSave = false;
 		Log("Save data initialized");
 	}
 
@@ -397,7 +415,8 @@ namespace SWRGame
 		baseAddress = (int)GetModuleHandleA("SWEP1RCR.EXE");
 		gamestate = SWRGameState::Starting;
 
-		LoadProfile = (_LoadProfile)(baseAddress + LOAD_PROFILE_FUNC);
+		LoadProfile = (_SaveLoadProfile)(baseAddress + LOAD_PROFILE_FUNC);
+		SaveProfile = (_SaveLoadProfile)(baseAddress + SAVE_PROFILE_FUNC);
 
 		saveDataPtr = (RacerSaveData**)(baseAddress + SAVE_DATA_PTR_OFFSET);
 		racerSaveData = nullptr;
