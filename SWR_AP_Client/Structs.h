@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <vector>
+#include <string>
 #include "Enums.h"
 
 struct APServerInfo
@@ -103,4 +104,10 @@ struct APSaveData
 	RacerUnlocks unlockedRacers;
 	std::vector<CourseData> completedCourses;
 	RacerSaveData racerSaveDataCopy;
+};
+
+struct NotifyMsg
+{
+	std::string msg;
+	float timeRemaining;
 };

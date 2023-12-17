@@ -50,6 +50,7 @@ namespace SWRGame
 
 	SWRGameState gamestate;
 	std::vector <ItemInfo> itemQueue;
+	std::vector <NotifyMsg> notifyQueue;
 
 	// Callbacks
 	extern void ResetSaveData();

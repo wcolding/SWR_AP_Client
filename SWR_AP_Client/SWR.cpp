@@ -27,9 +27,33 @@ namespace SWRGame
 
 	_WriteWhiteText WriteWhiteText;
 
+	std::chrono::steady_clock::time_point prevTime;
+
 	void OnDraw()
 	{
-		WriteWhiteText(5, 5, "testy westy");
+		auto curTime = std::chrono::steady_clock::now();
+
+		if (!notifyQueue.empty())
+		{
+			if (notifyQueue[0].timeRemaining <= 0)
+				notifyQueue.erase(notifyQueue.begin());
+			else
+			{
+				const std::chrono::duration<float> deltaTime = curTime - prevTime;
+				notifyQueue[0].timeRemaining -= deltaTime.count();
+				WriteWhiteText(5, 5, notifyQueue[0].msg.c_str());
+			}
+		}
+
+		prevTime = curTime;
+	}
+
+	void QueueNotifyMsg(std::string _msg)
+	{
+		NotifyMsg newMsg;
+		newMsg.msg = _msg;
+		newMsg.timeRemaining = 2.5;
+		notifyQueue.push_back(newMsg);
 	}
 
 	void Update()
@@ -361,6 +385,7 @@ namespace SWRGame
 			ItemInfo itemInfo = itemQueue.front();
 			itemQueue.erase(itemQueue.begin());
 			Log("Received item \'%s\'", itemInfo.name.c_str());
+			QueueNotifyMsg(itemInfo.name); // todo: store notify bool and use it here
 
 			switch (itemInfo.type)
 			{
