@@ -10,6 +10,7 @@
 #define LOAD_PROFILE_FUNC 0x21850
 #define SAVE_PROFILE_FUNC 0x219D0
 typedef bool(__cdecl* _SaveLoadProfile)(const char* profileName);
+typedef void(__cdecl* _WriteWhiteText)(int16_t xPos, int16_t yPos, const char* text);
 
 namespace SWRGame
 {
@@ -23,6 +24,13 @@ namespace SWRGame
 
 	_SaveLoadProfile LoadProfile;
 	_SaveLoadProfile SaveProfile;
+
+	_WriteWhiteText WriteWhiteText;
+
+	void OnDraw()
+	{
+		WriteWhiteText(5, 5, "testy westy");
+	}
 
 	void Update()
 	{
@@ -418,6 +426,8 @@ namespace SWRGame
 		LoadProfile = (_SaveLoadProfile)(baseAddress + LOAD_PROFILE_FUNC);
 		SaveProfile = (_SaveLoadProfile)(baseAddress + SAVE_PROFILE_FUNC);
 
+		WriteWhiteText = (_WriteWhiteText)(baseAddress + 0x50560);
+
 		saveDataPtr = (RacerSaveData**)(baseAddress + SAVE_DATA_PTR_OFFSET);
 		racerSaveData = nullptr;
 
@@ -439,6 +449,7 @@ namespace SWRGame
 				gamestate = SWRGameState::AP_Authenticated;
 
 				//// Apply patches we don't need an AP callback for
+				Patches::HookDraw();
 				Patches::FixCourseSelection();
 				Patches::RewriteWattoShop();
 

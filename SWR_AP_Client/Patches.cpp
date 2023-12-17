@@ -222,3 +222,21 @@ void Patches::ResizeSaveFiles()
 	WritePatch(FIRST_SAVE_FILE_OPCODE, &loadNewCount, 5);
 	WritePatch(SECOND_SAVE_FILE_OPCODE, &loadNewCount, 5);
 }
+
+typedef void(__cdecl* _RenderTexture)(int a, void* b);
+_RenderTexture OriginalRenderTexture;
+const DWORD oRenderTextureCallOffset = 0x8DD28;
+
+void __cdecl HookedRenderTexture(int a, void* b)
+{
+	__asm pushad;
+	SWRGame::OnDraw();
+	__asm popad;
+	OriginalRenderTexture(a, b);
+}
+
+void Patches::HookDraw()
+{
+	OriginalRenderTexture = (_RenderTexture)(SWRGame::baseAddress + 0x8DF30);
+	HookFunction(oRenderTextureCallOffset, &HookedRenderTexture, 0);
+}

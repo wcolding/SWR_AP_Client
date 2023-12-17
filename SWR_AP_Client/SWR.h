@@ -32,6 +32,7 @@ namespace SWRGame
 	void Update();
 	void InitSaveData();
 	void CopySaveData(RacerSaveData* racerSaveData);
+	void OnDraw();
 
 	void ScoutWattoShop();
 

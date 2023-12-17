@@ -8,6 +8,7 @@ namespace SWRGame
 	extern APSaveData saveData;
 	extern void Log(const char* format, ...);
 	extern char saveDirectory[64];
+	extern void OnDraw();
 }
 
 static class Patches
@@ -17,6 +18,7 @@ private:
 	static void WritePatch(int offset, const void* patchPtr, size_t len);
 	static void HookFunction(int injectOffset, const void* function, size_t trailingNOP = 0);
 public:
+	static void HookDraw();
 	static void LimitAvailableRacers();
 	static void DisablePitDroidShop();
 	static void DisablePartDegradation();
