@@ -382,10 +382,13 @@ namespace SWRGame
 	{
 		if (!itemQueue.empty() && isSaveDataReady())
 		{
-			ItemInfo itemInfo = itemQueue.front();
-			itemQueue.erase(itemQueue.begin());
+			QueuedItem item = itemQueue.front();
+			ItemInfo itemInfo = item.info;
 			Log("Received item \'%s\'", itemInfo.name.c_str());
-			QueueNotifyMsg(itemInfo.name); // todo: store notify bool and use it here
+			if (item.notify)
+				QueueNotifyMsg(itemInfo.name);
+
+			itemQueue.erase(itemQueue.begin());
 
 			switch (itemInfo.type)
 			{

@@ -24,7 +24,7 @@ namespace SWRGame
 		int localID = (int)itemID - SWR_AP_BASE_ID;
 
 		if (itemTable.contains(localID))
-			itemQueue.push_back(itemTable[localID]);
+			itemQueue.push_back({ itemTable[localID], notify });
 	}
 
 	void SetLocationChecked(int64_t locID)

@@ -49,7 +49,7 @@ namespace SWRGame
 	char saveDirectory[64];
 
 	SWRGameState gamestate;
-	std::vector <ItemInfo> itemQueue;
+	std::vector <QueuedItem> itemQueue;
 	std::vector <NotifyMsg> notifyQueue;
 
 	// Callbacks

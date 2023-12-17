@@ -16,6 +16,12 @@ struct ItemInfo
 	int modelId;
 };
 
+struct QueuedItem
+{
+	ItemInfo info;
+	bool notify;
+};
+
 static std::map<int, ItemInfo> itemTable
 {
 	// Pod parts
