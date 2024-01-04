@@ -14,12 +14,6 @@
 #define DEFAULT_FIRST_COURSE_INJECT 0x3B379
 #define SKIP_ITEM_INJECT 0x3E8EF
 
-#define EXPANDED_SAVE_FILE_SIZE 0x60
-#define FIRST_LOAD_FILE_OPCODE 0x218FF
-#define SECOND_LOAD_FILE_OPCODE 0x4E506
-#define FIRST_SAVE_FILE_OPCODE 0x4E536
-#define SECOND_SAVE_FILE_OPCODE 0x219E0
-
 void Patches::MakePageWritable(const void* addr)
 {
 	MEMORY_BASIC_INFORMATION mbi;
@@ -206,22 +200,41 @@ void Patches::RedirectSaveFiles()
 		WritePatch(offset, &loadNewDir, 5);
 }
 
-void Patches::ResizeSaveFiles()
+void MarkRaceCompletion()
 {
-	SWRGame::Log("Applying patch: Resize Save Files");
-	int dwordCount = EXPANDED_SAVE_FILE_SIZE / 4;
-
-	char loadNewCount[5] = {
-		0xB9, 0x00, 0x00, 0x00, 0x00
-	};
-
-	memcpy(&loadNewCount[1], &dwordCount, 4);
-
-	WritePatch(FIRST_LOAD_FILE_OPCODE, &loadNewCount, 5);
-	WritePatch(SECOND_LOAD_FILE_OPCODE, &loadNewCount, 5);
-	WritePatch(FIRST_SAVE_FILE_OPCODE, &loadNewCount, 5);
-	WritePatch(SECOND_SAVE_FILE_OPCODE, &loadNewCount, 5);
+	SWRGame::Log("Called MarkRaceCompletion function");
 }
+
+void __declspec(naked) MarkRaceCompletionAsm()
+{
+	__asm
+	{
+		pushad;
+		call MarkRaceCompletion;
+		popad;
+		ret;
+	}
+}
+
+void Patches::HookRaceRewards()
+{
+	// +3A35F 
+	// eax = circuit index
+	// esi = course index
+
+	// nop out +3A3BF (len=6)
+	// Overwrite money reward opcode with a call to our function
+
+	HookFunction(0x3A3BF, &MarkRaceCompletionAsm, 1);
+
+	// +3A3C8 compare?
+
+	// +3AA50
+	// cmp byte ptr[placement], 3
+	// hard-coded placement minimum?
+}
+
+// 8DF30 is render func
 
 typedef void(__cdecl* _RenderTexture)(int a, void* b);
 _RenderTexture OriginalRenderTexture;
