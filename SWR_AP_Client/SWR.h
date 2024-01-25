@@ -6,6 +6,8 @@
 #include "Items.h"
 #include "APCpp/Archipelago.h"
 
+#define CLIENT_VERSION { 0, 4, 4 }
+
 #define POD_PARTS_OFFSET 0xA35AA1
 #define POD_DATA_PTR_OFFSET 0xA29C44
 #define SAVE_DATA_OFFSET 0xA35A60

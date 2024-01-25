@@ -427,7 +427,7 @@ namespace SWRGame
 	{
 		AP_Init(serverInfo.server, "Star Wars Episode I Racer", serverInfo.player, serverInfo.pw);
 
-		AP_NetworkVersion version = { 0, 4, 3 };
+		AP_NetworkVersion version = CLIENT_VERSION;
 		AP_SetClientVersion(&version);
 		AP_SetDeathLinkSupported(true);
 
