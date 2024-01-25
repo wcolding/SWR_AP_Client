@@ -12,7 +12,6 @@ namespace SWRGame
 	extern std::vector<ItemShopEntry*> wattoShopData;
 	extern std::vector<std::string> wattoShopItemNames;
 	extern int queuedDeaths;
-	extern RacePlacement requiredPlacement;
 	extern std::vector <QueuedItem> itemQueue;
 
 	void ResetSaveData();
@@ -23,6 +22,5 @@ namespace SWRGame
 
 	void SetStartingRacers(int value);
 	void SetDisablePartDegradation(int value);
-	void SetRequiredPlacement(int value);
 	void SetCourses(std::map<int, int> courseValues);
 }

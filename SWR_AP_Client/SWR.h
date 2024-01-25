@@ -44,7 +44,6 @@ namespace SWRGame
 	int baseAddress;
 	APServerInfo serverInfo;
 	APSaveData saveData;
-	RacePlacement requiredPlacement;
 
 	char saveDirectory[64];
 
@@ -61,7 +60,5 @@ namespace SWRGame
 
 	extern void SetStartingRacers(int value);
 	extern void SetDisablePartDegradation(int value);
-	extern void SetRequiredPlacement(int value);
 	extern void SetCourses(std::map<int, int> courseValues);
 }
-

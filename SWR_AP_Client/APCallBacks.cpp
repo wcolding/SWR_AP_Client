@@ -112,23 +112,6 @@ namespace SWRGame
 		}
 	}
 
-	// todo: do this less stupidly
-	void SetRequiredPlacement(int value)
-	{
-		switch (value)
-		{
-		case 0:
-			requiredPlacement = RacePlacement::First;
-			break;
-		case 1:
-			requiredPlacement = RacePlacement::Second;
-			break;
-		case 2:
-			requiredPlacement = RacePlacement::Third;
-			break;
-		}
-	}
-
 	void SetCourses(std::map<int, int> courseValues)
 	{
 		courseLayout = courseValues;
