@@ -53,6 +53,8 @@ namespace SWRGame
 	std::vector <QueuedItem> itemQueue;
 	std::vector <NotifyMsg> notifyQueue;
 
+	void __fastcall MarkRaceCompletion(int circuit, int course);
+
 	// Callbacks
 	extern void ResetSaveData();
 	extern void ReceiveItem(int64_t itemID, bool notify);

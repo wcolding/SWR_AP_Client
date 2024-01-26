@@ -170,43 +170,20 @@ namespace SWRGame
 		}
 	}
 
+	void __fastcall MarkRaceCompletion(int circuit, int course)
+	{
+		int locationOffset = 145 + circuit * 7 + course;
+		std::string locationName = locationTable[locationOffset];
+		Log("Location checked: %s", locationName.c_str());
+		AP_SendItem(locationOffset + SWR_AP_BASE_ID);
+	}
+
 	void ScanLocationChecks()
 	{
 		if (!isSaveDataReady())
 			return;
 
-		// Race progress
-		if (requiredPlacement == RacePlacement::Fourth)
-		{
-			// Check unlocked courses
-
-		}
-		else
-		{
-			// Check placement flags
-			int flag;
-			CourseData* course;
-			for (int i = 0; i < saveData.completedCourses.size(); i++)
-			{
-				course = &saveData.completedCourses[i];
-				if (course->completed)
-					continue;
-
-				flag = racerSaveData->racePlacements >> (course->slot * 2);
-				flag &= 0x03;
-
-				if (flag >= (int)requiredPlacement)
-				{
-					course->completed = true;
-
-					// Notify of location check
-					int locID = courseSlotToId[course->slot];
-					Log("Location checked: %s", locationTable[locID].c_str());
-					locID += SWR_AP_BASE_ID;
-					AP_SendItem(locID);
-				}
-			}
-		}
+		
 
 		// Racer Unlock Checks
 		if (racerSaveData->racerUnlocks != saveData.racerSaveDataCopy.racerUnlocks)
@@ -439,7 +416,6 @@ namespace SWRGame
 
 		AP_RegisterSlotDataIntCallback("StartingRacers", &SetStartingRacers);
 		AP_RegisterSlotDataIntCallback("DisablePartDegradation", &SetDisablePartDegradation);
-		AP_RegisterSlotDataIntCallback("RequiredPlacement", &SetRequiredPlacement);
 		AP_RegisterSlotDataMapIntIntCallback("Courses", &SetCourses);
 
 		AP_Start();
@@ -479,7 +455,8 @@ namespace SWRGame
 				//// Apply patches we don't need an AP callback for
 				Patches::HookDraw();
 				Patches::FixCourseSelection();
-				Patches::RewriteWattoShop();
+				Patches::RewriteWattoShop(); 
+				Patches::HookRaceRewards();
 
 				// Set save directory
 				AP_RoomInfo roomInfo;

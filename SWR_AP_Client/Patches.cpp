@@ -200,17 +200,15 @@ void Patches::RedirectSaveFiles()
 		WritePatch(offset, &loadNewDir, 5);
 }
 
-void MarkRaceCompletion()
+void __declspec(naked) MarkRaceCompletionWrapper()
 {
-	SWRGame::Log("Called MarkRaceCompletion function");
-}
-
-void __declspec(naked) MarkRaceCompletionAsm()
-{
+	// eax = circuit index
+	// edx = course index
 	__asm
 	{
 		pushad;
-		call MarkRaceCompletion;
+		mov ecx, eax; // __fastcall reads from ecx
+		call SWRGame::MarkRaceCompletion;
 		popad;
 		ret;
 	}
@@ -218,20 +216,25 @@ void __declspec(naked) MarkRaceCompletionAsm()
 
 void Patches::HookRaceRewards()
 {
-	// +3A35F 
-	// eax = circuit index
-	// esi = course index
+	SWRGame::Log("Applying patch: Hook Race Rewards");
+	
+	HookFunction(0x3A363, &MarkRaceCompletionWrapper, 3);
 
-	// nop out +3A3BF (len=6)
-	// Overwrite money reward opcode with a call to our function
+	// Our hook hijacks the same args as this call, so we'll overwrite it and rewrite it 8 bytes later
+	char pushedOriginalCall[8] = {
+		0xE8, 0xB0, 0x66, 0x00, 0x00, // call SWEP1RCR.EXE+40A20
+		0x83, 0xC4, 0x08              // add esp, 08
+	};
 
-	HookFunction(0x3A3BF, &MarkRaceCompletionAsm, 1);
+	WritePatch(0x3A36B, &pushedOriginalCall, 8);
 
-	// +3A3C8 compare?
+	// Force reward to be from "Fair" payout pool
+	char giveFairReward[7] = {
+		0xB9, 0x01, 0x00, 0x00, 0x00, // mov ecx, 1
+		0x90, 0x90                    // nop
+	};
 
-	// +3AA50
-	// cmp byte ptr[placement], 3
-	// hard-coded placement minimum?
+	WritePatch(0x3A373, &giveFairReward, 7);
 }
 
 // 8DF30 is render func

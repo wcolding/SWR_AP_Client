@@ -9,6 +9,7 @@ namespace SWRGame
 	extern void Log(const char* format, ...);
 	extern char saveDirectory[64];
 	extern void OnDraw();
+	extern void __fastcall MarkRaceCompletion(int circuit, int course);
 }
 
 static class Patches
