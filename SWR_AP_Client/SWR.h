@@ -54,6 +54,7 @@ namespace SWRGame
 	std::vector <NotifyMsg> notifyQueue;
 
 	void __fastcall MarkRaceCompletion(int circuit, int course);
+	void __fastcall MarkShopPurchase(int entryOffset);
 
 	// Callbacks
 	extern void ResetSaveData();

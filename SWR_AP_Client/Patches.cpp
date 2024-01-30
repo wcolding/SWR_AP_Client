@@ -151,26 +151,18 @@ void __declspec(naked) SkipAcquiredItems()
 	}
 }
 
-   //Item shop
-   //3EB6D
-   //Gets cost of part for shop
-
-   //37862
-   //Sets part stat display in bottom left (can be invalid)
-   // call +5cf60
-   // cdecl (ecx, eax, edx) (?, podPartType, ?) (9, 2, 1)
-
-   //56017
-   //Gets model of item to replace (call can be jumped)
-
-   //3EF60
-   //->3EF80
-   //Gets name of item to replace
-
-
-// profiles
-// +17FF writes string on profile page?
-
+void __declspec(naked) MarkShopPurchaseWrapper()
+{
+	// eax table offset
+	__asm
+	{
+		pushad;
+		mov ecx, eax; // __fastcall reads from ecx
+		call SWRGame::MarkShopPurchase;
+		popad;
+		ret;
+	}
+}
 
 void Patches::RewriteWattoShop()
 {
@@ -179,6 +171,39 @@ void Patches::RewriteWattoShop()
 	// Don't show items marked as acquired
 	// We're using the flag 0x80 to mark an item
 	HookFunction(SKIP_ITEM_INJECT, &SkipAcquiredItems, 1);
+
+	// Write part
+	// +40914
+	// can NOP
+	// eax has the offset in the table
+	//NOP(0x40914, 6);
+	HookFunction(0x40914, &MarkShopPurchaseWrapper, 1);
+
+	// Sets trade cost
+	// +3EBC1
+	// mov 0 works
+	char disableTradeValue[13] = {
+		0xC7, 0x05, 0x5C, 0x93, 0xE9, 0x00, 0x00, 0x00, 0x00, 0x00, // mov [SWEP1RCR.EXE+A9935C],0
+		0x90, 0x90, 0x90                                            // NOP
+	};
+
+	WritePatch(0x3EBC1, &disableTradeValue, 13);
+
+	//Item shop
+	//3EB6D
+	//Gets cost of part for shop
+
+	//37862
+	//Sets part stat display in bottom left (can be invalid)
+	// call +5cf60
+	// cdecl (ecx, eax, edx) (?, podPartType, ?) (9, 2, 1)
+
+	//56017
+	//Gets model of item to replace (call can be jumped)
+
+	//3EF60
+	//->3EF80
+	//Gets name of item to replace
 }
 
 void Patches::RedirectSaveFiles()
@@ -245,6 +270,7 @@ void Patches::HookRaceRewards()
 }
 
 // 8DF30 is render func
+// +17FF writes string on profile page?
 
 typedef void(__cdecl* _RenderTexture)(int a, void* b);
 _RenderTexture OriginalRenderTexture;

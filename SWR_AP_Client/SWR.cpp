@@ -178,6 +178,20 @@ namespace SWRGame
 		AP_SendItem(locationOffset + SWR_AP_BASE_ID);
 	}
 
+	void __fastcall MarkShopPurchase(int entryOffset)
+	{
+		int tableOffset = entryOffset / 0x10;
+
+		for (auto pair : wattoShopLocationToOffset)
+		{
+			if (pair.second == tableOffset)
+			{
+				Log("Location checked: %s", locationTable[pair.first].c_str());
+				AP_SendItem(pair.first + SWR_AP_BASE_ID);
+			}
+		}
+	}
+
 	void ScanLocationChecks()
 	{
 		if (!isSaveDataReady())
