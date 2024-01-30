@@ -45,6 +45,13 @@ void Patches::HookFunction(int injectOffset, const void* function, size_t traili
 	WritePatch(injectOffset, &payload, payloadSize);
 }
 
+void Patches::NOP(int offset, size_t len)
+{
+	void* funcPtr = (void*)(SWRGame::baseAddress + offset);
+	MakePageWritable(funcPtr);
+	memset(funcPtr, 0x90, len);
+}
+
 // Game hardcodes initially unlocked racers in a function before ORing them with the save file's unlocks
 // Overwrite the bitfield and change `or` to `mov` to explicitly set who is available
 void Patches::LimitAvailableRacers()
