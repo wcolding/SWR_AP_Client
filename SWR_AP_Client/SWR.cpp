@@ -187,6 +187,7 @@ namespace SWRGame
 			if (pair.second == tableOffset)
 			{
 				Log("Location checked: %s", locationTable[pair.first].c_str());
+				wattoShopData[tableOffset]->requiredRaces |= 0x80; // mark as completed
 				AP_SendItem(pair.first + SWR_AP_BASE_ID);
 			}
 		}
@@ -452,7 +453,12 @@ namespace SWRGame
 		queuedDeaths = 0;
 
 		for (int i = 0; i < 42; i++)
-			wattoShopData.push_back((ItemShopEntry*)(baseAddress + SHOP_DATA_START + sizeof(ItemShopEntry) * i));
+		{
+			ItemShopEntry* nextItem = (ItemShopEntry*)(baseAddress + SHOP_DATA_START + sizeof(ItemShopEntry) * i);
+			if (i % 6 == 0)
+				nextItem->requiredRaces |= 0x80; // mark base items so the shop doesn't display them
+			wattoShopData.push_back(nextItem);
+		}
 
 		APSetup();
 	}
