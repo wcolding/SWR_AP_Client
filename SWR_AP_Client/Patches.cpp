@@ -164,6 +164,11 @@ void __declspec(naked) MarkShopPurchaseWrapper()
 	}
 }
 
+const char* tradeInName = "";
+
+// models
+// 0x62 items
+// 0x8E trade ins
 void Patches::RewriteWattoShop()
 {
 	SWRGame::Log("Applying patch: Rewrite Watto Shop");
@@ -178,6 +183,33 @@ void Patches::RewriteWattoShop()
 	// eax has the offset in the table
 	//NOP(0x40914, 6);
 	HookFunction(0x40914, &MarkShopPurchaseWrapper, 1);
+
+	// Hide models for trade in items
+	// 3E9D6 move model id into eax
+	// value of 0x49 is invalid?
+	// result is an invisible object
+	char hideTradeInModels[6] = {
+		0xB8, 0x49, 0x00, 0x00, 0x00, // mov eax, 0x49
+		0x90                          // nop    
+	};
+
+	WritePatch(0x3E9D6, &hideTradeInModels, 6);
+
+	// 3EC10 draws purchase window elements
+	// Disable rendering of unnecessary info
+	NOP(0x3F029, 5); // Health bar of trade-in item
+	NOP(0x3F0DF, 5); // "Trade" string 
+	NOP(0x3F11D, 5); // "Cost" string 
+	NOP(0x3F170, 5); // "Trade" value
+	NOP(0x3F1CC, 5); // "Cost" value
+	
+	// Disable swapping models on purchase
+	NOP(0x4091A, 5);
+
+	// Copies entry from replacement data to shop data
+	//NOP(0x4087E, 2);
+	NOP(0x40891, 2);
+	//NOP(0x408AB, 2);
 
 	// Sets trade cost
 	// +3EBC1

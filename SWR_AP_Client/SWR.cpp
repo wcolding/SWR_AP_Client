@@ -170,6 +170,23 @@ namespace SWRGame
 		}
 	}
 
+	template<typename T>
+	T* GetArrayEntry(void* array, int index)
+	{
+		return (T*)((int)array + sizeof(T) * index);
+	}
+
+	template<typename T>
+	void RemoveElementFromArray(void* array, int index, size_t arrayLength)
+	{
+		for (int i = index; i < arrayLength - 1; i++)
+		{
+			T* curElement = (T*)((int)array + sizeof(T) * i);
+			T* nextElement = (T*)((int)array + sizeof(T) * (i + 1));
+			*curElement = *nextElement;
+		}
+	}
+
 	void __fastcall MarkRaceCompletion(int circuit, int course)
 	{
 		int locationOffset = 145 + circuit * 7 + course;
@@ -189,6 +206,25 @@ namespace SWRGame
 				Log("Location checked: %s", locationTable[pair.first].c_str());
 				wattoShopData[tableOffset]->requiredRaces |= 0x80; // mark as completed
 				AP_SendItem(pair.first + SWR_AP_BASE_ID);
+				
+				int* removedIndex = (int*)(baseAddress + 0xA295D0);
+				size_t* selectionCount = (size_t*)(baseAddress + 0xA295CC);
+
+				void* shopInvModels = (void*)(baseAddress + 0xA29A88);
+
+				// Hide model
+				MeshData*** removedMeshPtr = (MeshData***)((int)shopInvModels + 4 * *removedIndex);
+				MeshData* removedMesh = **removedMeshPtr;
+				removedMesh->visible = false;
+
+				RemoveElementFromArray<int>(shopInvModels, *removedIndex, *selectionCount);
+
+				void* shopInvData = (void*)(baseAddress + 0xA2A6C0);
+				RemoveElementFromArray<ShopInventoryEntry>(shopInvData, *removedIndex, *selectionCount);
+
+				--*selectionCount;
+				if (*removedIndex >= *selectionCount)
+					--*removedIndex;
 			}
 		}
 	}
