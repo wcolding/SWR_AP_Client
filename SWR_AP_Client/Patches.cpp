@@ -164,7 +164,7 @@ void __declspec(naked) MarkShopPurchaseWrapper()
 	}
 }
 
-const char* tradeInName = "";
+const char* shopPurchaseTitle = "  BUY";
 
 // models
 // 0x62 items
@@ -196,7 +196,23 @@ void Patches::RewriteWattoShop()
 	WritePatch(0x3E9D6, &hideTradeInModels, 6);
 
 	// 3EC10 draws purchase window elements
+	// Change title of right window
+	char newShopPurchaseTitle[5] = {
+		0x68, 0x00, 0x00, 0x00, 0x00 // push 0
+	};
+
+	memcpy(&newShopPurchaseTitle[1], &shopPurchaseTitle, 4);
+	WritePatch(0x3EEB7, &newShopPurchaseTitle, 5);
+
+	// Center title
+	char adjustPurchaseTitleXPos[5] = {
+		0x68, 0xC6, 0x00, 0x00, 0x00 // push 0xC6
+	};
+
+	WritePatch(0x3EED1, &adjustPurchaseTitleXPos, 5);
+
 	// Disable rendering of unnecessary info
+	NOP(0x3EFBA, 5); // Name of trade-in item
 	NOP(0x3F029, 5); // Health bar of trade-in item
 	NOP(0x3F0DF, 5); // "Trade" string 
 	NOP(0x3F11D, 5); // "Cost" string 
@@ -206,10 +222,8 @@ void Patches::RewriteWattoShop()
 	// Disable swapping models on purchase
 	NOP(0x4091A, 5);
 
-	// Copies entry from replacement data to shop data
-	//NOP(0x4087E, 2);
-	NOP(0x40891, 2);
-	//NOP(0x408AB, 2);
+	// Disable copy entry from replacement data to shop data
+	NOP(0x40891, 2); // obsolete?
 
 	// Sets trade cost
 	// +3EBC1
