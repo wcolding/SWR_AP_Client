@@ -283,6 +283,11 @@ void Patches::HookDroidShop()
 	HookFunction(0x37B88, &MarkPitDroidPurchaseWrapper, 0);
 }
 
+void Patches::DisableJunkyard()
+{
+	NOP(0x36A2C, 9);
+}
+
 void Patches::RedirectSaveFiles()
 {
 	SWRGame::Log("Applying patch: Redirect Save Files");

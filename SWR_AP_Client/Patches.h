@@ -30,6 +30,7 @@ public:
 	static void FixCourseSelection();
 	static void RewriteWattoShop();
 	static void HookDroidShop();
+	static void DisableJunkyard();
 	static void HookRaceRewards();
 
 	static void RedirectSaveFiles();
