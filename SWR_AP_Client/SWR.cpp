@@ -229,6 +229,17 @@ namespace SWRGame
 		}
 	}
 
+	void __fastcall MarkPitDroidPurchase() 
+	{
+		if (pitDroidChecksCompleted >= 4)
+			return;
+
+		int locationOffset = 141 + pitDroidChecksCompleted;
+		std::string locationName = locationTable[locationOffset];
+		Log("Location checked: %s", locationName.c_str());
+		AP_SendItem(locationOffset + SWR_AP_BASE_ID);
+		pitDroidChecksCompleted++;
+	}
 	void ScanLocationChecks()
 	{
 		if (!isSaveDataReady())

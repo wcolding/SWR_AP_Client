@@ -110,6 +110,8 @@ namespace SWRGame
 			Patches::DisablePartDegradation();
 			Patches::DisablePitDroidShop();
 		}
+		else
+			Patches::HookDroidShop();
 	}
 
 	void SetCourses(std::map<int, int> courseValues)

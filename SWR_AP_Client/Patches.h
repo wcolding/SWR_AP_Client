@@ -11,6 +11,8 @@ namespace SWRGame
 	extern void OnDraw();
 	extern void __fastcall MarkRaceCompletion(int circuit, int course);
 	extern void __fastcall MarkShopPurchase(int entryOffset);
+	extern void __fastcall MarkPitDroidPurchase();
+	extern int pitDroidChecksCompleted;
 }
 
 static class Patches
@@ -27,6 +29,7 @@ public:
 	static void DisablePartDegradation();
 	static void FixCourseSelection();
 	static void RewriteWattoShop();
+	static void HookDroidShop();
 	static void HookRaceRewards();
 
 	static void RedirectSaveFiles();

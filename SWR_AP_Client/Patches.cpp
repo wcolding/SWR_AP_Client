@@ -252,6 +252,37 @@ void Patches::RewriteWattoShop()
 	//Gets name of item to replace
 }
 
+void __declspec(naked) MarkPitDroidPurchaseWrapper()
+{
+	__asm
+	{
+		pushad;
+		call SWRGame::MarkPitDroidPurchase;
+		popad;
+		ret;
+	}
+}
+
+void Patches::HookDroidShop()
+{
+	SWRGame::Log("Applying patch: Hook Droid Shop");
+	std::vector<int> offsets = {
+		0x58DDE,
+		0x58E09,
+		0x59815,
+		0x598DB,
+		0x3771A,
+		0x36A37
+	};
+
+	void* redirect = &SWRGame::pitDroidChecksCompleted;
+
+	for (auto offset : offsets)
+		WritePatch(offset, &redirect, 4);
+
+	HookFunction(0x37B88, &MarkPitDroidPurchaseWrapper, 0);
+}
+
 void Patches::RedirectSaveFiles()
 {
 	SWRGame::Log("Applying patch: Redirect Save Files");

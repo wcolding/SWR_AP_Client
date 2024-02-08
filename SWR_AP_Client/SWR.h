@@ -53,8 +53,11 @@ namespace SWRGame
 	std::vector <QueuedItem> itemQueue;
 	std::vector <NotifyMsg> notifyQueue;
 
+	int pitDroidChecksCompleted = 1;
+
 	void __fastcall MarkRaceCompletion(int circuit, int course);
 	void __fastcall MarkShopPurchase(int entryOffset);
+	void __fastcall MarkPitDroidPurchase();
 
 	// Callbacks
 	extern void ResetSaveData();
