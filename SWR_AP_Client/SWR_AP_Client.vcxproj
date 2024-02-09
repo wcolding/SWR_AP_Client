@@ -64,7 +64,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>$(ProjectDir)external\APCpp\build_debug\lib\APCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)external\APCpp\build_debug\APCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -84,7 +84,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>$(ProjectDir)external\APCpp\build\lib\APCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>APCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\external\APCpp\build\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(TargetPath)" "$(SolutionDir)dist\$(ProjectName).asi*" /f /y &amp;&amp; xcopy "$(ProjectDir)external\APCpp\build\bin\APCpp.dll" "$(SolutionDir)dist\APCpp.dll*" /f /y</Command>

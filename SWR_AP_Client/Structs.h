@@ -60,6 +60,21 @@ public:
 
 typedef char TrackUnlocks[4];
 
+struct Vector3
+{
+	float x;
+	float y;
+	float z;
+
+	Vector3& operator=(const Vector3& other)
+	{
+		this->x = other.x;
+		this->y = other.y;
+		this->z = other.z;
+		return *this;
+	}
+};
+
 struct ItemShopEntry
 {
 	char globalId;
@@ -69,6 +84,39 @@ struct ItemShopEntry
 	int cost;
 	int modelId;
 	char* displayText;
+};
+
+struct ShopInventoryEntry
+{
+public:
+	char partId;
+	char partHealth;
+private:
+	short unk_00;
+public:
+	Vector3 position;
+	Vector3 prevPosition;
+private:
+	Vector3 positionCopy;
+public:
+	float rotation;
+	float swing;
+private:
+	char unk_01[8];
+};
+
+// Extremely incomplete
+// Static and Skeletal meshes have some different fields
+struct MeshData
+{
+private:
+	char unk_00[0x14];
+public:
+	bool visible; // 0x14
+private:
+	char unk_01[0x2B];
+public:
+	Vector3 position;
 };
 
 struct RacerSaveData

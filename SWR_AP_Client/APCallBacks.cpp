@@ -110,23 +110,8 @@ namespace SWRGame
 			Patches::DisablePartDegradation();
 			Patches::DisablePitDroidShop();
 		}
-	}
-
-	// todo: do this less stupidly
-	void SetRequiredPlacement(int value)
-	{
-		switch (value)
-		{
-		case 0:
-			requiredPlacement = RacePlacement::First;
-			break;
-		case 1:
-			requiredPlacement = RacePlacement::Second;
-			break;
-		case 2:
-			requiredPlacement = RacePlacement::Third;
-			break;
-		}
+		else
+			Patches::HookDroidShop();
 	}
 
 	void SetCourses(std::map<int, int> courseValues)

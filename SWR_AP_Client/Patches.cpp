@@ -45,6 +45,13 @@ void Patches::HookFunction(int injectOffset, const void* function, size_t traili
 	WritePatch(injectOffset, &payload, payloadSize);
 }
 
+void Patches::NOP(int offset, size_t len)
+{
+	void* funcPtr = (void*)(SWRGame::baseAddress + offset);
+	MakePageWritable(funcPtr);
+	memset(funcPtr, 0x90, len);
+}
+
 // Game hardcodes initially unlocked racers in a function before ORing them with the save file's unlocks
 // Overwrite the bitfield and change `or` to `mov` to explicitly set who is available
 void Patches::LimitAvailableRacers()
@@ -144,27 +151,24 @@ void __declspec(naked) SkipAcquiredItems()
 	}
 }
 
-   //Item shop
-   //3EB6D
-   //Gets cost of part for shop
+void __declspec(naked) MarkShopPurchaseWrapper()
+{
+	// eax table offset
+	__asm
+	{
+		pushad;
+		mov ecx, eax; // __fastcall reads from ecx
+		call SWRGame::MarkShopPurchase;
+		popad;
+		ret;
+	}
+}
 
-   //37862
-   //Sets part stat display in bottom left (can be invalid)
-   // call +5cf60
-   // cdecl (ecx, eax, edx) (?, podPartType, ?) (9, 2, 1)
+const char* shopPurchaseTitle = "  BUY";
 
-   //56017
-   //Gets model of item to replace (call can be jumped)
-
-   //3EF60
-   //->3EF80
-   //Gets name of item to replace
-
-
-// profiles
-// +17FF writes string on profile page?
-
-
+// models
+// 0x62 items
+// 0x8E trade ins
 void Patches::RewriteWattoShop()
 {
 	SWRGame::Log("Applying patch: Rewrite Watto Shop");
@@ -172,6 +176,136 @@ void Patches::RewriteWattoShop()
 	// Don't show items marked as acquired
 	// We're using the flag 0x80 to mark an item
 	HookFunction(SKIP_ITEM_INJECT, &SkipAcquiredItems, 1);
+
+	// Write part
+	// +40914
+	// can NOP
+	// eax has the offset in the table
+	//NOP(0x40914, 6);
+	HookFunction(0x40914, &MarkShopPurchaseWrapper, 1);
+
+	// Hide models for trade in items
+	// 3E9D6 move model id into eax
+	// value of 0x49 is invalid?
+	// result is an invisible object
+	char hideTradeInModels[6] = {
+		0xB8, 0x49, 0x00, 0x00, 0x00, // mov eax, 0x49
+		0x90                          // nop    
+	};
+
+	WritePatch(0x3E9D6, &hideTradeInModels, 6);
+
+	// 3EC10 draws purchase window elements
+	// Change title of right window
+	char newShopPurchaseTitle[5] = {
+		0x68, 0x00, 0x00, 0x00, 0x00 // push 0
+	};
+
+	memcpy(&newShopPurchaseTitle[1], &shopPurchaseTitle, 4);
+	WritePatch(0x3EEB7, &newShopPurchaseTitle, 5);
+
+	// Center title
+	char adjustPurchaseTitleXPos[5] = {
+		0x68, 0xC6, 0x00, 0x00, 0x00 // push 0xC6
+	};
+
+	WritePatch(0x3EED1, &adjustPurchaseTitleXPos, 5);
+
+	// Disable rendering of unnecessary info
+	NOP(0x3EFBA, 5); // Name of trade-in item
+	NOP(0x3F029, 5); // Health bar of trade-in item
+	NOP(0x3F0DF, 5); // "Trade" string 
+	NOP(0x3F11D, 5); // "Cost" string 
+	NOP(0x3F170, 5); // "Trade" value
+	NOP(0x3F1CC, 5); // "Cost" value
+	
+	// Disable swapping models on purchase
+	NOP(0x4091A, 5);
+
+	// Disable copy entry from replacement data to shop data
+	NOP(0x40891, 2); // obsolete?
+
+	// Sets trade cost
+	// +3EBC1
+	// mov 0 works
+	char disableTradeValue[13] = {
+		0xC7, 0x05, 0x5C, 0x93, 0xE9, 0x00, 0x00, 0x00, 0x00, 0x00, // mov [SWEP1RCR.EXE+A9935C],0
+		0x90, 0x90, 0x90                                            // NOP
+	};
+
+	WritePatch(0x3EBC1, &disableTradeValue, 13);
+
+	//Item shop
+	//3EB6D
+	//Gets cost of part for shop
+
+	//56017
+	//Gets model of item to replace (call can be jumped)
+
+	// Overwrite functions to allow part type values out of range
+	// The display for the right side is being hidden anyway so it's fine to make these hardcoded
+	// 3EF60 index for name
+	char tradeInName[7] = {
+		0xBE, 0x00, 0x00, 0x00, 0x00, // mov esi, 0
+		0x90, 0x90                    // nop
+	};
+
+	// 56017 index for model
+	char tradeInModel[7] = {
+		0xB8, 0x00, 0x00, 0x00, 0x00, // mov eax, 0
+		0x90, 0x90                    // nop
+	};
+
+	char* tradeInIndex = tradeInModel;
+
+	WritePatch(0x3EF60, &tradeInName, 7);
+	WritePatch(0x56017, &tradeInModel, 7);
+	WritePatch(0x3EB6D, &tradeInIndex, 7);
+
+	// todo: adapt this
+	//37862
+	//Sets part stat display in bottom left (can be invalid)
+	// call +5cf60
+	// cdecl (ecx, eax, edx) (?, podPartType, ?) (9, 2, 1)
+	
+	//->3EF80
+	//Gets name of item to replace
+}
+
+void __declspec(naked) MarkPitDroidPurchaseWrapper()
+{
+	__asm
+	{
+		pushad;
+		call SWRGame::MarkPitDroidPurchase;
+		popad;
+		ret;
+	}
+}
+
+void Patches::HookDroidShop()
+{
+	SWRGame::Log("Applying patch: Hook Droid Shop");
+	std::vector<int> offsets = {
+		0x58DDE,
+		0x58E09,
+		0x59815,
+		0x598DB,
+		0x3771A,
+		0x36A37
+	};
+
+	void* redirect = &SWRGame::pitDroidChecksCompleted;
+
+	for (auto offset : offsets)
+		WritePatch(offset, &redirect, 4);
+
+	HookFunction(0x37B88, &MarkPitDroidPurchaseWrapper, 0);
+}
+
+void Patches::DisableJunkyard()
+{
+	NOP(0x36A2C, 9);
 }
 
 void Patches::RedirectSaveFiles()
@@ -200,17 +334,15 @@ void Patches::RedirectSaveFiles()
 		WritePatch(offset, &loadNewDir, 5);
 }
 
-void MarkRaceCompletion()
+void __declspec(naked) MarkRaceCompletionWrapper()
 {
-	SWRGame::Log("Called MarkRaceCompletion function");
-}
-
-void __declspec(naked) MarkRaceCompletionAsm()
-{
+	// eax = circuit index
+	// edx = course index
 	__asm
 	{
 		pushad;
-		call MarkRaceCompletion;
+		mov ecx, eax; // __fastcall reads from ecx
+		call SWRGame::MarkRaceCompletion;
 		popad;
 		ret;
 	}
@@ -218,23 +350,29 @@ void __declspec(naked) MarkRaceCompletionAsm()
 
 void Patches::HookRaceRewards()
 {
-	// +3A35F 
-	// eax = circuit index
-	// esi = course index
+	SWRGame::Log("Applying patch: Hook Race Rewards");
+	
+	HookFunction(0x3A363, &MarkRaceCompletionWrapper, 3);
 
-	// nop out +3A3BF (len=6)
-	// Overwrite money reward opcode with a call to our function
+	// Our hook hijacks the same args as this call, so we'll overwrite it and rewrite it 8 bytes later
+	char pushedOriginalCall[8] = {
+		0xE8, 0xB0, 0x66, 0x00, 0x00, // call SWEP1RCR.EXE+40A20
+		0x83, 0xC4, 0x08              // add esp, 08
+	};
 
-	HookFunction(0x3A3BF, &MarkRaceCompletionAsm, 1);
+	WritePatch(0x3A36B, &pushedOriginalCall, 8);
 
-	// +3A3C8 compare?
+	// Force reward to be from "Fair" payout pool
+	char giveFairReward[7] = {
+		0xB9, 0x01, 0x00, 0x00, 0x00, // mov ecx, 1
+		0x90, 0x90                    // nop
+	};
 
-	// +3AA50
-	// cmp byte ptr[placement], 3
-	// hard-coded placement minimum?
+	WritePatch(0x3A373, &giveFairReward, 7);
 }
 
 // 8DF30 is render func
+// +17FF writes string on profile page?
 
 typedef void(__cdecl* _RenderTexture)(int a, void* b);
 _RenderTexture OriginalRenderTexture;

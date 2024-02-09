@@ -170,43 +170,82 @@ namespace SWRGame
 		}
 	}
 
+	template<typename T>
+	T* GetArrayEntry(void* array, int index)
+	{
+		return (T*)((int)array + sizeof(T) * index);
+	}
+
+	template<typename T>
+	void RemoveElementFromArray(void* array, int index, size_t arrayLength)
+	{
+		for (int i = index; i < arrayLength - 1; i++)
+		{
+			T* curElement = (T*)((int)array + sizeof(T) * i);
+			T* nextElement = (T*)((int)array + sizeof(T) * (i + 1));
+			*curElement = *nextElement;
+		}
+	}
+
+	void __fastcall MarkRaceCompletion(int circuit, int course)
+	{
+		int locationOffset = 145 + circuit * 7 + course;
+		std::string locationName = locationTable[locationOffset];
+		Log("Location checked: %s", locationName.c_str());
+		AP_SendItem(locationOffset + SWR_AP_BASE_ID);
+	}
+
+	void __fastcall MarkShopPurchase(int entryOffset)
+	{
+		int tableOffset = entryOffset / 0x10;
+
+		for (auto pair : wattoShopLocationToOffset)
+		{
+			if (pair.second == tableOffset)
+			{
+				Log("Location checked: %s", locationTable[pair.first].c_str());
+				wattoShopData[tableOffset]->requiredRaces |= 0x80; // mark as completed
+				AP_SendItem(pair.first + SWR_AP_BASE_ID);
+				
+				int* removedIndex = (int*)(baseAddress + 0xA295D0);
+				size_t* selectionCount = (size_t*)(baseAddress + 0xA295CC);
+
+				void* shopInvModels = (void*)(baseAddress + 0xA29A88);
+
+				// Hide model
+				MeshData*** removedMeshPtr = (MeshData***)((int)shopInvModels + 4 * *removedIndex);
+				MeshData* removedMesh = **removedMeshPtr;
+				removedMesh->visible = false;
+
+				RemoveElementFromArray<int>(shopInvModels, *removedIndex, *selectionCount);
+
+				void* shopInvData = (void*)(baseAddress + 0xA2A6C0);
+				RemoveElementFromArray<ShopInventoryEntry>(shopInvData, *removedIndex, *selectionCount);
+
+				--*selectionCount;
+				if (*removedIndex >= *selectionCount)
+					--*removedIndex;
+			}
+		}
+	}
+
+	void __fastcall MarkPitDroidPurchase() 
+	{
+		if (pitDroidChecksCompleted >= 4)
+			return;
+
+		int locationOffset = 141 + pitDroidChecksCompleted;
+		std::string locationName = locationTable[locationOffset];
+		Log("Location checked: %s", locationName.c_str());
+		AP_SendItem(locationOffset + SWR_AP_BASE_ID);
+		pitDroidChecksCompleted++;
+	}
 	void ScanLocationChecks()
 	{
 		if (!isSaveDataReady())
 			return;
 
-		// Race progress
-		if (requiredPlacement == RacePlacement::Fourth)
-		{
-			// Check unlocked courses
-
-		}
-		else
-		{
-			// Check placement flags
-			int flag;
-			CourseData* course;
-			for (int i = 0; i < saveData.completedCourses.size(); i++)
-			{
-				course = &saveData.completedCourses[i];
-				if (course->completed)
-					continue;
-
-				flag = racerSaveData->racePlacements >> (course->slot * 2);
-				flag &= 0x03;
-
-				if (flag >= (int)requiredPlacement)
-				{
-					course->completed = true;
-
-					// Notify of location check
-					int locID = courseSlotToId[course->slot];
-					Log("Location checked: %s", locationTable[locID].c_str());
-					locID += SWR_AP_BASE_ID;
-					AP_SendItem(locID);
-				}
-			}
-		}
+		
 
 		// Racer Unlock Checks
 		if (racerSaveData->racerUnlocks != saveData.racerSaveDataCopy.racerUnlocks)
@@ -427,7 +466,7 @@ namespace SWRGame
 	{
 		AP_Init(serverInfo.server, "Star Wars Episode I Racer", serverInfo.player, serverInfo.pw);
 
-		AP_NetworkVersion version = { 0, 4, 3 };
+		AP_NetworkVersion version = CLIENT_VERSION;
 		AP_SetClientVersion(&version);
 		AP_SetDeathLinkSupported(true);
 
@@ -439,7 +478,6 @@ namespace SWRGame
 
 		AP_RegisterSlotDataIntCallback("StartingRacers", &SetStartingRacers);
 		AP_RegisterSlotDataIntCallback("DisablePartDegradation", &SetDisablePartDegradation);
-		AP_RegisterSlotDataIntCallback("RequiredPlacement", &SetRequiredPlacement);
 		AP_RegisterSlotDataMapIntIntCallback("Courses", &SetCourses);
 
 		AP_Start();
@@ -462,7 +500,12 @@ namespace SWRGame
 		queuedDeaths = 0;
 
 		for (int i = 0; i < 42; i++)
-			wattoShopData.push_back((ItemShopEntry*)(baseAddress + SHOP_DATA_START + sizeof(ItemShopEntry) * i));
+		{
+			ItemShopEntry* nextItem = (ItemShopEntry*)(baseAddress + SHOP_DATA_START + sizeof(ItemShopEntry) * i);
+			if (i % 6 == 0)
+				nextItem->requiredRaces |= 0x80; // mark base items so the shop doesn't display them
+			wattoShopData.push_back(nextItem);
+		}
 
 		APSetup();
 	}
@@ -479,7 +522,9 @@ namespace SWRGame
 				//// Apply patches we don't need an AP callback for
 				Patches::HookDraw();
 				Patches::FixCourseSelection();
-				Patches::RewriteWattoShop();
+				Patches::RewriteWattoShop(); 
+				Patches::HookRaceRewards();
+				Patches::DisableJunkyard();
 
 				// Set save directory
 				AP_RoomInfo roomInfo;
