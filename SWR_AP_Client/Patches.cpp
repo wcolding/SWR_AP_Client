@@ -239,15 +239,35 @@ void Patches::RewriteWattoShop()
 	//3EB6D
 	//Gets cost of part for shop
 
+	//56017
+	//Gets model of item to replace (call can be jumped)
+
+	// Overwrite functions to allow part type values out of range
+	// The display for the right side is being hidden anyway so it's fine to make these hardcoded
+	// 3EF60 index for name
+	char tradeInName[7] = {
+		0xBE, 0x00, 0x00, 0x00, 0x00, // mov esi, 0
+		0x90, 0x90                    // nop
+	};
+
+	// 56017 index for model
+	char tradeInModel[7] = {
+		0xB8, 0x00, 0x00, 0x00, 0x00, // mov eax, 0
+		0x90, 0x90                    // nop
+	};
+
+	char* tradeInIndex = tradeInModel;
+
+	WritePatch(0x3EF60, &tradeInName, 7);
+	WritePatch(0x56017, &tradeInModel, 7);
+	WritePatch(0x3EB6D, &tradeInIndex, 7);
+
+	// todo: adapt this
 	//37862
 	//Sets part stat display in bottom left (can be invalid)
 	// call +5cf60
 	// cdecl (ecx, eax, edx) (?, podPartType, ?) (9, 2, 1)
-
-	//56017
-	//Gets model of item to replace (call can be jumped)
-
-	//3EF60
+	
 	//->3EF80
 	//Gets name of item to replace
 }
