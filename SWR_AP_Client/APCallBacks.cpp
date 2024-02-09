@@ -35,6 +35,17 @@ namespace SWRGame
 			Log("Setting location '%s' as checked", locationTable[localID].c_str());
 
 		// todo: actually set it as checked
+
+		// Watto
+		if (wattoShopLocationToOffset.contains(localID))
+		{
+			ItemShopEntry* curEntry = wattoShopData[wattoShopLocationToOffset[localID]];
+			curEntry->requiredRaces |= 0x80;
+		}
+
+		// Pit droid
+		if ((141 < localID) && (localID < 145))
+			SWRGame::pitDroidChecksCompleted++;
 	}
 
 	void RecvLocationInfo(std::vector<AP_NetworkItem> items)
