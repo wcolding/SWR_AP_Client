@@ -260,7 +260,7 @@ void Patches::RewriteWattoShop()
 
 	WritePatch(0x3EF60, &tradeInName, 7);
 	WritePatch(0x56017, &tradeInModel, 7);
-	WritePatch(0x3EB6D, &tradeInIndex, 7);
+	WritePatch(0x3EB6D, &tradeInIndex, 7);*/
 
 	// todo: adapt this
 	//37862
