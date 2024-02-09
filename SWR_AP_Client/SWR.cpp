@@ -58,14 +58,18 @@ namespace SWRGame
 
 	void Update()
 	{
-		ScanLocationChecks();
+		// Only act on matching save data
+		if (racerSaveData->apPartialSeed == partialSeed)
+		{
+			ScanLocationChecks();
 
-		if (isPlayerInRace())
-			CheckPodKilled();
+			if (isPlayerInRace())
+				CheckPodKilled();
 
-		ProcessDeathQueue();
-		ProcessItemQueue();
-
+			ProcessDeathQueue();
+			ProcessItemQueue();
+		}
+		
 		Sleep(50);
 	}
 
@@ -289,34 +293,34 @@ namespace SWRGame
 
 	void InitSaveData()
 	{
-		bool saveExists = LoadProfile(serverInfo.player);
+		//bool saveExists = LoadProfile(serverInfo.player);
 
-		// Reset values of progressive/stackable items (except circuit pass)
-		// AP will send items on connect so we will recalculate from the base values
-		racerSaveData->money = 400;
-		racerSaveData->pitDroids = 1;
-		memset(&racerSaveData->parts, 0, 7);
+		//// Reset values of progressive/stackable items (except circuit pass)
+		//// AP will send items on connect so we will recalculate from the base values
+		//racerSaveData->money = 400;
+		//racerSaveData->pitDroids = 1;
+		//memset(&racerSaveData->parts, 0, 7);
 
-		if (!saveExists)
-		{
-			// Set actual initial data
-			// todo: figure out handling progressive circuit pass
-			memcpy(&racerSaveData->profileName, &serverInfo.player, 24);
-			racerSaveData->racerUnlocks = RacerUnlocks::None;
-			racerSaveData->trackUnlocks[0] = 1;
-			racerSaveData->trackUnlocks[1] = 0;
-			racerSaveData->trackUnlocks[2] = 0;
-			racerSaveData->trackUnlocks[3] = 0;
-			racerSaveData->cutscenesBitfield = 0xFFFFFFFF;
-			memset(&racerSaveData->partsHealth, 0xFF, 7);
+		//if (!saveExists)
+		//{
+		//	// Set actual initial data
+		//	// todo: figure out handling progressive circuit pass
+		//	memcpy(&racerSaveData->profileName, &serverInfo.player, 24);
+		//	racerSaveData->racerUnlocks = RacerUnlocks::None;
+		//	racerSaveData->trackUnlocks[0] = 1;
+		//	racerSaveData->trackUnlocks[1] = 0;
+		//	racerSaveData->trackUnlocks[2] = 0;
+		//	racerSaveData->trackUnlocks[3] = 0;
+		//	racerSaveData->cutscenesBitfield = 0xFFFFFFFF;
+		//	memset(&racerSaveData->partsHealth, 0xFF, 7);
 
-			// Saving once appears to write to the "live" save area of tgfd.dat
-			// Saving twice appears to make an actual .sav file
-			SaveProfile(serverInfo.player);
-			SaveProfile(serverInfo.player);
-		}
+		//	// Saving once appears to write to the "live" save area of tgfd.dat
+		//	// Saving twice appears to make an actual .sav file
+		//	SaveProfile(serverInfo.player);
+		//	SaveProfile(serverInfo.player);
+		//}
 
-		CopySaveData(racerSaveData);
+		//CopySaveData(racerSaveData);
 
 		saveData.completedCourses.clear();
 		saveData.completedCourses = {
@@ -520,6 +524,7 @@ namespace SWRGame
 				gamestate = SWRGameState::AP_Authenticated;
 
 				//// Apply patches we don't need an AP callback for
+				Patches::HookSaveFiles();
 				Patches::HookDraw();
 				Patches::FixCourseSelection();
 				Patches::RewriteWattoShop(); 
@@ -529,9 +534,11 @@ namespace SWRGame
 				// Set save directory
 				AP_RoomInfo roomInfo;
 				AP_GetRoomInfo(&roomInfo);
-				std::string saveDirStr = R"(.\data\player\AP_)" + roomInfo.seed_name + R"(\)";
+				std::string partialSeedStr = roomInfo.seed_name.substr(0, 8);
+				partialSeed = (uint64_t)strtoll(partialSeedStr.c_str(), nullptr, 0);
+				/*std::string saveDirStr = R"(.\data\player\AP_)" + roomInfo.seed_name + R"(\)";
 				memcpy((void*) &saveDirectory, saveDirStr.c_str(), saveDirStr.size());
-				Patches::RedirectSaveFiles();
+				Patches::RedirectSaveFiles();*/
 			}
 		}
 

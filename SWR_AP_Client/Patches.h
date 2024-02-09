@@ -13,6 +13,7 @@ namespace SWRGame
 	extern void __fastcall MarkShopPurchase(int entryOffset);
 	extern void __fastcall MarkPitDroidPurchase();
 	extern int pitDroidChecksCompleted;
+	extern uint64_t partialSeed;
 }
 
 static class Patches
@@ -33,5 +34,5 @@ public:
 	static void DisableJunkyard();
 	static void HookRaceRewards();
 
-	static void RedirectSaveFiles();
+	static void HookSaveFiles();
 };

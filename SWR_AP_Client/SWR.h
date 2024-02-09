@@ -47,6 +47,7 @@ namespace SWRGame
 	APServerInfo serverInfo;
 	APSaveData saveData;
 
+	uint64_t partialSeed = 0;
 	char saveDirectory[64];
 
 	SWRGameState gamestate;

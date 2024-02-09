@@ -308,30 +308,57 @@ void Patches::DisableJunkyard()
 	NOP(0x36A2C, 9);
 }
 
-void Patches::RedirectSaveFiles()
+void __fastcall WritePlanetsVisited(int offset)
 {
-	SWRGame::Log("Applying patch: Redirect Save Files");
+	int* planetsVisitedAddr = (int*)(SWRGame::baseAddress + 0xA35A9C + offset);
+	*planetsVisitedAddr = -1;
+}
+
+void __fastcall WriteAPPartialSeed(int offset)
+{
+	uint64_t* seedAddr = (uint64_t*)(SWRGame::baseAddress + 0xA35A78 + offset);
+	*seedAddr = SWRGame::partialSeed;
+}
+
+void __declspec(naked) APSavePatch()
+{
+	__asm
+	{
+		pushad;
+		mov ecx, eax;
+		call WritePlanetsVisited;
+		call WriteAPPartialSeed;
+		popad;
+		ret;
+	}
+}
+
+void Patches::HookSaveFiles()
+{
+	SWRGame::Log("Applying patch: Hook Save Files");
 	
-	char loadNewDir[5] = {
-		0x68, 0x00, 0x00, 0x00, 0x00 // push 0
+	// Default racers to 0
+	char defaultRacers[10] = {
+		0xC7, 0x80, 0x94, 0x5A, 0xE3, 0x00, 0x00, 0x00, 0x00, 0x00 // mov [eax + E35A94], 0
 	};
 
-	void* dirPtr = &SWRGame::saveDirectory;
-	memcpy(&loadNewDir[1], &dirPtr, 4);
+	WritePatch(0x3EADC, &defaultRacers, 10);
 
-	// This game is hardcoded to push the pointer of the default save path to the stack in several spots
-	std::vector<int> opcodeOffsets = {
-		0xC518,
-		0x21861,
-		0x2195F,
-		0x21A14,
-		0x21B9D,
-		0x21CBE,
-		0x21CD4
+	// Overwrite planet cutscenes
+	HookFunction(0x3EAE6, &APSavePatch, 1);
+
+	// Lock semi-pro and galactic circuits
+	// Just change a cl to a bl to lock both like invitational
+	char blOpcode = 0x98;
+	WritePatch(0x3EB13, &blOpcode, 1); // semi-pro
+	WritePatch(0x3EB19, &blOpcode, 1); // galactic
+
+	// Limit name to 24 bytes to avoid overwriting partial seed
+	char limitName[5] = {
+		0xB9, 0x06, 0x00, 0x00, 0x00 // mov ecx, 6
 	};
 
-	for (auto offset : opcodeOffsets)
-		WritePatch(offset, &loadNewDir, 5);
+	WritePatch(0x3EB41, &limitName, 5);
 }
 
 void __declspec(naked) MarkRaceCompletionWrapper()
