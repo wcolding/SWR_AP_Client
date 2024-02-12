@@ -34,7 +34,14 @@ namespace SWRGame
 		if (locationTable.contains(localID))
 			Log("Setting location '%s' as checked", locationTable[localID].c_str());
 
-		// todo: actually set it as checked
+		// Races
+		// 145 - 169
+		if ((144 < localID) && (localID < 170))
+		{
+			SWRGame::racesCompleted++;
+			if (SWRGame::racesCompleted > 24)
+				AP_StoryComplete();
+		}
 
 		// Watto
 		if (wattoShopLocationToOffset.contains(localID))

@@ -48,7 +48,7 @@ namespace SWRGame
 	APSaveData saveData;
 
 	uint64_t partialSeed = 0;
-	char saveDirectory[64];
+	int racesCompleted = 0;
 
 	SWRGameState gamestate;
 	std::vector <QueuedItem> itemQueue;

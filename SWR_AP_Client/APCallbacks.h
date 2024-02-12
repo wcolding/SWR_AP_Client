@@ -14,6 +14,7 @@ namespace SWRGame
 	extern int queuedDeaths;
 	extern std::vector <QueuedItem> itemQueue;
 	extern int pitDroidChecksCompleted;
+	extern int racesCompleted;
 
 	void ResetSaveData();
 	void ReceiveItem(int64_t itemID, bool notify);
