@@ -293,66 +293,11 @@ namespace SWRGame
 
 	void InitSaveData()
 	{
-		//bool saveExists = LoadProfile(serverInfo.player);
-
-		//// Reset values of progressive/stackable items (except circuit pass)
-		//// AP will send items on connect so we will recalculate from the base values
-		//racerSaveData->money = 400;
-		//racerSaveData->pitDroids = 1;
-		//memset(&racerSaveData->parts, 0, 7);
-
-		//if (!saveExists)
-		//{
-		//	// Set actual initial data
-		//	// todo: figure out handling progressive circuit pass
-		//	memcpy(&racerSaveData->profileName, &serverInfo.player, 24);
-		//	racerSaveData->racerUnlocks = RacerUnlocks::None;
-		//	racerSaveData->trackUnlocks[0] = 1;
-		//	racerSaveData->trackUnlocks[1] = 0;
-		//	racerSaveData->trackUnlocks[2] = 0;
-		//	racerSaveData->trackUnlocks[3] = 0;
-		//	racerSaveData->cutscenesBitfield = 0xFFFFFFFF;
-		//	memset(&racerSaveData->partsHealth, 0xFF, 7);
-
-		//	// Saving once appears to write to the "live" save area of tgfd.dat
-		//	// Saving twice appears to make an actual .sav file
-		//	SaveProfile(serverInfo.player);
-		//	SaveProfile(serverInfo.player);
-		//}
-
-		//CopySaveData(racerSaveData);
-
-		saveData.completedCourses.clear();
-		saveData.completedCourses = {
-				{0, false},
-				{1, false},
-				{2, false},
-				{3, false},
-				{4, false},
-				{5, false},
-				{6, false},
-
-				{8, false},
-				{9, false},
-				{10, false},
-				{11, false},
-				{12, false},
-				{13, false},
-				{14, false},
-
-				{16, false},
-				{17, false},
-				{18, false},
-				{19, false},
-				{20, false},
-				{21, false},
-				{22, false},
-
-				{24, false},
-				{25, false},
-				{26, false},
-				{27, false}
-		};
+		// Reset values of progressive/stackable items (except circuit pass)
+		// AP will send items on connect so we will recalculate from the base values
+		racerSaveData->money = 400;
+		racerSaveData->pitDroids = 1;
+		memset(&racerSaveData->parts, 0, 7);
 
 		Log("Save data initialized");
 	}
@@ -536,9 +481,6 @@ namespace SWRGame
 				AP_GetRoomInfo(&roomInfo);
 				std::string partialSeedStr = roomInfo.seed_name.substr(0, 8);
 				partialSeed = (uint64_t)strtoll(partialSeedStr.c_str(), nullptr, 0);
-				/*std::string saveDirStr = R"(.\data\player\AP_)" + roomInfo.seed_name + R"(\)";
-				memcpy((void*) &saveDirectory, saveDirStr.c_str(), saveDirStr.size());
-				Patches::RedirectSaveFiles();*/
 			}
 		}
 
@@ -547,8 +489,11 @@ namespace SWRGame
 			// Wait for game to load
 			if (isSaveDataReady())
 			{
-				InitSaveData();
-				gamestate = SWRGameState::Save_Initialized;
+				if (racerSaveData->apPartialSeed == partialSeed) 
+				{
+					InitSaveData();
+					gamestate = SWRGameState::Save_Initialized;
+				}
 			}
 		}
 

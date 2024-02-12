@@ -12,12 +12,6 @@ struct APServerInfo
 	char pw[64];
 };
 
-struct CourseData
-{
-	int slot;
-	bool completed;
-};
-
 #pragma pack(push)
 #pragma pack(1)
 
@@ -153,7 +147,6 @@ static_assert(sizeof(RacerSaveData) == 0x50, "RacerSaveData resized!");
 struct APSaveData
 {
 	RacerUnlocks unlockedRacers;
-	std::vector<CourseData> completedCourses;
 	RacerSaveData racerSaveDataCopy;
 };
 

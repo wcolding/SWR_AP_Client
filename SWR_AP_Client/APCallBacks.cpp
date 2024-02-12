@@ -11,12 +11,7 @@ namespace SWRGame
 
 	void ResetSaveData()
 	{
-		CourseData* course;
-		for (int i = 0; i < saveData.completedCourses.size(); i++)
-		{
-			course = &saveData.completedCourses[i];
-			course->completed = false;
-		}
+		Log("ResetSaveData called by AP");
 	}
 
 	void ReceiveItem(int64_t itemID, bool notify)
