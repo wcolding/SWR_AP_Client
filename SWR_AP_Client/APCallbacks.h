@@ -13,6 +13,8 @@ namespace SWRGame
 	extern std::vector<std::string> wattoShopItemNames;
 	extern int queuedDeaths;
 	extern std::vector <QueuedItem> itemQueue;
+	extern int pitDroidChecksCompleted;
+	extern int racesCompleted;
 
 	void ResetSaveData();
 	void ReceiveItem(int64_t itemID, bool notify);

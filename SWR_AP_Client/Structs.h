@@ -12,12 +12,6 @@ struct APServerInfo
 	char pw[64];
 };
 
-struct CourseData
-{
-	int slot;
-	bool completed;
-};
-
 #pragma pack(push)
 #pragma pack(1)
 
@@ -123,8 +117,10 @@ struct RacerSaveData
 {
 public:
 	char profileName[0x18];    // 0x00
+	uint64_t apPartialSeed;    // 0x18 - technically part of the profile name but the in-game gui limits you to 24 characters
 private:
-	char unk_00[0x0C];         // 0x18
+	char unk_00[0x02];         // 0x20
+	uint16_t profileId;        // 0x22
 public:
 	char selectedRacer;        // 0x24
 	TrackUnlocks trackUnlocks; // 0x25
@@ -144,13 +140,13 @@ public:
 private:
 	char pad;                  // 0x4F
 };
+static_assert(sizeof(RacerSaveData) == 0x50, "RacerSaveData resized!");
 
 #pragma pack(pop)
 
 struct APSaveData
 {
 	RacerUnlocks unlockedRacers;
-	std::vector<CourseData> completedCourses;
 	RacerSaveData racerSaveDataCopy;
 };
 

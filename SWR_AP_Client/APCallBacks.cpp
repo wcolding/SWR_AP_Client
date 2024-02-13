@@ -11,12 +11,7 @@ namespace SWRGame
 
 	void ResetSaveData()
 	{
-		CourseData* course;
-		for (int i = 0; i < saveData.completedCourses.size(); i++)
-		{
-			course = &saveData.completedCourses[i];
-			course->completed = false;
-		}
+		Log("ResetSaveData called by AP");
 	}
 
 	void ReceiveItem(int64_t itemID, bool notify)
@@ -34,7 +29,25 @@ namespace SWRGame
 		if (locationTable.contains(localID))
 			Log("Setting location '%s' as checked", locationTable[localID].c_str());
 
-		// todo: actually set it as checked
+		// Races
+		// 145 - 169
+		if ((144 < localID) && (localID < 170))
+		{
+			SWRGame::racesCompleted++;
+			if (SWRGame::racesCompleted > 24)
+				AP_StoryComplete();
+		}
+
+		// Watto
+		if (wattoShopLocationToOffset.contains(localID))
+		{
+			ItemShopEntry* curEntry = wattoShopData[wattoShopLocationToOffset[localID]];
+			curEntry->requiredRaces |= 0x80;
+		}
+
+		// Pit droid
+		if ((141 < localID) && (localID < 145))
+			SWRGame::pitDroidChecksCompleted++;
 	}
 
 	void RecvLocationInfo(std::vector<AP_NetworkItem> items)
