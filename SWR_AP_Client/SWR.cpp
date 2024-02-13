@@ -474,7 +474,8 @@ namespace SWRGame
 				Patches::FixCourseSelection();
 				Patches::RewriteWattoShop(); 
 				Patches::HookRaceRewards();
-				Patches::DisableJunkyard();
+				Patches::DisableJunkyard(); 
+				Patches::DisableAwardsCeremony();
 
 				// Set save directory
 				AP_RoomInfo roomInfo;

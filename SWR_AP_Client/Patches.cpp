@@ -399,6 +399,18 @@ void Patches::HookRaceRewards()
 	WritePatch(0x3A373, &giveFairReward, 7);
 }
 
+void Patches::DisableAwardsCeremony()
+{
+	SWRGame::Log("Applying patch: Disable Awards Ceremony");
+	char alwaysSkip[2] = {
+		0xEB, 0x27 // jmp SWEP1RCR.EXE + 3AA89
+	};
+
+	WritePatch(0x3AA60, &alwaysSkip, 2);
+
+	// todo: prevent credits on Galactic completion
+}
+
 // 8DF30 is render func
 // +17FF writes string on profile page?
 

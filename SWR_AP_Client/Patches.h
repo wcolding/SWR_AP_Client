@@ -33,6 +33,7 @@ public:
 	static void HookDroidShop();
 	static void DisableJunkyard();
 	static void HookRaceRewards();
+	static void DisableAwardsCeremony();
 
 	static void HookSaveFiles();
 };
