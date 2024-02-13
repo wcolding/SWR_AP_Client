@@ -481,7 +481,7 @@ namespace SWRGame
 				AP_RoomInfo roomInfo;
 				AP_GetRoomInfo(&roomInfo);
 				std::string partialSeedStr = roomInfo.seed_name.substr(0, 8);
-				partialSeed = (uint64_t)strtoll(partialSeedStr.c_str(), nullptr, 0);
+				partialSeed = (uint64_t)strtoll(partialSeedStr.c_str(), nullptr, 10);
 			}
 		}
 
