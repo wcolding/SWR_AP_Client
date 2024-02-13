@@ -305,6 +305,7 @@ void Patches::HookDroidShop()
 
 void Patches::DisableJunkyard()
 {
+	SWRGame::Log("Applying patch: Disable Junkyard");
 	NOP(0x36A2C, 9);
 }
 
