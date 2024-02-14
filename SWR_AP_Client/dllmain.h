@@ -10,8 +10,8 @@
 
 namespace SWRGame
 {
-    extern APSaveData saveData;
-    extern APServerInfo serverInfo;
+    extern AP_ProgressData progress;
+    extern AP_ServerInfo serverInfo;
     extern SWRGameState gamestate;
     extern void Init();
     extern void Update();

@@ -16,8 +16,8 @@ namespace SWRGame
 {
 	int queuedDeaths;
 	DeathState deathState = DeathState::Alive;
-	RacerSaveData* racerSaveData; 
-	RacerSaveData** saveDataPtr;
+	SWR_SaveData* swrSaveData;
+	SWR_SaveData** saveDataPtr;
 
 	std::vector<ItemShopEntry*> wattoShopData;
 	std::vector<std::string> wattoShopItemNames;
@@ -59,7 +59,7 @@ namespace SWRGame
 	void Update()
 	{
 		// Only act on matching save data
-		if (racerSaveData->apPartialSeed == partialSeed)
+		if (swrSaveData->apPartialSeed == partialSeed)
 		{
 			ScanLocationChecks();
 
@@ -93,12 +93,10 @@ namespace SWRGame
 	{
 		if (*saveDataPtr == nullptr)
 			return false;
-		else
-		{
-			racerSaveData = *saveDataPtr;
+
+		swrSaveData = *saveDataPtr;
 			return true;
 		}
-	}
 
 	bool isPlayerInRace()
 	{
@@ -235,10 +233,10 @@ namespace SWRGame
 
 	void __fastcall MarkPitDroidPurchase() 
 	{
-		if (pitDroidChecksCompleted >= 4)
+		if (progress.pitDroidCounter >= 4)
 			return;
 
-		int locationOffset = 141 + pitDroidChecksCompleted;
+		int locationOffset = 141 + progress.pitDroidCounter;
 		std::string locationName = locationTable[locationOffset];
 		Log("Location checked: %s", locationName.c_str());
 		AP_SendItem(locationOffset + SWR_AP_BASE_ID);
@@ -252,13 +250,13 @@ namespace SWRGame
 		
 
 		// Racer Unlock Checks
-		if (racerSaveData->racerUnlocks != saveData.racerSaveDataCopy.racerUnlocks)
+		if (swrSaveData->racerUnlocks != progress.cachedSave.racerUnlocks)
 		{
 			RacerUnlocks curRacer;
 			for (int i = 0; i < RACERS_COUNT; i++)
 			{
 				curRacer = (RacerUnlocks)(1 << i);
-				if ((racerSaveData->racerUnlocks & curRacer) != 0)
+				if ((swrSaveData->racerUnlocks & curRacer) != 0)
 				{
 					if (racerUnlockTable.contains(curRacer))
 					{
@@ -270,14 +268,8 @@ namespace SWRGame
 				}
 			}
 
-			CopySaveData(racerSaveData);
+			progress.cachedSave = *swrSaveData;
 		}
-
-		// Watto Shop
-
-		// Junkyard
-
-		// Pit Droid Shop
 	}
 
 	void ProcessDeathQueue()
@@ -286,18 +278,13 @@ namespace SWRGame
 			KillPod();
 	}
 
-	void CopySaveData(RacerSaveData* inGameSaveData)
-	{
-		memcpy(&saveData.racerSaveDataCopy, inGameSaveData, sizeof(RacerSaveData));
-	}
-
 	void InitSaveData()
 	{
 		// Reset values of progressive/stackable items (except circuit pass)
 		// AP will send items on connect so we will recalculate from the base values
-		racerSaveData->money = 400;
-		racerSaveData->pitDroids = 1;
-		memset(&racerSaveData->parts, 0, 7);
+		swrSaveData->money = 400;
+		swrSaveData->pitDroids = 1;
+		memset(&swrSaveData->parts, 0, 7);
 
 		Log("Save data initialized");
 	}
@@ -326,7 +313,7 @@ namespace SWRGame
 
 	void GiveRacer(int racerID)
 	{
-		saveData.unlockedRacers = (RacerUnlocks)(saveData.unlockedRacers | racerID);
+		progress.unlockedRacers = (RacerUnlocks)(progress.unlockedRacers | racerID);
 	}
 
 	void GivePitDroid()
@@ -334,7 +321,7 @@ namespace SWRGame
 		if (!isSaveDataReady())
 			return;
 
-		racerSaveData->pitDroids++;
+		swrSaveData->pitDroids++;
 	}
 
 	void GiveCircuitPass(int type)
@@ -347,15 +334,15 @@ namespace SWRGame
 			// Progressive
 			for (int i = 1; i < 4; i++)
 			{
-				if (racerSaveData->trackUnlocks[i] == 0)
+				if (swrSaveData->trackUnlocks[i] == 0)
 				{
-					racerSaveData->trackUnlocks[i] |= 0x01;
+					swrSaveData->trackUnlocks[i] |= 0x01;
 					return;
 				}
 			}
 		}
 		else
-			racerSaveData->trackUnlocks[type] |= 0x01;
+			swrSaveData->trackUnlocks[type] |= 0x01;
 	}
 
 	void GiveMoney(int amount)
@@ -363,7 +350,7 @@ namespace SWRGame
 		if (!isSaveDataReady())
 			return;
 
-		racerSaveData->money += amount;
+		swrSaveData->money += amount;
 	}
 
 	void ProcessItemQueue()
@@ -443,8 +430,8 @@ namespace SWRGame
 
 		WriteWhiteText = (_WriteWhiteText)(baseAddress + 0x50560);
 
-		saveDataPtr = (RacerSaveData**)(baseAddress + SAVE_DATA_PTR_OFFSET);
-		racerSaveData = nullptr;
+		saveDataPtr = (SWR_SaveData**)(baseAddress + SAVE_DATA_PTR_OFFSET);
+		swrSaveData = nullptr;
 
 		queuedDeaths = 0;
 
@@ -490,7 +477,7 @@ namespace SWRGame
 			// Wait for game to load
 			if (isSaveDataReady())
 			{
-				if (racerSaveData->apPartialSeed == partialSeed) 
+				if (swrSaveData->apPartialSeed == partialSeed) 
 				{
 					InitSaveData();
 					gamestate = SWRGameState::Save_Initialized;

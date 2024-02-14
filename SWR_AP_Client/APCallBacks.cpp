@@ -33,8 +33,8 @@ namespace SWRGame
 		// 145 - 169
 		if ((144 < localID) && (localID < 170))
 		{
-			SWRGame::racesCompleted++;
-			if (SWRGame::racesCompleted > 24)
+			SWRGame::progress.racesCompleted++;
+			if (SWRGame::progress.racesCompleted > 24)
 				AP_StoryComplete();
 		}
 
@@ -47,7 +47,7 @@ namespace SWRGame
 
 		// Pit droid
 		if ((141 < localID) && (localID < 145))
-			SWRGame::pitDroidChecksCompleted++;
+			SWRGame::progress.pitDroidCounter++;
 	}
 
 	void RecvLocationInfo(std::vector<AP_NetworkItem> items)
@@ -82,7 +82,7 @@ namespace SWRGame
 						{
 						case ItemType::PodPart:
 							// This needs a rework. Maybe we can patch the game to read the item as progressive and do this work live
-							curPartValue = 0; //temporary //(int)racerSaveData->parts[curItemId];
+							curPartValue = 0; //temporary //(int)swrSaveData->parts[curItemId];
 							nextPartId = 7 + 5 * curItemId + curPartValue;
 							if (curPartValue == 5)
 								nextPartId--;
@@ -112,7 +112,7 @@ namespace SWRGame
 
 	void SetStartingRacers(int value)
 	{
-		saveData.unlockedRacers = (RacerUnlocks)value;
+		progress.unlockedRacers = (RacerUnlocks)value;
 		Patches::LimitAvailableRacers();
 	}
 

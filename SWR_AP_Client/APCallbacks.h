@@ -7,14 +7,14 @@
 
 namespace SWRGame
 {
-	extern APSaveData saveData;
+	extern AP_ProgressData progress;
 	extern void Log(const char* format, ...);
 	extern std::vector<ItemShopEntry*> wattoShopData;
 	extern std::vector<std::string> wattoShopItemNames;
 	extern int queuedDeaths;
 	extern std::vector <QueuedItem> itemQueue;
-	extern int pitDroidChecksCompleted;
-	extern int racesCompleted;
+	//extern int pitDroidChecksCompleted;
+	//extern int racesCompleted;
 
 	void ResetSaveData();
 	void ReceiveItem(int64_t itemID, bool notify);

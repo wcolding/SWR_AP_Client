@@ -1,6 +1,6 @@
 #include "dllmain.h"
 
-using SWRGame::saveData;
+using SWRGame::progress;
 using SWRGame::serverInfo;
 
 bool debugConsole = false;

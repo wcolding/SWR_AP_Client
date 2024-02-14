@@ -5,7 +5,7 @@
 #include <string>
 #include "Enums.h"
 
-struct APServerInfo
+struct AP_ServerInfo
 {
 	char server[64];
 	char player[64];
@@ -113,7 +113,7 @@ public:
 	Vector3 position;
 };
 
-struct RacerSaveData
+struct SWR_SaveData
 {
 public:
 	char profileName[0x18];    // 0x00
@@ -140,14 +140,16 @@ public:
 private:
 	char pad;                  // 0x4F
 };
-static_assert(sizeof(RacerSaveData) == 0x50, "RacerSaveData resized!");
+static_assert(sizeof(SWR_SaveData) == 0x50, "RacerSaveData resized!");
 
 #pragma pack(pop)
 
-struct APSaveData
+struct AP_ProgressData
 {
 	RacerUnlocks unlockedRacers;
-	RacerSaveData racerSaveDataCopy;
+	SWR_SaveData cachedSave;
+	int pitDroidCounter = 1;
+	int racesCompleted = 0;
 };
 
 struct NotifyMsg

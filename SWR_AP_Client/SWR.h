@@ -33,7 +33,6 @@ namespace SWRGame
 	void StartupSequenceLoop();
 	void Update();
 	void InitSaveData();
-	void CopySaveData(RacerSaveData* racerSaveData);
 	void OnDraw();
 
 	void ScoutWattoShop();
@@ -44,8 +43,8 @@ namespace SWRGame
 	bool isPlayerKillable();
 
 	int baseAddress;
-	APServerInfo serverInfo;
-	APSaveData saveData;
+	AP_ServerInfo serverInfo;
+	AP_ProgressData progress;
 
 	uint64_t partialSeed = 0;
 	int racesCompleted = 0;
@@ -53,8 +52,6 @@ namespace SWRGame
 	SWRGameState gamestate;
 	std::vector <QueuedItem> itemQueue;
 	std::vector <NotifyMsg> notifyQueue;
-
-	int pitDroidChecksCompleted = 1;
 
 	void __fastcall MarkRaceCompletion(int circuit, int course);
 	void __fastcall MarkShopPurchase(int entryOffset);

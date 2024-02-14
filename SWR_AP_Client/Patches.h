@@ -5,14 +5,13 @@
 namespace SWRGame
 {
 	extern int baseAddress;
-	extern APSaveData saveData;
+	extern AP_ProgressData progress;
 	extern void Log(const char* format, ...);
 	extern char saveDirectory[64];
 	extern void OnDraw();
 	extern void __fastcall MarkRaceCompletion(int circuit, int course);
 	extern void __fastcall MarkShopPurchase(int entryOffset);
 	extern void __fastcall MarkPitDroidPurchase();
-	extern int pitDroidChecksCompleted;
 	extern uint64_t partialSeed;
 }
 

@@ -62,7 +62,7 @@ void Patches::LimitAvailableRacers()
 	};                 
 
 	// Overwrite 0 with racers value
-	RacerUnlocks* unlockedRacersPtr = &SWRGame::saveData.unlockedRacers;
+	RacerUnlocks* unlockedRacersPtr = &SWRGame::progress.unlockedRacers;
 	memcpy(&limitRacers[2], &unlockedRacersPtr, 4);
 
 	WritePatch(DEFAULT_RACERS_OPCODE, &limitRacers, 6);
@@ -295,7 +295,7 @@ void Patches::HookDroidShop()
 		0x36A37
 	};
 
-	void* redirect = &SWRGame::pitDroidChecksCompleted;
+	void* redirect = &SWRGame::progress.pitDroidCounter;
 
 	for (auto offset : offsets)
 		WritePatch(offset, &redirect, 4);
