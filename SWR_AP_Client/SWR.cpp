@@ -294,21 +294,15 @@ namespace SWRGame
 		if (!isSaveDataReady())
 			return;
 		
-		char partVal = racerSaveData->parts[type];
-		if (partVal >= 5)
+		auto current = &swrSaveData->parts[type];
+		if (*current >= 5)
 			return;
 
 		if (part == -1) // Progressive
-		{
-			partVal++;
-			racerSaveData->parts[type] = partVal;
-		}
+			++*current;
 		else
-		{
-			if (partVal > part)
-				return;
-			racerSaveData->parts[type] = (char)part;
-		}
+			if (*current < (char)part)
+				*current = (char)part;
 	}
 
 	void GiveRacer(int racerID)
