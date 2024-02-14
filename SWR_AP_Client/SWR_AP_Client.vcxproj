@@ -93,7 +93,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="APCallbacks.h" />
-    <ClInclude Include="dllmain.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Items.h" />
     <ClInclude Include="Locations.h" />
