@@ -10,7 +10,7 @@
 #define LOAD_PROFILE_FUNC 0x21850
 #define SAVE_PROFILE_FUNC 0x219D0
 typedef bool(__cdecl* _SaveLoadProfile)(const char* profileName);
-typedef void(__cdecl* _WriteWhiteText)(int16_t xPos, int16_t yPos, const char* text);
+typedef void(__cdecl* _WriteText)(int16_t xPos, int16_t yPos, int r, int g, int b, int a, const char* text, int unk_00, int unk_01);
 
 namespace SWRGame
 {
@@ -25,7 +25,13 @@ namespace SWRGame
 	_SaveLoadProfile LoadProfile;
 	_SaveLoadProfile SaveProfile;
 
-	_WriteWhiteText WriteWhiteText;
+	_WriteText WriteText;
+
+	void WriteTextWrapper(std::string string, int x, int y)
+	{
+		string = "~F6~s" + string;
+		WriteText(x, y, 0xB7, 0xF5, 0xFF, 0xFF, string.c_str(), -1, 0);
+	}
 
 	std::chrono::steady_clock::time_point prevTime;
 
@@ -41,7 +47,7 @@ namespace SWRGame
 			{
 				const std::chrono::duration<float> deltaTime = curTime - prevTime;
 				notifyQueue[0].timeRemaining -= deltaTime.count();
-				WriteWhiteText(5, 5, notifyQueue[0].msg.c_str());
+				WriteTextWrapper(notifyQueue[0].msg, 10, 10);
 			}
 		}
 
@@ -427,7 +433,7 @@ namespace SWRGame
 		LoadProfile = (_SaveLoadProfile)(baseAddress + LOAD_PROFILE_FUNC);
 		SaveProfile = (_SaveLoadProfile)(baseAddress + SAVE_PROFILE_FUNC);
 
-		WriteWhiteText = (_WriteWhiteText)(baseAddress + 0x50560);
+		WriteText = (_WriteText)(baseAddress + 0x503E0);
 
 		saveDataPtr = (SWR_SaveData**)(baseAddress + SAVE_DATA_PTR_OFFSET);
 		swrSaveData = nullptr;
