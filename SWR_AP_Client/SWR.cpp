@@ -61,7 +61,7 @@ namespace SWRGame
 		// Only act on matching save data
 		if (swrSaveData->apPartialSeed == partialSeed)
 		{
-			ScanLocationChecks();
+			SyncProgress();
 
 			if (isPlayerInRace())
 				CheckPodKilled();
@@ -242,7 +242,7 @@ namespace SWRGame
 		AP_SendItem(locationOffset + SWR_AP_BASE_ID);
 	}
 
-	void ScanLocationChecks()
+	void SyncProgress()
 	{
 		if (!isSaveDataReady())
 			return;
@@ -267,10 +267,10 @@ namespace SWRGame
 					}
 				}
 			}
+		}
 
 			progress.cachedSave = *swrSaveData;
 		}
-	}
 
 	void ProcessDeathQueue()
 	{

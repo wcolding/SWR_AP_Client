@@ -21,7 +21,7 @@
 namespace SWRGame
 {
 	void Log(const char* format, ...);
-	void ScanLocationChecks();
+	void SyncProgress();
 
 	void ProcessDeathQueue();
 	void KillPod();
