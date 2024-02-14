@@ -47,7 +47,7 @@ namespace SWRGame
 	AP_ProgressData progress;
 
 	uint64_t partialSeed = 0;
-	int racesCompleted = 0;
+	bool invitationalCircuitPass = false;
 
 	SWRGameState gamestate;
 	std::vector <QueuedItem> itemQueue;
@@ -66,5 +66,6 @@ namespace SWRGame
 
 	extern void SetStartingRacers(int value);
 	extern void SetDisablePartDegradation(int value);
+	extern void SetInvitationalCircuitPass(int value);
 	extern void SetCourses(std::map<int, int> courseValues);
 }

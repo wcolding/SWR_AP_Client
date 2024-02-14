@@ -38,6 +38,17 @@ namespace SWRGame
 				AP_StoryComplete();
 		}
 
+		if (invitationalCircuitPass)
+		{
+			// 166 - 168
+			if ((165 < localID) && (localID < 169))
+			{
+				int index = localID - 165;
+				int flag = 1 << index;
+				progress.cachedSave.trackUnlocks[3] |= (char)flag;
+			}
+		}
+
 		// Watto
 		if (wattoShopLocationToOffset.contains(localID))
 		{
@@ -125,6 +136,12 @@ namespace SWRGame
 		}
 		else
 			Patches::HookDroidShop();
+	}
+
+	void SetInvitationalCircuitPass(int value)
+	{
+		invitationalCircuitPass = value == 1;
+		Patches::DisableVanillaInvitationalUnlocks();
 	}
 
 	void SetCourses(std::map<int, int> courseValues)

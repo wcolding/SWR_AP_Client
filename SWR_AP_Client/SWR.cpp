@@ -95,8 +95,8 @@ namespace SWRGame
 			return false;
 
 		swrSaveData = *saveDataPtr;
-			return true;
-		}
+		return true;
+	}
 
 	bool isPlayerInRace()
 	{
@@ -247,7 +247,11 @@ namespace SWRGame
 		if (!isSaveDataReady())
 			return;
 
-		
+		if (invitationalCircuitPass)
+		{
+			// Unlock any invitational tracks unlocked on a previous load
+			swrSaveData->trackUnlocks[3] |= progress.cachedSave.trackUnlocks[3];
+		}
 
 		// Racer Unlock Checks
 		if (swrSaveData->racerUnlocks != progress.cachedSave.racerUnlocks)
@@ -269,8 +273,8 @@ namespace SWRGame
 			}
 		}
 
-			progress.cachedSave = *swrSaveData;
-		}
+		progress.cachedSave = *swrSaveData;
+	}
 
 	void ProcessDeathQueue()
 	{
@@ -408,6 +412,7 @@ namespace SWRGame
 
 		AP_RegisterSlotDataIntCallback("StartingRacers", &SetStartingRacers);
 		AP_RegisterSlotDataIntCallback("DisablePartDegradation", &SetDisablePartDegradation);
+		AP_RegisterSlotDataIntCallback("EnableInvitationalCircuitPass", &SetInvitationalCircuitPass);
 		AP_RegisterSlotDataMapIntIntCallback("Courses", &SetCourses);
 
 		AP_Start();

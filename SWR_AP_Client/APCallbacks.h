@@ -13,8 +13,7 @@ namespace SWRGame
 	extern std::vector<std::string> wattoShopItemNames;
 	extern int queuedDeaths;
 	extern std::vector <QueuedItem> itemQueue;
-	//extern int pitDroidChecksCompleted;
-	//extern int racesCompleted;
+	extern bool invitationalCircuitPass;
 
 	void ResetSaveData();
 	void ReceiveItem(int64_t itemID, bool notify);
@@ -24,5 +23,6 @@ namespace SWRGame
 
 	void SetStartingRacers(int value);
 	void SetDisablePartDegradation(int value);
+	void SetInvitationalCircuitPass(int value);
 	void SetCourses(std::map<int, int> courseValues);
 }

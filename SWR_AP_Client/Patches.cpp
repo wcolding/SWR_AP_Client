@@ -411,6 +411,12 @@ void Patches::DisableAwardsCeremony()
 	// todo: prevent credits on Galactic completion
 }
 
+void Patches::DisableVanillaInvitationalUnlocks()
+{
+	SWRGame::Log("Applying patch: Disable Vanilla Invitational Unlocks");
+	NOP(0x3A40B, 5);
+}
+
 // 8DF30 is render func
 // +17FF writes string on profile page?
 
