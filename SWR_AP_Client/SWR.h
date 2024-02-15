@@ -16,7 +16,7 @@
 #define IS_PAUSED_OFFSET 0xD6B58
 #define SHOP_DATA_START 0xC1CB8
 
-#define RACERS_COUNT 22
+#define RACERS_COUNT 23
 
 namespace SWRGame
 {

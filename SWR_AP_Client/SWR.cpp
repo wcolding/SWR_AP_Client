@@ -257,6 +257,7 @@ namespace SWRGame
 		{
 			// Unlock any invitational tracks unlocked on a previous load
 			swrSaveData->trackUnlocks[3] |= progress.cachedSave.trackUnlocks[3];
+			progress.cachedSave.trackUnlocks[3] = swrSaveData->trackUnlocks[3];
 		}
 
 		// Racer Unlock Checks
@@ -277,9 +278,10 @@ namespace SWRGame
 					}
 				}
 			}
+
+			progress.cachedSave.racerUnlocks = swrSaveData->racerUnlocks;
 		}
 
-		progress.cachedSave = *swrSaveData;
 	}
 
 	void ProcessDeathQueue()
