@@ -8,11 +8,13 @@
 namespace SWRGame
 {
 	extern AP_ProgressData progress;
+	extern AP_ServerInfo serverInfo;
 	extern void Log(const char* format, ...);
 	extern std::vector<ItemShopEntry*> wattoShopData;
 	extern std::vector<std::string> wattoShopItemNames;
 	extern int queuedDeaths;
 	extern std::vector <QueuedItem> itemQueue;
+	extern void QueueNotifyMsg(std::string _msg);
 	extern bool invitationalCircuitPass;
 
 	void ResetSaveData();
@@ -20,6 +22,7 @@ namespace SWRGame
 	void SetLocationChecked(int64_t locID);
 	void RecvLocationInfo(std::vector<AP_NetworkItem> items);
 	void QueueDeath();
+	void ProcessMessages();
 
 	void SetStartingRacers(int value);
 	void SetDisablePartDegradation(int value);

@@ -34,6 +34,7 @@ namespace SWRGame
 	void Update();
 	void InitSaveData();
 	void OnDraw();
+	void QueueNotifyMsg(std::string _msg);
 
 	void ScoutWattoShop();
 
@@ -63,6 +64,7 @@ namespace SWRGame
 	extern void SetLocationChecked(int64_t locID);
 	extern void RecvLocationInfo(std::vector<AP_NetworkItem> items);
 	extern void QueueDeath();
+	extern void ProcessMessages();
 
 	extern void SetStartingRacers(int value);
 	extern void SetDisablePartDegradation(int value);

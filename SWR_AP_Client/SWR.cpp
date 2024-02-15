@@ -71,7 +71,8 @@ namespace SWRGame
 
 			if (isPlayerInRace())
 				CheckPodKilled();
-
+			
+			ProcessMessages();
 			ProcessDeathQueue();
 			ProcessItemQueue();
 		}
@@ -369,8 +370,6 @@ namespace SWRGame
 			QueuedItem item = itemQueue.front();
 			ItemInfo itemInfo = item.info;
 			Log("Received item \'%s\'", itemInfo.name.c_str());
-			if (item.notify)
-				QueueNotifyMsg(itemInfo.name);
 
 			itemQueue.erase(itemQueue.begin());
 

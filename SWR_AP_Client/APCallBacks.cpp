@@ -121,6 +121,41 @@ namespace SWRGame
 		Log("Queued deaths: %i", queuedDeaths);
 	}
 
+	void ProcessMessages()
+	{
+		if (!AP_IsMessagePending())
+			return;
+
+		auto msg = AP_GetLatestMessage();
+
+		switch (msg->type)
+		{
+		case AP_MessageType::ItemSend:
+		{
+			AP_ItemSendMessage* sendMsg = static_cast<AP_ItemSendMessage*>(msg);
+			if (strcmp(sendMsg->recvPlayer.c_str(), serverInfo.player) != 0)
+				QueueNotifyMsg("Sent " + sendMsg->item + " to " + sendMsg->recvPlayer);
+
+			AP_ClearLatestMessage();
+			break;
+		}
+		case AP_MessageType::ItemRecv:
+		{
+			AP_ItemRecvMessage* recvMsg = static_cast<AP_ItemRecvMessage*>(msg);
+			if (strcmp(recvMsg->sendPlayer.c_str(), serverInfo.player) != 0)
+				QueueNotifyMsg("Received " + recvMsg->item + " from " + recvMsg->sendPlayer);
+			else
+				QueueNotifyMsg("Found your " + recvMsg->item);
+
+			AP_ClearLatestMessage();
+			break;
+		}
+		default:
+			AP_ClearLatestMessage();
+			break;
+		}
+	}
+
 	void SetStartingRacers(int value)
 	{
 		progress.unlockedRacers = (RacerUnlocks)value;
