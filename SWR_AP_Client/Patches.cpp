@@ -417,6 +417,36 @@ void Patches::DisableVanillaInvitationalUnlocks()
 	NOP(0x3A40B, 5);
 }
 
+std::vector<float> circuitValues = {
+	.89f, .97f, 1.0f, 1.1f 
+};
+
+void __fastcall SetAIDifficulty()
+{
+	GameStatus** statusPtr = (GameStatus**)(SWRGame::baseAddress + 0xBFDB8);
+	GameStatus* status = *statusPtr;
+	float* aiMultiplier = (float*)(SWRGame::baseAddress + 0xC707C);
+	*aiMultiplier = circuitValues[status->selectedCircuit];
+}
+
+void __declspec(naked) SetAIDifficultyWrapper()
+{
+	__asm
+	{
+		mov edx,[eax+0x1AC]; // vanilla call
+		pushad;
+		call SetAIDifficulty;
+		popad;
+		ret;
+	}
+}
+
+void Patches::ScaleAIDifficulty()
+{
+	SWRGame::Log("Applying patch: Scale AI Difficulty");
+	HookFunction(0x66ABD, &SetAIDifficultyWrapper, 1);
+}
+
 // 8DF30 is render func
 // +17FF writes string on profile page?
 

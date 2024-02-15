@@ -34,6 +34,7 @@ public:
 	static void HookRaceRewards();
 	static void DisableAwardsCeremony();
 	static void DisableVanillaInvitationalUnlocks();
+	static void ScaleAIDifficulty();
 
 	static void HookSaveFiles();
 };

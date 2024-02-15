@@ -142,6 +142,16 @@ private:
 };
 static_assert(sizeof(SWR_SaveData) == 0x50, "RacerSaveData resized!");
 
+// Not entirely sure what this structure is
+struct GameStatus
+{
+private:
+	char unk_00[0x5D];
+public:
+	char selectedCourseId;
+	char selectedCircuit;
+};
+
 #pragma pack(pop)
 
 struct AP_ProgressData

@@ -472,6 +472,7 @@ namespace SWRGame
 				Patches::HookRaceRewards();
 				Patches::DisableJunkyard(); 
 				Patches::DisableAwardsCeremony();
+				Patches::ScaleAIDifficulty();
 
 				// Set save directory
 				AP_RoomInfo roomInfo;
