@@ -89,6 +89,16 @@ namespace SWRGame
 		va_end(args);
 	}
 
+	void SendAPItem(int localLocationId)
+	{
+		std::vector<int64_t> locations;
+		locations.push_back(localLocationId + SWR_AP_BASE_ID);
+		std::string locationName = locationTable[localLocationId];
+		Log("Location checked: %s", locationName.c_str());
+		//AP_SendLocationScouts(locations, 0);
+		AP_SendItem(locations[0]);
+	}
+
 	bool isSaveFileLoaded()
 	{
 		char* firstChar = (char*)(baseAddress + SAVE_DATA_OFFSET);
@@ -198,9 +208,7 @@ namespace SWRGame
 	void __fastcall MarkRaceCompletion(int circuit, int course)
 	{
 		int locationOffset = 145 + circuit * 7 + course;
-		std::string locationName = locationTable[locationOffset];
-		Log("Location checked: %s", locationName.c_str());
-		AP_SendItem(locationOffset + SWR_AP_BASE_ID);
+		SendAPItem(locationOffset);
 	}
 
 	void __fastcall MarkShopPurchase(int entryOffset)
@@ -211,9 +219,8 @@ namespace SWRGame
 		{
 			if (pair.second == tableOffset)
 			{
-				Log("Location checked: %s", locationTable[pair.first].c_str());
 				wattoShopData[tableOffset]->requiredRaces |= 0x80; // mark as completed
-				AP_SendItem(pair.first + SWR_AP_BASE_ID);
+				SendAPItem(pair.first);
 				
 				int* removedIndex = (int*)(baseAddress + 0xA295D0);
 				size_t* selectionCount = (size_t*)(baseAddress + 0xA295CC);
@@ -243,9 +250,7 @@ namespace SWRGame
 			return;
 
 		int locationOffset = 141 + progress.pitDroidCounter;
-		std::string locationName = locationTable[locationOffset];
-		Log("Location checked: %s", locationName.c_str());
-		AP_SendItem(locationOffset + SWR_AP_BASE_ID);
+		SendAPItem(locationOffset);
 	}
 
 	void SyncProgress()
@@ -272,9 +277,7 @@ namespace SWRGame
 					if (racerUnlockTable.contains(curRacer))
 					{
 						int locID = racerUnlockTable[curRacer];
-						Log("Location checked: %s", locationTable[locID].c_str());
-						locID += SWR_AP_BASE_ID;
-						AP_SendItem(locID);
+						SendAPItem(locID);
 					}
 				}
 			}
