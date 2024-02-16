@@ -417,10 +417,6 @@ void Patches::DisableVanillaInvitationalUnlocks()
 	NOP(0x3A40B, 5);
 }
 
-std::vector<float> circuitValues = {
-	.89f, .97f, 1.0f, 1.1f 
-};
-
 void __fastcall SetAIDifficulty()
 {
 	GameStatus** statusPtr = (GameStatus**)(SWRGame::baseAddress + 0xBFDB8);
