@@ -417,18 +417,26 @@ void Patches::DisableVanillaInvitationalUnlocks()
 	NOP(0x3A40B, 5);
 }
 
-void __fastcall SetAIDifficulty()
+typedef void(__fastcall* _SetAIDifficulty)();
+_SetAIDifficulty SetAIDifficulty;
+
+void __fastcall AIScaleByCircuit()
 {
 	GameStatus** statusPtr = (GameStatus**)(SWRGame::baseAddress + 0xBFDB8);
-	GameStatus* status = *statusPtr;
+	GameStatus* gameStatus = *statusPtr;
 	float* aiMultiplier = (float*)(SWRGame::baseAddress + 0xC707C);
-	//*aiMultiplier = SWRGame::GetAIScaleFromParts();
-	int vanillaCircuit = courseIdToVanillaCircuit[status->selectedCourseId];
-	if (vanillaCircuit != status->selectedCircuit)
+	int vanillaCircuit = courseIdToVanillaCircuit[gameStatus->selectedCourseId];
+	if (vanillaCircuit != gameStatus->selectedCircuit)
 	{
-		float value = SWRGame::GetAIScaleByCircuit(*aiMultiplier, vanillaCircuit, status->selectedCircuit);
+		float value = SWRGame::GetAIScaleByCircuit(*aiMultiplier, vanillaCircuit, gameStatus->selectedCircuit);
 		*aiMultiplier = value;
 	}
+}
+
+void __fastcall AIScaleFromParts()
+{
+	float* aiMultiplier = (float*)(SWRGame::baseAddress + 0xC707C);
+	*aiMultiplier = SWRGame::GetAIScaleFromParts();
 }
 
 void __declspec(naked) SetAIDifficultyWrapper()
@@ -443,9 +451,14 @@ void __declspec(naked) SetAIDifficultyWrapper()
 	}
 }
 
-void Patches::ScaleAIDifficulty()
+void Patches::ScaleAIDifficulty(int option)
 {
 	SWRGame::Log("Applying patch: Scale AI Difficulty");
+	if (option == 1)
+		SetAIDifficulty = AIScaleByCircuit;
+	else
+		SetAIDifficulty = AIScaleFromParts;
+
 	HookFunction(0x66ABD, &SetAIDifficultyWrapper, 1);
 }
 

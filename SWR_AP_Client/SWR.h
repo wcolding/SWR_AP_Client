@@ -71,5 +71,6 @@ namespace SWRGame
 	extern void SetStartingRacers(int value);
 	extern void SetDisablePartDegradation(int value);
 	extern void SetInvitationalCircuitPass(int value);
+	extern void SetAIScaling(int value);
 	extern void SetCourses(std::map<int, int> courseValues);
 }

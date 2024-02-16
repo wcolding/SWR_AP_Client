@@ -179,6 +179,12 @@ namespace SWRGame
 		Patches::DisableVanillaInvitationalUnlocks();
 	}
 
+	void SetAIScaling(int value)
+	{
+		if (value != 0)
+			Patches::ScaleAIDifficulty(value);
+	}
+
 	void SetCourses(std::map<int, int> courseValues)
 	{
 		courseLayout = courseValues;

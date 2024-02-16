@@ -491,6 +491,7 @@ namespace SWRGame
 		AP_RegisterSlotDataIntCallback("StartingRacers", &SetStartingRacers);
 		AP_RegisterSlotDataIntCallback("DisablePartDegradation", &SetDisablePartDegradation);
 		AP_RegisterSlotDataIntCallback("EnableInvitationalCircuitPass", &SetInvitationalCircuitPass);
+		AP_RegisterSlotDataIntCallback("AIScaling", &SetAIScaling);
 		AP_RegisterSlotDataMapIntIntCallback("Courses", &SetCourses);
 
 		AP_Start();
@@ -540,7 +541,6 @@ namespace SWRGame
 				Patches::HookRaceRewards();
 				Patches::DisableJunkyard(); 
 				Patches::DisableAwardsCeremony();
-				Patches::ScaleAIDifficulty();
 
 				// Set save directory
 				AP_RoomInfo roomInfo;
