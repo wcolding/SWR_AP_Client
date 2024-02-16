@@ -57,6 +57,8 @@ namespace SWRGame
 	void __fastcall MarkRaceCompletion(int circuit, int course);
 	void __fastcall MarkShopPurchase(int entryOffset);
 	void __fastcall MarkPitDroidPurchase();
+	float GetAIScaleFromParts();
+	float GetAIScaleByCircuit(float val, int baseCircuit, int targetCircuit);
 
 	// Callbacks
 	extern void ResetSaveData();

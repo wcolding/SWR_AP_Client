@@ -1,6 +1,7 @@
 #pragma once
 #include "Enums.h"
 #include "Structs.h"
+#include "Locations.h"
 
 namespace SWRGame
 {
@@ -13,6 +14,8 @@ namespace SWRGame
 	extern void __fastcall MarkShopPurchase(int entryOffset);
 	extern void __fastcall MarkPitDroidPurchase();
 	extern uint64_t partialSeed;
+	extern float GetAIScaleFromParts();
+	extern float GetAIScaleByCircuit(float val, int baseCircuit, int targetCircuit);
 }
 
 static class Patches

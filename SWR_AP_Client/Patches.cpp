@@ -426,7 +426,13 @@ void __fastcall SetAIDifficulty()
 	GameStatus** statusPtr = (GameStatus**)(SWRGame::baseAddress + 0xBFDB8);
 	GameStatus* status = *statusPtr;
 	float* aiMultiplier = (float*)(SWRGame::baseAddress + 0xC707C);
-	*aiMultiplier = circuitValues[status->selectedCircuit];
+	//*aiMultiplier = SWRGame::GetAIScaleFromParts();
+	int vanillaCircuit = courseIdToVanillaCircuit[status->selectedCourseId];
+	if (vanillaCircuit != status->selectedCircuit)
+	{
+		float value = SWRGame::GetAIScaleByCircuit(*aiMultiplier, vanillaCircuit, status->selectedCircuit);
+		*aiMultiplier = value;
+	}
 }
 
 void __declspec(naked) SetAIDifficultyWrapper()

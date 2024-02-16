@@ -363,6 +363,74 @@ namespace SWRGame
 		swrSaveData->money += amount;
 	}
 
+	//////////////////////
+	// AI Scaling Methods
+	//////////////////////
+	// Scale according to the quality of your pod's parts
+	// 
+	// These values need testing/tuning
+	float partModifiers[7] = {
+		.05f,
+		.07f,
+		.07f,
+		.07f,
+		.03f,
+		.05f,
+		.04f
+	};
+
+	float GetAIScaleFromParts()
+	{
+		float scale = .87f;
+		float healthScale = 1;
+		
+		for (int i = 0; i < 7; i++)
+		{
+
+			healthScale = (float)swrSaveData->partsHealth[i] / 255.0f; 
+			Log("Health scale: %i -> %f", swrSaveData->partsHealth[i], healthScale);
+			scale += partModifiers[i] * (int)swrSaveData->parts[i] * healthScale;
+		}
+			
+		Log("Scale: %f", scale);
+		return scale;
+	}
+	//
+	// Scale the vanilla track values based on their circuit placement
+	// Amateur will be easier than Semi-Pro, Semi-Pro easier than Galactic, etc
+	//
+	// These modifiers are based on the average vanilla values per circuit
+	const std::vector<float> circuitAIConversions =	{
+		1.121f, // Amateur -> Semi-Pro
+		1.064f, // Semi-Pro -> Galactic
+		1.018f  // Galactic -> Invitational
+	};
+
+	float GetAIScaleByCircuit(float val, int baseCircuit, int targetCircuit)
+	{
+		if (baseCircuit < targetCircuit)
+		{
+			// Upscale
+			while (baseCircuit < targetCircuit)
+			{
+				val *= circuitAIConversions[baseCircuit];
+				baseCircuit++;
+			}
+		}
+		else
+		{
+			// Downscale
+			while (baseCircuit > targetCircuit)
+			{
+				val /= circuitAIConversions[baseCircuit - 1];
+				baseCircuit--;
+			}
+		}
+
+		return val;
+	}
+	///////////////////////////////////////////////////////////////////////////
+
 	void ProcessItemQueue()
 	{
 		if (!itemQueue.empty() && isSaveDataReady())

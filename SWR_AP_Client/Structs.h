@@ -15,7 +15,7 @@ struct AP_ServerInfo
 #pragma pack(push)
 #pragma pack(1)
 
-typedef char PodParts[7];
+typedef unsigned char PodParts[7];
 
 struct PodHealth
 {

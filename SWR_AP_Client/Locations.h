@@ -215,3 +215,35 @@ static std::map<int, int> wattoShopLocationToOffset
 	{ 133, 40 },
 	{ 134, 41 }
 };
+
+static std::map<int, int> courseIdToVanillaCircuit
+{
+	{ 0x00, 0 }, // Boonta Training Course
+	{ 0x10, 0 }, // Mon Gazza Speedway
+	{ 0x02, 0 }, // Beedo's Wild Ride
+	{ 0x06, 0 }, // Aquilaris Classic
+	{ 0x16, 0 }, // Malastare 100
+	{ 0x13, 0 }, // Vengeance
+	{ 0x11, 0 }, // Spice Mine Run
+
+	{ 0x07, 1 }, // Sunken City
+	{ 0x03, 1 }, // Howler Gorge
+	{ 0x17, 1 }, // Dug Derby
+	{ 0x09, 1 }, // Scrapper's Run
+	{ 0x12, 1 }, // Zugga Challenge
+	{ 0x0C, 1 }, // Baroo Coast
+	{ 0x08, 1 }, // Bumpy's Breakers
+
+	{ 0x14, 2 }, // Executioner
+	{ 0x18, 2 }, // Sebulba's Legacy
+	{ 0x0D, 2 }, // Grabvine Gateway
+	{ 0x04, 2 }, // Andobi Mountain Run
+	{ 0x0A, 2 }, // Dethro's Revenge
+	{ 0x0E, 2 }, // Fire Mountain Rally
+	{ 0x01, 2 }, // The Boonta Classic
+
+	{ 0x05, 3 }, // Ando Prime Centrum
+	{ 0x0B, 3 }, // Abyss
+	{ 0x15, 3 }, // The Gauntlet
+	{ 0x0F, 3 }  // Inferno
+};
