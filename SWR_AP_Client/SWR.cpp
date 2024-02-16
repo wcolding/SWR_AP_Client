@@ -47,7 +47,7 @@ namespace SWRGame
 			{
 				const std::chrono::duration<float> deltaTime = curTime - prevTime;
 				notifyQueue[0].timeRemaining -= deltaTime.count();
-				WriteTextWrapper(notifyQueue[0].msg, 10, 10);
+				WriteTextWrapper(notifyQueue[0].msg, 10, 16);
 			}
 		}
 

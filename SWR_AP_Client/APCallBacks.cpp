@@ -145,7 +145,7 @@ namespace SWRGame
 			if (strcmp(recvMsg->sendPlayer.c_str(), serverInfo.player) != 0)
 				QueueNotifyMsg("Received " + recvMsg->item + " from " + recvMsg->sendPlayer);
 			else
-				QueueNotifyMsg("Found your " + recvMsg->item);
+				QueueNotifyMsg("You found your " + recvMsg->item);
 
 			AP_ClearLatestMessage();
 			break;
