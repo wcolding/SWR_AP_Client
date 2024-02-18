@@ -124,9 +124,7 @@ private:
 public:
 	char selectedRacer;        // 0x24
 	TrackUnlocks trackUnlocks; // 0x25
-private:
-	char unk_01;               // 0x29
-public:
+	char progressivePasses;    // 0x29 - unk_01 being used to track progressive passes
 	uint64_t racePlacements;   // 0x2A
 private:
 	char unk_02[0x02];         // 0x32

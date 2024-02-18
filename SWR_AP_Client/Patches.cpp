@@ -321,6 +321,12 @@ void __fastcall WriteAPPartialSeed(int offset)
 	*seedAddr = SWRGame::partialSeed;
 }
 
+void __fastcall SetProgressivePasses(int offset)
+{
+	char* passesPtr = (char*)(SWRGame::baseAddress + 0xA35A89 + offset);
+	*passesPtr = 0;
+}
+
 void __declspec(naked) APSavePatch()
 {
 	__asm
@@ -329,6 +335,7 @@ void __declspec(naked) APSavePatch()
 		mov ecx, eax;
 		call WritePlanetsVisited;
 		call WriteAPPartialSeed;
+		call SetProgressivePasses;
 		popad;
 		ret;
 	}
