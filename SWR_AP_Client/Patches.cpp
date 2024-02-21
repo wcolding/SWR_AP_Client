@@ -184,17 +184,6 @@ void Patches::RewriteWattoShop()
 	//NOP(0x40914, 6);
 	HookFunction(0x40914, &MarkShopPurchaseWrapper, 1);
 
-	// Hide models for trade in items
-	// 3E9D6 move model id into eax
-	// value of 0x49 is invalid?
-	// result is an invisible object
-	char hideTradeInModels[6] = {
-		0xB8, 0x49, 0x00, 0x00, 0x00, // mov eax, 0x49
-		0x90                          // nop    
-	};
-
-	WritePatch(0x3E9D6, &hideTradeInModels, 6);
-
 	// 3EC10 draws purchase window elements
 	// Change title of right window
 	char newShopPurchaseTitle[5] = {
@@ -218,6 +207,7 @@ void Patches::RewriteWattoShop()
 	NOP(0x3F11D, 5); // "Cost" string 
 	NOP(0x3F170, 5); // "Trade" value
 	NOP(0x3F1CC, 5); // "Cost" value
+	NOP(0x56061, 5); // Draws current pod part model
 	
 	// Disable swapping models on purchase
 	NOP(0x4091A, 5);
