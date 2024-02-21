@@ -367,33 +367,34 @@ namespace SWRGame
 	// AI Scaling Methods
 	//////////////////////
 	// Scale according to the quality of your pod's parts
-	// 
-	// These values need testing/tuning
-	float partModifiers[7] = {
-		.05f,
-		.07f,
-		.07f,
-		.07f,
-		.03f,
-		.05f,
-		.04f
+	//
+	// Pieces will be weighted differently
+	PodParts partWeights = {
+		2,
+		3,
+		3,
+		3,
+		1,
+		2,
+		1
 	};
 
 	float GetAIScaleFromParts()
 	{
-		float scale = .87f;
-		float healthScale = 1;
-		
+		float playerScore = 0; 
+		float maxScore = 0;
+		float low  = 0.846f; // lowest scale in vanilla
+		float high = 1.135f; // highest scale in vanilla
+
 		for (int i = 0; i < 7; i++)
 		{
-
-			healthScale = (float)swrSaveData->partsHealth[i] / 255.0f; 
-			Log("Health scale: %i -> %f", swrSaveData->partsHealth[i], healthScale);
-			scale += partModifiers[i] * (int)swrSaveData->parts[i] * healthScale;
+			playerScore += (float)swrSaveData->parts[i] * (float)swrSaveData->partsHealth[i] * (float)partWeights[i];
+			maxScore += (float)6 * (float)255 * (float)partWeights[i];
 		}
-			
-		Log("Scale: %f", scale);
-		return scale;
+		Log("Player parts score: %f / %f", playerScore, maxScore);
+		float scaled = (high - low) * (playerScore - 0) / (maxScore - 0) + low; // may tweak since base parts don't degrade
+		Log("Scale: %f", scaled);
+		return scaled;
 	}
 	//
 	// Scale the vanilla track values based on their circuit placement
