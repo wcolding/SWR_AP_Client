@@ -217,13 +217,14 @@ void Patches::RewriteWattoShop()
 
 	// Sets trade cost
 	// +3EBC1
-	// mov 0 works
 	char disableTradeValue[13] = {
-		0xC7, 0x05, 0x5C, 0x93, 0xE9, 0x00, 0x00, 0x00, 0x00, 0x00, // mov [SWEP1RCR.EXE+A9935C],0
-		0x90, 0x90, 0x90                                            // NOP
+		0x89, 0x0D, 0x20, 0x92, 0xE9, 0x00,      // mov [SWEP1RCR.EXE+A99220], ecx
+		0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 // NOP
 	};
 
 	WritePatch(0x3EBC1, &disableTradeValue, 13);
+
+	NOP(0x3EBF5, 6); // originally set +A99220 with calculated value
 
 	//Item shop
 	//3EB6D
