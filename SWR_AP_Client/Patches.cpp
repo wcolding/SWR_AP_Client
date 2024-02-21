@@ -184,17 +184,6 @@ void Patches::RewriteWattoShop()
 	//NOP(0x40914, 6);
 	HookFunction(0x40914, &MarkShopPurchaseWrapper, 1);
 
-	// Hide models for trade in items
-	// 3E9D6 move model id into eax
-	// value of 0x49 is invalid?
-	// result is an invisible object
-	char hideTradeInModels[6] = {
-		0xB8, 0x49, 0x00, 0x00, 0x00, // mov eax, 0x49
-		0x90                          // nop    
-	};
-
-	WritePatch(0x3E9D6, &hideTradeInModels, 6);
-
 	// 3EC10 draws purchase window elements
 	// Change title of right window
 	char newShopPurchaseTitle[5] = {
@@ -218,6 +207,7 @@ void Patches::RewriteWattoShop()
 	NOP(0x3F11D, 5); // "Cost" string 
 	NOP(0x3F170, 5); // "Trade" value
 	NOP(0x3F1CC, 5); // "Cost" value
+	NOP(0x56061, 5); // Draws current pod part model
 	
 	// Disable swapping models on purchase
 	NOP(0x4091A, 5);
@@ -227,13 +217,14 @@ void Patches::RewriteWattoShop()
 
 	// Sets trade cost
 	// +3EBC1
-	// mov 0 works
 	char disableTradeValue[13] = {
-		0xC7, 0x05, 0x5C, 0x93, 0xE9, 0x00, 0x00, 0x00, 0x00, 0x00, // mov [SWEP1RCR.EXE+A9935C],0
-		0x90, 0x90, 0x90                                            // NOP
+		0x89, 0x0D, 0x20, 0x92, 0xE9, 0x00,      // mov [SWEP1RCR.EXE+A99220], ecx
+		0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 // NOP
 	};
 
 	WritePatch(0x3EBC1, &disableTradeValue, 13);
+
+	NOP(0x3EBF5, 6); // originally set +A99220 with calculated value
 
 	//Item shop
 	//3EB6D
@@ -321,6 +312,12 @@ void __fastcall WriteAPPartialSeed(int offset)
 	*seedAddr = SWRGame::partialSeed;
 }
 
+void __fastcall SetProgressivePasses(int offset)
+{
+	char* passesPtr = (char*)(SWRGame::baseAddress + 0xA35A89 + offset);
+	*passesPtr = 0;
+}
+
 void __declspec(naked) APSavePatch()
 {
 	__asm
@@ -329,6 +326,7 @@ void __declspec(naked) APSavePatch()
 		mov ecx, eax;
 		call WritePlanetsVisited;
 		call WriteAPPartialSeed;
+		call SetProgressivePasses;
 		popad;
 		ret;
 	}

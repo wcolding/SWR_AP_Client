@@ -27,6 +27,8 @@ namespace SWRGame
 
 	_WriteText WriteText;
 
+	char sessionProgressivePasses = 0;
+
 	void WriteTextWrapper(std::string string, int x, int y)
 	{
 		string = "~F6~s" + string;
@@ -147,7 +149,7 @@ namespace SWRGame
 		int unkillable = PodStatus::Destroyed | PodStatus::Autopilot | PodStatus::Invincible;
 
 		if ((playerPodData->status & unkillable) != 0)
-		return false;
+			return false;
 
 		return true;
 	}
@@ -286,6 +288,14 @@ namespace SWRGame
 			progress.cachedSave.racerUnlocks = swrSaveData->racerUnlocks;
 		}
 
+		// Progressive circuit passes
+		if (sessionProgressivePasses > swrSaveData->progressivePasses)
+		{
+			swrSaveData->progressivePasses = sessionProgressivePasses;
+			Log("Progressive circuit passes: %i", (int)swrSaveData->progressivePasses);
+			for (int i = 0; i < swrSaveData->progressivePasses; i++) 
+				swrSaveData->trackUnlocks[i+1] |= 0x01;
+		}
 	}
 
 	void ProcessDeathQueue()
@@ -340,17 +350,7 @@ namespace SWRGame
 			return;
 
 		if (type == -1)
-		{
-			// Progressive
-			for (int i = 1; i < 4; i++)
-			{
-				if (swrSaveData->trackUnlocks[i] == 0)
-				{
-					swrSaveData->trackUnlocks[i] |= 0x01;
-					return;
-				}
-			}
-		}
+			sessionProgressivePasses++;
 		else
 			swrSaveData->trackUnlocks[type] |= 0x01;
 	}
