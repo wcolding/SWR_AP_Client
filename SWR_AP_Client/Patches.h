@@ -28,7 +28,7 @@ private:
 public:
 	static void HookDraw();
 	static void LimitAvailableRacers();
-	static void DisablePitDroidShop();
+	static void DisablePitDroidShop(); // phasing this out
 	static void DisablePartDegradation();
 	static void FixCourseSelection();
 	static void RewriteWattoShop();

@@ -165,12 +165,7 @@ namespace SWRGame
 	void SetDisablePartDegradation(int value)
 	{
 		if (value)
-		{
 			Patches::DisablePartDegradation();
-			Patches::DisablePitDroidShop();
-		}
-		else
-			Patches::HookDroidShop();
 	}
 
 	void SetInvitationalCircuitPass(int value)

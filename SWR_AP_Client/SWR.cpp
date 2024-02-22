@@ -544,6 +544,7 @@ namespace SWRGame
 				Patches::FixCourseSelection();
 				Patches::RewriteWattoShop(); 
 				Patches::HookRaceRewards();
+				Patches::HookDroidShop();
 				Patches::DisableJunkyard(); 
 				Patches::DisableAwardsCeremony();
 
