@@ -393,6 +393,7 @@ namespace SWRGame
 		}
 		Log("Player parts score: %f / %f", playerScore, maxScore);
 		float scaled = (high - low) * (playerScore - 0) / (maxScore - 0) + low; // may tweak since base parts don't degrade
+		scaled *= aiModifier;
 		Log("Scale: %f", scaled);
 		return scaled;
 	}
@@ -428,6 +429,7 @@ namespace SWRGame
 			}
 		}
 
+		val *= aiModifier;
 		return val;
 	}
 	///////////////////////////////////////////////////////////////////////////
@@ -494,6 +496,7 @@ namespace SWRGame
 		AP_RegisterSlotDataIntCallback("DisablePartDegradation", &SetDisablePartDegradation);
 		AP_RegisterSlotDataIntCallback("EnableInvitationalCircuitPass", &SetInvitationalCircuitPass);
 		AP_RegisterSlotDataIntCallback("AIScaling", &SetAIScaling);
+		AP_RegisterSlotDataIntCallback("AdditionalAIMultiplier", &SetAdditionalScaling);
 		AP_RegisterSlotDataMapIntIntCallback("Courses", &SetCourses);
 
 		AP_Start();

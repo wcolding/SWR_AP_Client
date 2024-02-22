@@ -185,6 +185,12 @@ namespace SWRGame
 			Patches::ScaleAIDifficulty(value);
 	}
 
+	void SetAdditionalScaling(int value)
+	{
+		SWRGame::aiModifier = (float)value / 1000;
+		Log("AI modifier set: %f", SWRGame::aiModifier);
+	}
+
 	void SetCourses(std::map<int, int> courseValues)
 	{
 		courseLayout = courseValues;

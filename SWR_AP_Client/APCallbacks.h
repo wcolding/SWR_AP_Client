@@ -16,6 +16,7 @@ namespace SWRGame
 	extern std::vector <QueuedItem> itemQueue;
 	extern void QueueNotifyMsg(std::string _msg);
 	extern bool invitationalCircuitPass;
+	extern float aiModifier;
 
 	void ResetSaveData();
 	void ReceiveItem(int64_t itemID, bool notify);
@@ -28,5 +29,6 @@ namespace SWRGame
 	void SetDisablePartDegradation(int value);
 	void SetInvitationalCircuitPass(int value);
 	void SetAIScaling(int value);
+	void SetAdditionalScaling(int value);
 	void SetCourses(std::map<int, int> courseValues);
 }
