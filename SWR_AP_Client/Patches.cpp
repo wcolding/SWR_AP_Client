@@ -395,6 +395,10 @@ void Patches::HookRaceRewards()
 	};
 
 	WritePatch(0x3A373, &giveFairReward, 7);
+
+	// Disable user ability to change the payout setting to minimize confusion
+	NOP(0x3C40E, 6);
+	NOP(0x3C4C1, 6);
 }
 
 void Patches::DisableAwardsCeremony()

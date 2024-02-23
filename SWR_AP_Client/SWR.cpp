@@ -573,6 +573,10 @@ namespace SWRGame
 		{
 			// Scout locations, do any other things we want done before we start the update loop
 			ScoutWattoShop();
+			GameStatus** statusPtr = (GameStatus**)(SWRGame::baseAddress + 0xBFDB8);
+			GameStatus* gameStatus = *statusPtr;
+			if (gameStatus != nullptr)
+				gameStatus->payoutSetting = PayoutSetting::Fair;
 
 			gamestate = SWRGameState::Ready;
 		}

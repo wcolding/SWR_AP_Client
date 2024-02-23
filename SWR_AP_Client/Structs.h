@@ -146,8 +146,12 @@ struct GameStatus
 private:
 	char unk_00[0x5D];
 public:
-	char selectedCourseId;
-	char selectedCircuit;
+	char selectedCourseId; // 0x5D
+	char selectedCircuit;  // 0x5E
+private:
+	char unk_01[0x32];
+public:
+	char payoutSetting;    // 0x91
 };
 
 #pragma pack(pop)

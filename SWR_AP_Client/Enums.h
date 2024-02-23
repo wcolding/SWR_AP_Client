@@ -60,3 +60,10 @@ enum SWRGameState : int
 	Ready = 3,
 	Closed = 4
 };
+
+enum PayoutSetting : char
+{
+	Fair = 1,
+	Balanced = 2,
+	WTA = 3
+};
