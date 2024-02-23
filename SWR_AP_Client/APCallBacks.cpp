@@ -162,10 +162,10 @@ namespace SWRGame
 		Patches::LimitAvailableRacers();
 	}
 
-	void SetDisablePartDegradation(int value)
+	void SetDisablePartDamage(int value)
 	{
 		if (value)
-			Patches::DisablePartDegradation();
+			Patches::DisablePartDamage();
 	}
 
 	void SetInvitationalCircuitPass(int value)

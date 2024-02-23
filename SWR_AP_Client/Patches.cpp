@@ -87,9 +87,9 @@ void Patches::DisablePitDroidShop()
 
 // Game does not degrade base pod parts 
 // Trick it into thinking every part is a base part
-void Patches::DisablePartDegradation()
+void Patches::DisablePartDamage()
 {
-	SWRGame::Log("Applying patch: Disable Part Degredation");
+	SWRGame::Log("Applying patch: Disable Part Damage");
 	char forceUnupgraded[6] = {
 		0xB1, 0x00, // mov cl, 00
 		0x90,       // nop

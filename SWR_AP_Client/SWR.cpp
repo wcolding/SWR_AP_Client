@@ -493,7 +493,7 @@ namespace SWRGame
 		AP_SetDeathLinkRecvCallback(&QueueDeath);
 
 		AP_RegisterSlotDataIntCallback("StartingRacers", &SetStartingRacers);
-		AP_RegisterSlotDataIntCallback("DisablePartDegradation", &SetDisablePartDegradation);
+		AP_RegisterSlotDataIntCallback("DisablePartDamage", &SetDisablePartDamage);
 		AP_RegisterSlotDataIntCallback("EnableInvitationalCircuitPass", &SetInvitationalCircuitPass);
 		AP_RegisterSlotDataIntCallback("AIScaling", &SetAIScaling);
 		AP_RegisterSlotDataIntCallback("AdditionalAIMultiplier", &SetAdditionalScaling);

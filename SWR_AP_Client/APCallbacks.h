@@ -26,7 +26,7 @@ namespace SWRGame
 	void ProcessMessages();
 
 	void SetStartingRacers(int value);
-	void SetDisablePartDegradation(int value);
+	void SetDisablePartDamage(int value);
 	void SetInvitationalCircuitPass(int value);
 	void SetAIScaling(int value);
 	void SetAdditionalScaling(int value);
