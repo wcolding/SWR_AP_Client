@@ -69,7 +69,7 @@ struct Vector3
 	}
 };
 
-struct ItemShopEntry
+struct SWR_PodPartEntry
 {
 	char globalId;
 	char seriesId;
@@ -78,6 +78,11 @@ struct ItemShopEntry
 	int cost;
 	int modelId;
 	char* displayText;
+};
+
+struct SWR_PodPartTable
+{
+	SWR_PodPartEntry entries[42];
 };
 
 struct ShopInventoryEntry

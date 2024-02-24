@@ -10,7 +10,7 @@ namespace SWRGame
 	extern AP_ProgressData progress;
 	extern AP_ServerInfo serverInfo;
 	extern void Log(const char* format, ...);
-	extern std::vector<ItemShopEntry*> wattoShopData;
+	extern std::vector<SWR_PodPartEntry*> wattoShopData;
 	extern std::vector<std::string> wattoShopItemNames;
 	extern int queuedDeaths;
 	extern std::vector <QueuedItem> itemQueue;

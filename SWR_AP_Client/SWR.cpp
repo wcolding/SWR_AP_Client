@@ -19,7 +19,7 @@ namespace SWRGame
 	SWR_SaveData* swrSaveData;
 	SWR_SaveData** saveDataPtr;
 
-	std::vector<ItemShopEntry*> wattoShopData;
+	std::vector<SWR_PodPartEntry*> wattoShopData;
 	std::vector<std::string> wattoShopItemNames;
 
 	_SaveLoadProfile LoadProfile;
@@ -520,7 +520,7 @@ namespace SWRGame
 
 		for (int i = 0; i < 42; i++)
 		{
-			ItemShopEntry* nextItem = (ItemShopEntry*)(baseAddress + SHOP_DATA_START + sizeof(ItemShopEntry) * i);
+			SWR_PodPartEntry* nextItem = (SWR_PodPartEntry*)(baseAddress + SHOP_DATA_START + sizeof(SWR_PodPartEntry) * i);
 			if (i % 6 == 0)
 				nextItem->requiredRaces |= 0x80; // mark base items so the shop doesn't display them
 			wattoShopData.push_back(nextItem);
