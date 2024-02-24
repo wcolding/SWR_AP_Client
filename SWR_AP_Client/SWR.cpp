@@ -524,7 +524,7 @@ namespace SWRGame
 		for (int i = 0; i < 42; i++)
 		{
 			if (i % 6 == 0)
-				apShopData.entries[0].requiredRaces |= 0x80; // mark base items so the shop doesn't display them
+				apShopData.entries[i].requiredRaces |= 0x80; // mark base items so the shop doesn't display them
 		}
 
 		APSetup();
