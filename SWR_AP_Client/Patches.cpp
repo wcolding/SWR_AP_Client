@@ -464,10 +464,14 @@ void Patches::ScaleAIDifficulty(int option)
 	HookFunction(0x66ABD, &SetAIDifficultyWrapper, 1);
 }
 
-void __fastcall SetAPString(TextPtrStructure* textPtr)
+void __fastcall SetAPString(int menuId, TextPtrStructure* textPtr)
 {
-	const char* newString = "~sArchipelago Mode";
-	memcpy(textPtr->text, newString, 19);
+	if (menuId == 0x0B) // Main menu
+	{
+		SWRGame::Log("Set AP string");
+		const char* newString = "~sArchipelago Mode";
+		memcpy(textPtr->text, newString, 19);
+	}
 
 	// Do vanilla operation
 	int* vanillaPtr = (int*)(SWRGame::baseAddress + 0xD8798);
@@ -479,7 +483,7 @@ void __declspec(naked) SetAPStringWrapper()
 	__asm
 	{
 		pushad;
-		mov ecx, esi;
+		mov edx, esi;
 		call SetAPString;
 		popad;
 		ret;
