@@ -547,6 +547,7 @@ namespace SWRGame
 				Patches::HookDroidShop();
 				Patches::DisableJunkyard(); 
 				Patches::DisableAwardsCeremony();
+				Patches::SetAPModeString();
 
 				// Set save directory
 				AP_RoomInfo roomInfo;

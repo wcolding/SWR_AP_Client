@@ -40,4 +40,5 @@ public:
 	static void ScaleAIDifficulty(int option);
 
 	static void HookSaveFiles();
+	static void SetAPModeString();
 };

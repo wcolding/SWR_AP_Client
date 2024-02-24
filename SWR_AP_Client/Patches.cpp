@@ -464,6 +464,33 @@ void Patches::ScaleAIDifficulty(int option)
 	HookFunction(0x66ABD, &SetAIDifficultyWrapper, 1);
 }
 
+void __fastcall SetAPString(TextPtrStructure* textPtr)
+{
+	const char* newString = "~sArchipelago Mode";
+	memcpy(textPtr->text, newString, 19);
+
+	// Do vanilla operation
+	int* vanillaPtr = (int*)(SWRGame::baseAddress + 0xD8798);
+	*vanillaPtr = (int)textPtr;
+}
+
+void __declspec(naked) SetAPStringWrapper()
+{
+	__asm
+	{
+		pushad;
+		mov ecx, esi;
+		call SetAPString;
+		popad;
+		ret;
+	}
+}
+
+void Patches::SetAPModeString()
+{
+	HookFunction(0x1593C, &SetAPStringWrapper, 1);
+}
+
 // 8DF30 is render func
 // +17FF writes string on profile page?
 

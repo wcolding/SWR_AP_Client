@@ -154,6 +154,16 @@ public:
 	char payoutSetting;    // 0x91
 };
 
+// Also unsure what this is
+// Holds pointer to stored text for menu options?
+struct TextPtrStructure
+{
+private:
+	char unk_00[0x4D4];
+public:
+	char* text;
+};
+
 #pragma pack(pop)
 
 struct AP_ProgressData
