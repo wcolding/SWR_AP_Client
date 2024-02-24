@@ -16,6 +16,7 @@ namespace SWRGame
 	extern uint64_t partialSeed;
 	extern float GetAIScaleFromParts();
 	extern float GetAIScaleByCircuit(float val, int baseCircuit, int targetCircuit);
+	extern SWR_PodPartTable apShopData;
 }
 
 static class Patches

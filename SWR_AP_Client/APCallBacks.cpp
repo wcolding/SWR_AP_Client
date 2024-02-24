@@ -52,8 +52,7 @@ namespace SWRGame
 		// Watto
 		if (wattoShopLocationToOffset.contains(localID))
 		{
-			SWR_PodPartEntry* curEntry = wattoShopData[wattoShopLocationToOffset[localID]];
-			curEntry->requiredRaces |= 0x80;
+			apShopData.entries[wattoShopLocationToOffset[localID]].requiredRaces |= 0x80;
 		}
 
 		// Pit droid
@@ -74,10 +73,9 @@ namespace SWRGame
 			curLocId = item.location - SWR_AP_BASE_ID;
 			if (wattoShopLocationToOffset.contains(curLocId))
 			{
-				SWR_PodPartEntry* curEntry = wattoShopData[wattoShopLocationToOffset[curLocId]];
+				SWR_PodPartEntry* curEntry = &apShopData.entries[wattoShopLocationToOffset[curLocId]];
 				wattoShopItemNames.push_back(std::format("{} [{}]", item.itemName.c_str(), item.playerName.c_str()));
 				curEntry->displayText = (char*)wattoShopItemNames.back().c_str();
-
 				if (itemTable.contains(curItemId))
 				{
 					ItemInfo curItem = itemTable[curItemId];

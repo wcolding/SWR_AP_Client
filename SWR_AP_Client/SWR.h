@@ -46,6 +46,7 @@ namespace SWRGame
 	int baseAddress;
 	AP_ServerInfo serverInfo;
 	AP_ProgressData progress;
+	SWR_PodPartTable apShopData;
 
 	uint64_t partialSeed = 0;
 	bool invitationalCircuitPass = false;

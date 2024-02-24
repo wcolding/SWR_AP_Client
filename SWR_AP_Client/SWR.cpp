@@ -222,7 +222,7 @@ namespace SWRGame
 		{
 			if (pair.second == tableOffset)
 			{
-				wattoShopData[tableOffset]->requiredRaces |= 0x80; // mark as completed
+				apShopData.entries[tableOffset].requiredRaces |= 0x80; // mark as completed
 				SendAPItem(pair.first);
 				
 				int* removedIndex = (int*)(baseAddress + 0xA295D0);
@@ -517,13 +517,14 @@ namespace SWRGame
 		swrSaveData = nullptr;
 
 		queuedDeaths = 0;
+		
+		SWR_PodPartTable* originalPodPartTable = (SWR_PodPartTable*)(baseAddress + SHOP_DATA_START);
+		apShopData = *originalPodPartTable;
 
 		for (int i = 0; i < 42; i++)
 		{
-			SWR_PodPartEntry* nextItem = (SWR_PodPartEntry*)(baseAddress + SHOP_DATA_START + sizeof(SWR_PodPartEntry) * i);
 			if (i % 6 == 0)
-				nextItem->requiredRaces |= 0x80; // mark base items so the shop doesn't display them
-			wattoShopData.push_back(nextItem);
+				apShopData.entries[0].requiredRaces |= 0x80; // mark base items so the shop doesn't display them
 		}
 
 		APSetup();

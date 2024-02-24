@@ -226,6 +226,23 @@ void Patches::RewriteWattoShop()
 
 	NOP(0x3EBF5, 6); // originally set +A99220 with calculated value
 
+	// Redirect shop functions to use AP shop
+	// Leave vanilla item table intact
+	//
+	// Item names
+	void* apShopDataPtr = &SWRGame::apShopData;
+	void* apShopDataNamesPtr = (void*)((int)apShopDataPtr + 0x0C);
+	WritePatch(0x37943, &apShopDataNamesPtr, 4); // full shop view
+	WritePatch(0x3ECBF, &apShopDataNamesPtr, 4); // buy menu
+
+	// Model
+	void* apShopDataModelPtr = (void*)((int)apShopDataPtr + 0x08);
+	WritePatch(0x3E9A4, &apShopDataModelPtr, 4);
+
+	// Races needed
+	void* apShopDataRacesPtr = (void*)((int)apShopDataPtr + 0x02);
+	WritePatch(0x3E8CA, &apShopDataRacesPtr, 4);
+
 	//Item shop
 	//3EB6D
 	//Gets cost of part for shop

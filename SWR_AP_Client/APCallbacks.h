@@ -10,13 +10,14 @@ namespace SWRGame
 	extern AP_ProgressData progress;
 	extern AP_ServerInfo serverInfo;
 	extern void Log(const char* format, ...);
-	extern std::vector<SWR_PodPartEntry*> wattoShopData;
+	//extern std::vector<SWR_PodPartEntry*> wattoShopData;
 	extern std::vector<std::string> wattoShopItemNames;
 	extern int queuedDeaths;
 	extern std::vector <QueuedItem> itemQueue;
 	extern void QueueNotifyMsg(std::string _msg);
 	extern bool invitationalCircuitPass;
 	extern float aiModifier;
+	extern SWR_PodPartTable apShopData;
 
 	void ResetSaveData();
 	void ReceiveItem(int64_t itemID, bool notify);
