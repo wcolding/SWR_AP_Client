@@ -29,14 +29,7 @@ namespace SWRGame
 		if (locationTable.contains(localID))
 			Log("Setting location '%s' as checked", locationTable[localID].c_str());
 
-		// Races
-		// 145 - 169
-		if ((144 < localID) && (localID < 170))
-		{
-			SWRGame::progress.racesCompleted++;
-			if (SWRGame::progress.racesCompleted > 24)
-				AP_StoryComplete();
-		}
+		// For race completions (145 - 169), do nothing
 
 		if (invitationalCircuitPass)
 		{

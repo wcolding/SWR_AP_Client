@@ -177,7 +177,6 @@ struct AP_ProgressData
 	RacerUnlocks unlockedRacers;
 	SWR_SaveData cachedSave;
 	int pitDroidCounter = 1;
-	int racesCompleted = 0;
 };
 
 struct NotifyMsg

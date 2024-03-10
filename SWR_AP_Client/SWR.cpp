@@ -212,6 +212,9 @@ namespace SWRGame
 	{
 		int locationOffset = 145 + circuit * 7 + course;
 		SendAPItem(locationOffset);
+		swrSaveData->racesCompleted++;
+		if (swrSaveData->racePlacements > (char)24)
+			AP_StoryComplete();
 	}
 
 	void __fastcall MarkShopPurchase(int entryOffset)
