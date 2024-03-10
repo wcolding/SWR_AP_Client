@@ -317,22 +317,13 @@ void Patches::DisableJunkyard()
 	NOP(0x36A2C, 9);
 }
 
-void __fastcall WritePlanetsVisited(int offset)
+void __fastcall InitAPSave(int offset)
 {
-	int* planetsVisitedAddr = (int*)(SWRGame::baseAddress + 0xA35A9C + offset);
-	*planetsVisitedAddr = -1;
-}
-
-void __fastcall WriteAPPartialSeed(int offset)
-{
-	uint64_t* seedAddr = (uint64_t*)(SWRGame::baseAddress + 0xA35A78 + offset);
-	*seedAddr = SWRGame::partialSeed;
-}
-
-void __fastcall SetProgressivePasses(int offset)
-{
-	char* passesPtr = (char*)(SWRGame::baseAddress + 0xA35A89 + offset);
-	*passesPtr = 0;
+	SWR_SaveData* saveData = (SWR_SaveData*)(SWRGame::baseAddress + 0xA35A60 + offset);
+	saveData->cutscenesBitfield = 0xFFFFFFFF;
+	saveData->apPartialSeed = SWRGame::partialSeed;
+	saveData->progressivePasses = 0;
+	saveData->racesCompleted = 0;
 }
 
 void __declspec(naked) APSavePatch()
@@ -341,9 +332,7 @@ void __declspec(naked) APSavePatch()
 	{
 		pushad;
 		mov ecx, eax;
-		call WritePlanetsVisited;
-		call WriteAPPartialSeed;
-		call SetProgressivePasses;
+		call InitAPSave;
 		popad;
 		ret;
 	}
