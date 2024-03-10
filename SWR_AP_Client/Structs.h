@@ -131,8 +131,9 @@ public:
 	TrackUnlocks trackUnlocks; // 0x25
 	char progressivePasses;    // 0x29 - unk_01 being used to track progressive passes
 	uint64_t racePlacements;   // 0x2A
+	char racesCompleted;       // 0x32 - part of unk_02 used to check goal complete
 private:
-	char unk_02[0x02];         // 0x32
+	char unk_02;               // 0x33 
 public:
 	RacerUnlocks racerUnlocks; // 0x34
 	int money;                 // 0x38
