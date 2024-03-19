@@ -22,6 +22,7 @@ namespace SWRGame
 
 	std::vector<SWR_PodPartEntry*> wattoShopData;
 	std::vector<std::string> wattoShopItemNames;
+	std::string fullSeedName = "";
 
 	_SaveLoadProfile LoadProfile;
 	_SaveLoadProfile SaveProfile;
@@ -68,6 +69,7 @@ namespace SWRGame
 			switch (*menuVal)
 			{
 			case 1: // Start Menu
+				WriteText(625, 10, 0xFF, 0xFF, 0x00, 0xFF, fullSeedName.c_str(), -1, 0);
 				break;
 			case 2: // Profile select
 				WriteText(310, 120, 0xB7, 0xF5, 0xFF, 0xFF, "~F5~s~cIMPORTANT: Create a new save for each new seed!", -1, 0);
@@ -583,6 +585,7 @@ namespace SWRGame
 				// Set save directory
 				AP_RoomInfo roomInfo;
 				AP_GetRoomInfo(&roomInfo);
+				fullSeedName = "~F5~s~rSeed: " + roomInfo.seed_name;
 				std::string partialSeedStr = roomInfo.seed_name.substr(0, 8);
 				partialSeed = (uint64_t)strtoll(partialSeedStr.c_str(), nullptr, 10);
 			}
