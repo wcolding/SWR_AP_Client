@@ -533,6 +533,17 @@ namespace SWRGame
 				apShopData.entries[i].requiredRaces |= 0x80; // mark base items so the shop doesn't display them
 		}
 
+		//// Apply patches we don't need an AP callback for
+		Patches::HookSaveFiles();
+		Patches::HookDraw();
+		Patches::FixCourseSelection();
+		Patches::RewriteWattoShop();
+		Patches::HookRaceRewards();
+		Patches::HookDroidShop();
+		Patches::DisableJunkyard();
+		Patches::DisableAwardsCeremony();
+		Patches::SetAPModeString();
+
 		APSetup();
 	}
 
@@ -544,17 +555,6 @@ namespace SWRGame
 			if (AP_GetConnectionStatus() == AP_ConnectionStatus::Authenticated)
 			{
 				gamestate = SWRGameState::AP_Authenticated;
-
-				//// Apply patches we don't need an AP callback for
-				Patches::HookSaveFiles();
-				Patches::HookDraw();
-				Patches::FixCourseSelection();
-				Patches::RewriteWattoShop(); 
-				Patches::HookRaceRewards();
-				Patches::HookDroidShop();
-				Patches::DisableJunkyard(); 
-				Patches::DisableAwardsCeremony();
-				Patches::SetAPModeString();
 
 				// Set save directory
 				AP_RoomInfo roomInfo;
