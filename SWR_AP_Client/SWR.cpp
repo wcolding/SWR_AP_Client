@@ -127,16 +127,19 @@ namespace SWRGame
 		if (raceData == nullptr)
 			return false;
 
-		if (raceData->timer > 0.0f)
 			return true;
-
-		return false;
 	}
 
 	bool isPlayerKillable()
 	{
 		if (!isPlayerInRace())
 			return false;
+		else
+		{
+			RaceData* raceData = (RaceData*)(baseAddress + RACE_DATA_OFFSET);
+			if (raceData->timer < 0.1f)
+				return false;
+		}
 
 		int paused = *(int*)(baseAddress + IS_PAUSED_OFFSET);
 		if (paused == 1)
