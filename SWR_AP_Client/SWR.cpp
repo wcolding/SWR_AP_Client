@@ -18,6 +18,7 @@ namespace SWRGame
 	DeathState deathState = DeathState::Alive;
 	SWR_SaveData* swrSaveData;
 	SWR_SaveData** saveDataPtr;
+	int* menuVal = nullptr;
 
 	std::vector<SWR_PodPartEntry*> wattoShopData;
 	std::vector<std::string> wattoShopItemNames;
@@ -54,6 +55,27 @@ namespace SWRGame
 		}
 
 		prevTime = curTime;
+
+		// Connection status
+		if (gamestate < SWRGameState::AP_Authenticated)
+			WriteText(625, 20, 0xFF, 0x00, 0x00, 0xFF, "~F5~s~rNot connected to AP", -1, 0);
+		else if (!isPlayerInRace()) // only show in menus
+			WriteText(625, 20, 0xB7, 0xF5, 0xFF, 0xFF, "~F5~s~rConnected to AP", -1, 0);
+
+		// Menu specific draws
+		if (menuVal != nullptr)
+		{
+			switch (*menuVal)
+			{
+			case 1: // Start Menu
+				break;
+			case 2: // Profile select
+				WriteText(310, 120, 0xB7, 0xF5, 0xFF, 0xFF, "~F5~s~cIMPORTANT: Create a new save for each new seed!", -1, 0);
+				break;
+			default:
+				break;
+			}
+		}
 	}
 
 	void QueueNotifyMsg(std::string _msg)
@@ -127,7 +149,7 @@ namespace SWRGame
 		if (raceData == nullptr)
 			return false;
 
-			return true;
+		return true;
 	}
 
 	bool isPlayerKillable()
@@ -521,6 +543,8 @@ namespace SWRGame
 
 		saveDataPtr = (SWR_SaveData**)(baseAddress + SAVE_DATA_PTR_OFFSET);
 		swrSaveData = nullptr;
+
+		menuVal = (int*)(baseAddress + 0xD87A4);
 
 		queuedDeaths = 0;
 		
