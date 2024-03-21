@@ -17,6 +17,7 @@ namespace SWRGame
 	extern float GetAIScaleFromParts();
 	extern float GetAIScaleByCircuit(float val, int baseCircuit, int targetCircuit);
 	extern SWR_PodPartTable apShopData;
+	extern void ChangeAIModifier(float amount);
 }
 
 static class Patches
@@ -28,6 +29,7 @@ private:
 	static void NOP(int offset, size_t len);
 public:
 	static void HookDraw();
+	static void HookInput();
 	static void LimitAvailableRacers();
 	static void DisablePitDroidShop(); // phasing this out
 	static void DisablePartDamage();

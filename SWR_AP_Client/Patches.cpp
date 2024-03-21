@@ -521,3 +521,41 @@ void Patches::HookDraw()
 	OriginalRenderTexture = (_RenderTexture)(SWRGame::baseAddress + 0x8DF30);
 	HookFunction(oRenderTextureCallOffset, &HookedRenderTexture, 0);
 }
+
+int prevInput = 0;
+
+void __fastcall ProcessInput(int input, int port)
+{
+	if ((port > 0) || (input == prevInput))
+		return;
+
+
+	// Left input
+	if ((input & 0x00010000) != 0)
+		SWRGame::ChangeAIModifier(-0.005);
+
+	// Right input
+	if ((input & 0x00020000) != 0)
+		SWRGame::ChangeAIModifier(0.005);
+
+	prevInput = input;
+}
+
+void __declspec(naked) ProcessInputWrapper()
+{
+	__asm
+	{
+		mov eax, [esi*4 + 0x50C908];
+		pushad;
+		mov ecx, eax;
+		mov edx, esi;
+		call ProcessInput;
+		popad;
+		ret;
+	}
+}
+
+void Patches::HookInput()
+{
+	HookFunction(0x5A6EF, &ProcessInputWrapper, 2);
+}

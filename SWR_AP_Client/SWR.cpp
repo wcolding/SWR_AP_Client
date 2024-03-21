@@ -507,6 +507,15 @@ namespace SWRGame
 		val *= aiModifier;
 		return val;
 	}
+
+	void ChangeAIModifier(float amount)
+	{
+		// Only change this on the Main Menu (pre race screen)
+		if ((*menuVal == 3) && (*menuValB == 3))
+		{
+			aiModifier += amount;
+		}
+	}
 	///////////////////////////////////////////////////////////////////////////
 
 	void ProcessItemQueue()
@@ -608,6 +617,7 @@ namespace SWRGame
 		//// Apply patches we don't need an AP callback for
 		Patches::HookSaveFiles();
 		Patches::HookDraw();
+		Patches::HookInput();
 		Patches::FixCourseSelection();
 		Patches::RewriteWattoShop();
 		Patches::HookRaceRewards();
