@@ -19,6 +19,7 @@ namespace SWRGame
 	SWR_SaveData* swrSaveData;
 	SWR_SaveData** saveDataPtr;
 	int* menuVal = nullptr;
+	int* menuValB = nullptr;
 
 	std::vector<SWR_PodPartEntry*> wattoShopData;
 	std::vector<std::string> wattoShopItemNames;
@@ -110,6 +111,13 @@ namespace SWRGame
 				break;
 			case 2: // Profile select
 				WriteTextWrapper("IMPORTANT : Create a new save for each new seed!", SWRFont::Medium, 310, 120, SWRTextColor::LightBlue, SWRTextAlign::Center);
+				break;
+			case 3: // Everything else?
+				if (*menuValB == 13)
+					WriteTextWrapper("Rewards are locked to \"Fair\" but are farmable", SWRFont::Medium, 50, 300);
+
+				if (*menuValB == 3)
+					WriteTextWrapper("AI Modifier: " + std::to_string(aiModifier), SWRFont::Medium, 300, 160);
 				break;
 			default:
 				break;
@@ -584,6 +592,7 @@ namespace SWRGame
 		swrSaveData = nullptr;
 
 		menuVal = (int*)(baseAddress + 0xD87A4);
+		menuValB = (int*)(baseAddress + 0xA2A67C);
 
 		queuedDeaths = 0;
 		
