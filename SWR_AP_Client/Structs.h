@@ -184,3 +184,8 @@ struct NotifyMsg
 	std::string msg;
 	float timeRemaining;
 };
+
+struct Color
+{
+	int r, g, b, a;
+};

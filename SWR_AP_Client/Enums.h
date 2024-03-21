@@ -67,3 +67,24 @@ enum PayoutSetting : char
 	Balanced = 2,
 	WTA = 3
 };
+
+enum SWRFont
+{
+	Medium,
+	Large
+};
+
+enum SWRTextAlign
+{
+	Left,
+	Center,
+	Right
+};
+
+enum SWRTextColor : int
+{
+	White     = 0xFFFFFFFF,
+	LightBlue = 0xB7F5FFFF,
+	Red       = 0xFF0000FF,
+	Yellow    = 0xFFFF00FF
+};

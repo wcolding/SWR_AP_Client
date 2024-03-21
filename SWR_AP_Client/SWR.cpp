@@ -31,10 +31,47 @@ namespace SWRGame
 
 	char sessionProgressivePasses = 0;
 
-	void WriteTextWrapper(std::string string, int x, int y)
+	Color GetColorFromEnum(SWRTextColor textColor)
 	{
-		string = "~F6~s" + string;
-		WriteText(x, y, 0xB7, 0xF5, 0xFF, 0xFF, string.c_str(), -1, 0);
+		Color newColor;
+		newColor.r = ((int)textColor & 0xFF000000) >> 24;
+		newColor.g = ((int)textColor & 0x00FF0000) >> 16;
+		newColor.b = ((int)textColor & 0x0000FF00) >> 8;
+		newColor.a = ((int)textColor & 0x000000FF);
+		return newColor;
+	}
+
+	void WriteTextWrapper(std::string string, SWRFont font, int x, int y, SWRTextColor color = SWRTextColor::White, SWRTextAlign align = SWRTextAlign::Left)
+	{
+		string = "~s" + string;
+
+		switch (align)
+		{
+		case SWRTextAlign::Center:
+			string = "~c" + string;
+			break;
+		case SWRTextAlign::Right:
+			string = "~r" + string;
+			break;
+		default:
+			break;
+		}
+
+		switch (font)
+		{
+		case SWRFont::Medium:
+			string = "~F5" + string;
+			break;
+		case SWRFont::Large:
+			string = "~F6" + string;
+			break;
+		default:
+			break;
+		}
+
+		Color col = GetColorFromEnum(color);
+
+		WriteText(x, y, col.r, col.g, col.b, col.a, string.c_str(), -1, 0);
 	}
 
 	std::chrono::steady_clock::time_point prevTime;
@@ -51,7 +88,7 @@ namespace SWRGame
 			{
 				const std::chrono::duration<float> deltaTime = curTime - prevTime;
 				notifyQueue[0].timeRemaining -= deltaTime.count();
-				WriteTextWrapper(notifyQueue[0].msg, 10, 16);
+				WriteTextWrapper(notifyQueue[0].msg, SWRFont::Large, 10, 16, SWRTextColor::LightBlue);
 			}
 		}
 
@@ -59,9 +96,9 @@ namespace SWRGame
 
 		// Connection status
 		if (gamestate < SWRGameState::AP_Authenticated)
-			WriteText(625, 20, 0xFF, 0x00, 0x00, 0xFF, "~F5~s~rNot connected to AP", -1, 0);
+			WriteTextWrapper("Not connected to AP", SWRFont::Medium, 625, 20, SWRTextColor::Red, SWRTextAlign::Right);
 		else if (!isPlayerInRace()) // only show in menus
-			WriteText(625, 20, 0xB7, 0xF5, 0xFF, 0xFF, "~F5~s~rConnected to AP", -1, 0);
+			WriteTextWrapper("Connected to AP", SWRFont::Medium, 625, 20, SWRTextColor::LightBlue, SWRTextAlign::Right);
 
 		// Menu specific draws
 		if (menuVal != nullptr)
@@ -69,10 +106,10 @@ namespace SWRGame
 			switch (*menuVal)
 			{
 			case 1: // Start Menu
-				WriteText(625, 10, 0xFF, 0xFF, 0x00, 0xFF, fullSeedName.c_str(), -1, 0);
+				WriteTextWrapper(fullSeedName, SWRFont::Medium, 625, 10, SWRTextColor::Yellow, SWRTextAlign::Right);
 				break;
 			case 2: // Profile select
-				WriteText(310, 120, 0xB7, 0xF5, 0xFF, 0xFF, "~F5~s~cIMPORTANT: Create a new save for each new seed!", -1, 0);
+				WriteTextWrapper("IMPORTANT : Create a new save for each new seed!", SWRFont::Medium, 310, 120, SWRTextColor::LightBlue, SWRTextAlign::Center);
 				break;
 			default:
 				break;
@@ -585,7 +622,7 @@ namespace SWRGame
 				// Set save directory
 				AP_RoomInfo roomInfo;
 				AP_GetRoomInfo(&roomInfo);
-				fullSeedName = "~F5~s~rSeed: " + roomInfo.seed_name;
+				fullSeedName = "Seed: " + roomInfo.seed_name;
 				std::string partialSeedStr = roomInfo.seed_name.substr(0, 8);
 				partialSeed = (uint64_t)strtoll(partialSeedStr.c_str(), nullptr, 10);
 			}
