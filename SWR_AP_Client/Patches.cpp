@@ -529,7 +529,6 @@ void __fastcall ProcessInput(int input, int port)
 	if ((port > 0) || (input == prevInput))
 		return;
 
-
 	// Left input
 	if ((input & 0x00010000) != 0)
 		SWRGame::ChangeAIModifier(-0.005);

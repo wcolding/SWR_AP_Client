@@ -177,6 +177,15 @@ namespace SWRGame
 		Log("AI modifier set: %f", SWRGame::aiModifier);
 	}
 
+	void SetEnableMultiplierControl(int value)
+	{
+		SWRGame::modifierControl = value != 0;
+		if (SWRGame::modifierControl)
+			Log("Modifier control enabled");
+		else
+			Log("Modifier control disabled");
+	}
+
 	void SetCourses(std::map<int, int> courseValues)
 	{
 		courseLayout = courseValues;

@@ -51,6 +51,7 @@ namespace SWRGame
 	uint64_t partialSeed = 0;
 	bool invitationalCircuitPass = false;
 	float aiModifier = 1.0f;
+	bool modifierControl = false;
 
 	SWRGameState gamestate;
 	std::vector <QueuedItem> itemQueue;
@@ -76,5 +77,6 @@ namespace SWRGame
 	extern void SetInvitationalCircuitPass(int value);
 	extern void SetAIScaling(int value);
 	extern void SetAdditionalScaling(int value);
+	extern void SetEnableMultiplierControl(int value);
 	extern void SetCourses(std::map<int, int> courseValues);
 }

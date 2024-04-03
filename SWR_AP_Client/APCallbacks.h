@@ -17,6 +17,7 @@ namespace SWRGame
 	extern void QueueNotifyMsg(std::string _msg);
 	extern bool invitationalCircuitPass;
 	extern float aiModifier;
+	extern bool modifierControl;
 	extern SWR_PodPartTable apShopData;
 
 	void ResetSaveData();
@@ -31,5 +32,6 @@ namespace SWRGame
 	void SetInvitationalCircuitPass(int value);
 	void SetAIScaling(int value);
 	void SetAdditionalScaling(int value);
+	void SetEnableMultiplierControl(int value);
 	void SetCourses(std::map<int, int> courseValues);
 }

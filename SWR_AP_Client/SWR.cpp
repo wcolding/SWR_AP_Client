@@ -117,7 +117,14 @@ namespace SWRGame
 					WriteTextWrapper("Rewards are locked to \"Fair\" but are farmable", SWRFont::Medium, 50, 300);
 
 				if (*menuValB == 3)
+				{
 					WriteTextWrapper("AI Modifier: " + std::to_string(aiModifier), SWRFont::Medium, 300, 160);
+
+					if (modifierControl)
+						WriteTextWrapper("Unlocked", SWRFont::Medium, 300, 170, SWRTextColor::LightBlue);
+					else
+						WriteTextWrapper("Locked", SWRFont::Medium, 300, 170, SWRTextColor::Red);
+				}
 				break;
 			default:
 				break;
@@ -510,6 +517,9 @@ namespace SWRGame
 
 	void ChangeAIModifier(float amount)
 	{
+		if (!modifierControl)
+			return;
+
 		// Only change this on the Main Menu (pre race screen)
 		if ((*menuVal == 3) && (*menuValB == 3))
 		{
@@ -581,6 +591,7 @@ namespace SWRGame
 		AP_RegisterSlotDataIntCallback("EnableInvitationalCircuitPass", &SetInvitationalCircuitPass);
 		AP_RegisterSlotDataIntCallback("AIScaling", &SetAIScaling);
 		AP_RegisterSlotDataIntCallback("AdditionalAIMultiplier", &SetAdditionalScaling);
+		AP_RegisterSlotDataIntCallback("EnableMultiplierControl", &SetEnableMultiplierControl);
 		AP_RegisterSlotDataMapIntIntCallback("Courses", &SetCourses);
 
 		AP_Start();
