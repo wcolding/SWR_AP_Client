@@ -6,8 +6,6 @@
 #include "Items.h"
 #include "APCpp/Archipelago.h"
 
-#define CLIENT_VERSION { 0, 4, 4 }
-
 #define POD_PARTS_OFFSET 0xA35AA1
 #define POD_DATA_PTR_OFFSET 0xA29C44
 #define SAVE_DATA_OFFSET 0xA35A60
@@ -20,6 +18,8 @@
 
 namespace SWRGame
 {
+	AP_NetworkVersion version = { 0, 5, 0 };
+
 	void Log(const char* format, ...);
 	void SyncProgress();
 

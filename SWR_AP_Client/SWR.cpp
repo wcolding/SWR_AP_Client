@@ -24,6 +24,7 @@ namespace SWRGame
 	std::vector<SWR_PodPartEntry*> wattoShopData;
 	std::vector<std::string> wattoShopItemNames;
 	std::string fullSeedName = "";
+	std::string versionString = "";
 
 	_SaveLoadProfile LoadProfile;
 	_SaveLoadProfile SaveProfile;
@@ -107,6 +108,7 @@ namespace SWRGame
 			switch (*menuVal)
 			{
 			case 1: // Start Menu
+				WriteTextWrapper(versionString, SWRFont::Medium, 625, 0, SWRTextColor::LightBlue, SWRTextAlign::Right);
 				WriteTextWrapper(fullSeedName, SWRFont::Medium, 625, 10, SWRTextColor::Yellow, SWRTextAlign::Right);
 				break;
 			case 2: // Profile select
@@ -576,7 +578,6 @@ namespace SWRGame
 	{
 		AP_Init(serverInfo.server, "Star Wars Episode I Racer", serverInfo.player, serverInfo.pw);
 
-		AP_NetworkVersion version = CLIENT_VERSION;
 		AP_SetClientVersion(&version);
 		AP_SetDeathLinkSupported(true);
 
@@ -613,6 +614,8 @@ namespace SWRGame
 
 		menuVal = (int*)(baseAddress + 0xD87A4);
 		menuValB = (int*)(baseAddress + 0xA2A67C);
+
+		versionString = std::format("Version {}.{}.{}", version.major, version.minor, version.build), 
 
 		queuedDeaths = 0;
 		
