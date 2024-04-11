@@ -93,6 +93,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="APCallbacks.h" />
+    <ClInclude Include="Draw.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Items.h" />
     <ClInclude Include="Locations.h" />
@@ -104,6 +105,7 @@
   <ItemGroup>
     <ClCompile Include="APCallBacks.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Draw.cpp" />
     <ClCompile Include="Patches.cpp" />
     <ClCompile Include="SWR.cpp" />
   </ItemGroup>

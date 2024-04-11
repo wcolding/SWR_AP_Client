@@ -10,7 +10,6 @@
 #define LOAD_PROFILE_FUNC 0x21850
 #define SAVE_PROFILE_FUNC 0x219D0
 typedef bool(__cdecl* _SaveLoadProfile)(const char* profileName);
-typedef void(__cdecl* _WriteText)(int16_t xPos, int16_t yPos, int r, int g, int b, int a, const char* text, int unk_00, int unk_01);
 
 namespace SWRGame
 {
@@ -18,133 +17,14 @@ namespace SWRGame
 	DeathState deathState = DeathState::Alive;
 	SWR_SaveData* swrSaveData;
 	SWR_SaveData** saveDataPtr;
-	int* menuVal = nullptr;
-	int* menuValB = nullptr;
 
 	std::vector<SWR_PodPartEntry*> wattoShopData;
 	std::vector<std::string> wattoShopItemNames;
-	std::string fullSeedName = "";
-	std::string versionString = "";
 
 	_SaveLoadProfile LoadProfile;
 	_SaveLoadProfile SaveProfile;
 
-	_WriteText WriteText;
-
 	char sessionProgressivePasses = 0;
-
-	Color GetColorFromEnum(SWRTextColor textColor)
-	{
-		Color newColor;
-		newColor.r = ((int)textColor & 0xFF000000) >> 24;
-		newColor.g = ((int)textColor & 0x00FF0000) >> 16;
-		newColor.b = ((int)textColor & 0x0000FF00) >> 8;
-		newColor.a = ((int)textColor & 0x000000FF);
-		return newColor;
-	}
-
-	void WriteTextWrapper(std::string string, SWRFont font, int x, int y, SWRTextColor color = SWRTextColor::White, SWRTextAlign align = SWRTextAlign::Left)
-	{
-		string = "~s" + string;
-
-		switch (align)
-		{
-		case SWRTextAlign::Center:
-			string = "~c" + string;
-			break;
-		case SWRTextAlign::Right:
-			string = "~r" + string;
-			break;
-		default:
-			break;
-		}
-
-		switch (font)
-		{
-		case SWRFont::Medium:
-			string = "~F5" + string;
-			break;
-		case SWRFont::Large:
-			string = "~F6" + string;
-			break;
-		default:
-			break;
-		}
-
-		Color col = GetColorFromEnum(color);
-
-		WriteText(x, y, col.r, col.g, col.b, col.a, string.c_str(), -1, 0);
-	}
-
-	std::chrono::steady_clock::time_point prevTime;
-
-	void OnDraw()
-	{
-		auto curTime = std::chrono::steady_clock::now();
-
-		if (!notifyQueue.empty())
-		{
-			if (notifyQueue[0].timeRemaining <= 0)
-				notifyQueue.erase(notifyQueue.begin());
-			else
-			{
-				const std::chrono::duration<float> deltaTime = curTime - prevTime;
-				notifyQueue[0].timeRemaining -= deltaTime.count();
-				WriteTextWrapper(notifyQueue[0].msg, SWRFont::Large, 10, 16, SWRTextColor::LightBlue);
-			}
-		}
-
-		prevTime = curTime;
-
-		// Connection status
-		if (gamestate < SWRGameState::AP_Authenticated)
-			WriteTextWrapper("Not connected to AP", SWRFont::Medium, 625, 20, SWRTextColor::Red, SWRTextAlign::Right);
-		else if (!isPlayerInRace()) // only show in menus
-			WriteTextWrapper("Connected to AP", SWRFont::Medium, 625, 20, SWRTextColor::LightBlue, SWRTextAlign::Right);
-
-		// Menu specific draws
-		if (menuVal != nullptr)
-		{
-			switch (*menuVal)
-			{
-			case 1: // Start Menu
-				WriteTextWrapper(versionString, SWRFont::Medium, 625, 0, SWRTextColor::LightBlue, SWRTextAlign::Right);
-				WriteTextWrapper(fullSeedName, SWRFont::Medium, 625, 10, SWRTextColor::Yellow, SWRTextAlign::Right);
-				break;
-			case 2: // Profile select
-				WriteTextWrapper("IMPORTANT : Create a new save for each new seed!", SWRFont::Medium, 310, 120, SWRTextColor::LightBlue, SWRTextAlign::Center);
-				break;
-			case 3: // Everything else?
-				if (*menuValB == 13) // Track info screen
-					WriteTextWrapper("Rewards are locked to \"Fair\" but are farmable", SWRFont::Medium, 50, 300);
-
-				if (*menuValB == 7) // Watto's shop
-				{
-					// 0x38
-					int cursor = *(int*)(baseAddress + 0xA295D0);
-					int itemTableOffset = (int)*(char*)(baseAddress + 0xA2A6C0 + (0x38 * cursor));
-					for (auto entry : wattoShopLocationToOffset)
-					{
-						if (entry.second == itemTableOffset)
-							WriteTextWrapper(locationTable[entry.first], SWRFont::Medium, 625, 0, SWRTextColor::LightBlue, SWRTextAlign::Right);
-					}
-				}
-
-				if (*menuValB == 3) // Pre-race "Main Menu"
-				{
-					WriteTextWrapper("AI Modifier: " + std::to_string(aiModifier), SWRFont::Medium, 300, 160);
-
-					if (modifierControl)
-						WriteTextWrapper("Unlocked", SWRFont::Medium, 300, 170, SWRTextColor::LightBlue);
-					else
-						WriteTextWrapper("Locked", SWRFont::Medium, 300, 170, SWRTextColor::Red);
-				}
-				break;
-			default:
-				break;
-			}
-		}
-	}
 
 	void QueueNotifyMsg(std::string _msg)
 	{

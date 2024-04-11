@@ -16,6 +16,9 @@
 
 #define RACERS_COUNT 23
 
+
+typedef void(__cdecl* _WriteText)(short xPos, short yPos, int r, int g, int b, int a, const char* text, int unk_00, int unk_01);
+
 namespace SWRGame
 {
 	AP_NetworkVersion version = { 0, 5, 0 };
@@ -33,8 +36,14 @@ namespace SWRGame
 	void StartupSequenceLoop();
 	void Update();
 	void InitSaveData();
-	void OnDraw();
 	void QueueNotifyMsg(std::string _msg);
+
+
+	extern void OnDraw();
+	extern _WriteText WriteText;
+
+	int* menuVal = nullptr;
+	int* menuValB = nullptr;
 
 	void ScoutWattoShop();
 
@@ -48,7 +57,10 @@ namespace SWRGame
 	AP_ProgressData progress;
 	SWR_PodPartTable apShopData;
 
+	std::string fullSeedName = "";
+	std::string versionString = "";
 	uint64_t partialSeed = 0;
+
 	bool invitationalCircuitPass = false;
 	float aiModifier = 1.0f;
 	bool modifierControl = false;
