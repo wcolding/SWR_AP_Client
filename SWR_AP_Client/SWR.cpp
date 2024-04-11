@@ -68,7 +68,6 @@ namespace SWRGame
 		locations.push_back(localLocationId + SWR_AP_BASE_ID);
 		std::string locationName = locationTable[localLocationId];
 		Log("Location checked: %s", locationName.c_str());
-		//AP_SendLocationScouts(locations, 0);
 		AP_SendItem(locations[0]);
 	}
 
@@ -314,17 +313,11 @@ namespace SWRGame
 
 	void GivePitDroid()
 	{
-		if (!isSaveDataReady())
-			return;
-
 		swrSaveData->pitDroids++;
 	}
 
 	void GiveCircuitPass(int type)
 	{
-		if (!isSaveDataReady())
-			return;
-
 		if (type == -1)
 			sessionProgressivePasses++;
 		else
@@ -333,9 +326,6 @@ namespace SWRGame
 
 	void GiveMoney(int amount)
 	{
-		if (!isSaveDataReady())
-			return;
-
 		swrSaveData->money += amount;
 	}
 
