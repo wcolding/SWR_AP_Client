@@ -92,6 +92,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AIScaling.h" />
     <ClInclude Include="APCallbacks.h" />
     <ClInclude Include="Draw.h" />
     <ClInclude Include="Enums.h" />
@@ -103,6 +104,7 @@
     <ClInclude Include="SWR.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AIScaling.cpp" />
     <ClCompile Include="APCallBacks.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Draw.cpp" />
