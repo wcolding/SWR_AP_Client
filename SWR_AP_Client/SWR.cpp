@@ -115,10 +115,22 @@ namespace SWRGame
 				WriteTextWrapper("IMPORTANT : Create a new save for each new seed!", SWRFont::Medium, 310, 120, SWRTextColor::LightBlue, SWRTextAlign::Center);
 				break;
 			case 3: // Everything else?
-				if (*menuValB == 13)
+				if (*menuValB == 13) // Track info screen
 					WriteTextWrapper("Rewards are locked to \"Fair\" but are farmable", SWRFont::Medium, 50, 300);
 
-				if (*menuValB == 3)
+				if (*menuValB == 7) // Watto's shop
+				{
+					// 0x38
+					int cursor = *(int*)(baseAddress + 0xA295D0);
+					int itemTableOffset = (int)*(char*)(baseAddress + 0xA2A6C0 + (0x38 * cursor));
+					for (auto entry : wattoShopLocationToOffset)
+					{
+						if (entry.second == itemTableOffset)
+							WriteTextWrapper(locationTable[entry.first], SWRFont::Medium, 625, 0, SWRTextColor::LightBlue, SWRTextAlign::Right);
+					}
+				}
+
+				if (*menuValB == 3) // Pre-race "Main Menu"
 				{
 					WriteTextWrapper("AI Modifier: " + std::to_string(aiModifier), SWRFont::Medium, 300, 160);
 
