@@ -72,6 +72,13 @@ namespace SWRGame
 		{ AP_ItemType::Useful, SWRTextColor::AP_UsefulItem }
 	};
 
+	std::map<AP_ItemType, std::string> typeTextMap
+	{
+		{ AP_ItemType::Filler, "Filler" },
+		{ AP_ItemType::Progression, "Progression" },
+		{ AP_ItemType::Useful, "Useful" }
+	};
+
 	void __fastcall PrintItemNameFullView()
 	{
 		AP_WattoEntry* entry = GetItemEntry();
@@ -88,6 +95,24 @@ namespace SWRGame
 			return;
 
 		WriteTextWrapper(entry->displayName, SWRFont::ShopItem, 86, 23, typeColorMap[entry->itemType], SWRTextAlign::Center);
+
+		// Other draw events
+		int itemTableOffset = GetShopItemOffset();
+
+		for (auto tableEntry : wattoShopLocationToOffset)
+		{
+			if (tableEntry.second == itemTableOffset)
+			{
+				std::string checkString = locationTable[tableEntry.first];
+				checkString.erase(0, 15);
+				WriteTextWrapper(checkString, SWRFont::ShopItem, 238, 41, SWRTextColor::LightBlue, SWRTextAlign::Center);
+				WriteTextWrapper(typeTextMap[entry->itemType], SWRFont::ShopItem, 238, 102, typeColorMap[entry->itemType], SWRTextAlign::Center);
+
+				if ((apShopData.entries[itemTableOffset].requiredRaces & 0x80) != 0)
+					WriteTextWrapper("SOLD OUT", SWRFont::Large, 470, 150, SWRTextColor::Red, SWRTextAlign::Center);
+
+			}
+		}
 	}
 
 	std::chrono::steady_clock::time_point prevTime;
@@ -133,31 +158,6 @@ namespace SWRGame
 			case 3: // Everything else?
 				if (*menuValB == 13) // Track info screen
 					WriteTextWrapper("Rewards are locked to \"Fair\" but are farmable", SWRFont::Medium, 50, 300);
-
-				if (*menuValB == 7) // Watto's shop
-				{
-					int itemTableOffset = GetShopItemOffset();
-
-					for (auto entry : wattoShopLocationToOffset)
-					{
-						
-						if (entry.second == itemTableOffset)
-						{
-							std::string checkString = locationTable[entry.first];
-							SWRTextColor checkColor = SWRTextColor::Green;
-
-							if ((apShopData.entries[itemTableOffset].requiredRaces & 0x80) != 0)
-							{
-								checkString = std::format("{} - SOLD OUT", checkString);
-								checkColor = SWRTextColor::Red;
-							}
-
-							WriteTextWrapper(checkString, SWRFont::Medium, 625, 0, checkColor, SWRTextAlign::Right);
-						}
-					}
-
-					WriteTextWrapper(std::format("Offset {}", itemTableOffset), SWRFont::Medium, 625, 10, SWRTextColor::LightBlue, SWRTextAlign::Right);
-				}
 
 				if (*menuValB == 3) // Pre-race "Main Menu"
 				{
