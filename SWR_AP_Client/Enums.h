@@ -86,5 +86,6 @@ enum SWRTextColor : int
 	White     = 0xFFFFFFFF,
 	LightBlue = 0xB7F5FFFF,
 	Red       = 0xFF0000FF,
-	Yellow    = 0xFFFF00FF
+	Yellow    = 0xFFFF00FF,
+	Green     = 0x00FF00FF
 };
