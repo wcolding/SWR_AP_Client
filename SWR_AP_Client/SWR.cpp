@@ -188,37 +188,23 @@ namespace SWRGame
 			AP_StoryComplete();
 	}
 
-	void __fastcall MarkShopPurchase(int entryOffset)
+	void __fastcall MarkShopPurchase()
 	{
-		int tableOffset = entryOffset / 0x10;
+		int tableOffset = GetShopItemOffset();
 
 		for (auto pair : wattoShopLocationToOffset)
 		{
 			if (pair.second == tableOffset)
 			{
-				apShopData.entries[tableOffset].requiredRaces |= 0x80; // mark as completed
-				SendAPItem(pair.first);
-				
-				int* removedIndex = (int*)(baseAddress + 0xA295D0);
-				size_t* selectionCount = (size_t*)(baseAddress + 0xA295CC);
-
-				void* shopInvModels = (void*)(baseAddress + 0xA29A88);
-
-				// Hide model
-				MeshData*** removedMeshPtr = (MeshData***)((int)shopInvModels + 4 * *removedIndex);
-				MeshData* removedMesh = **removedMeshPtr;
-				removedMesh->visible = false;
-
-				RemoveElementFromArray<int>(shopInvModels, *removedIndex, *selectionCount);
-
-				void* shopInvData = (void*)(baseAddress + 0xA2A6C0);
-				RemoveElementFromArray<ShopInventoryEntry>(shopInvData, *removedIndex, *selectionCount);
-
-				--*selectionCount;
-				if (*removedIndex >= *selectionCount)
-					--*removedIndex;
+				if ((apShopData.entries[tableOffset].requiredRaces & 0x80) == 0)
+				{
+					apShopData.entries[tableOffset].requiredRaces |= 0x80; // mark as completed
+					SendAPItem(pair.first);
+					swrSaveData->money -= apShopData.entries[tableOffset].cost; // manually deduct cost since we skipped the vanilla call
+				}
 			}
 		}
+	}
 
 	int GetShopItemOffset()
 	{

@@ -17,6 +17,7 @@ namespace SWRGame
 	extern bool isPlayerInRace();
 	extern float aiModifier;
 	extern bool modifierControl;
+	extern SWR_PodPartTable apShopData;
 	extern int GetShopItemOffset();
 
 	extern int* menuVal;

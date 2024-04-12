@@ -99,7 +99,18 @@ namespace SWRGame
 					{
 						
 						if (entry.second == itemTableOffset)
-							WriteTextWrapper(locationTable[entry.first], SWRFont::Medium, 625, 0, SWRTextColor::LightBlue, SWRTextAlign::Right);
+						{
+							std::string checkString = locationTable[entry.first];
+							SWRTextColor checkColor = SWRTextColor::Green;
+
+							if ((apShopData.entries[itemTableOffset].requiredRaces & 0x80) != 0)
+							{
+								checkString = std::format("{} - SOLD OUT", checkString);
+								checkColor = SWRTextColor::Red;
+							}
+
+							WriteTextWrapper(checkString, SWRFont::Medium, 625, 0, checkColor, SWRTextAlign::Right);
+						}
 					}
 
 					WriteTextWrapper(std::format("Offset {}", itemTableOffset), SWRFont::Medium, 625, 10, SWRTextColor::LightBlue, SWRTextAlign::Right);

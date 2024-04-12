@@ -153,11 +153,9 @@ void __declspec(naked) SkipAcquiredItems()
 
 void __declspec(naked) MarkShopPurchaseWrapper()
 {
-	// eax table offset
 	__asm
 	{
 		pushad;
-		mov ecx, eax; // __fastcall reads from ecx
 		call SWRGame::MarkShopPurchase;
 		popad;
 		ret;
@@ -179,10 +177,10 @@ void Patches::RewriteWattoShop()
 
 	// Stop game from skipping if item index matches the owned part
 	NOP(0x3E8EA, 2);
-	// can NOP
-	// eax has the offset in the table
-	//NOP(0x40914, 6);
-	HookFunction(0x40914, &MarkShopPurchaseWrapper, 1);
+
+	// Intercept vanilla call to swap owned and shop items
+	// We will have to manually deduct money in our function
+	HookFunction(0x37C14, &MarkShopPurchaseWrapper);
 
 	// 3EC10 draws purchase window elements
 	// Change title of right window
