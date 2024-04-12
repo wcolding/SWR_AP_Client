@@ -32,6 +32,9 @@ namespace SWRGame
 
 		switch (font)
 		{
+		case SWRFont::ShopItem:
+			string = "~f4" + string;
+			break;
 		case SWRFont::Medium:
 			string = "~F5" + string;
 			break;
@@ -45,6 +48,46 @@ namespace SWRGame
 		Color col = GetColorFromEnum(color);
 
 		WriteText(x, y, col.r, col.g, col.b, col.a, string.c_str(), -1, 0);
+	}
+
+	AP_WattoEntry cachedEntry;
+
+	AP_WattoEntry* GetItemEntry()
+	{
+		int index = GetShopItemOffset();
+		for (int i = 0; i < wattoShopEntries.size(); i++)
+		{
+			cachedEntry = wattoShopEntries[i];
+			if (cachedEntry.tableOffset == index)
+				return &cachedEntry;
+		}
+
+		return nullptr;
+	}
+
+	std::map<AP_ItemType, SWRTextColor> typeColorMap
+	{
+		{ AP_ItemType::Filler, SWRTextColor::AP_FillerItem },
+		{ AP_ItemType::Progression, SWRTextColor::AP_ProgressionItem },
+		{ AP_ItemType::Useful, SWRTextColor::AP_UsefulItem }
+	};
+
+	void __fastcall PrintItemNameFullView()
+	{
+		AP_WattoEntry* entry = GetItemEntry();
+		if (entry == nullptr)
+			return;
+
+		WriteTextWrapper(entry->displayName, SWRFont::Default, 160, 25, typeColorMap[entry->itemType], SWRTextAlign::Center);
+	}
+	
+	void __fastcall PrintItemNameBuyView()
+	{
+		AP_WattoEntry* entry = GetItemEntry();
+		if (entry == nullptr)
+			return;
+
+		WriteTextWrapper(entry->displayName, SWRFont::ShopItem, 86, 23, typeColorMap[entry->itemType], SWRTextAlign::Center);
 	}
 
 	std::chrono::steady_clock::time_point prevTime;

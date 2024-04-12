@@ -179,6 +179,13 @@ struct AP_ProgressData
 	int pitDroidCounter = 1;
 };
 
+struct AP_WattoEntry
+{
+	AP_ItemType itemType;
+	std::string displayName;
+	int tableOffset;
+};
+
 struct NotifyMsg
 {
 	std::string msg;

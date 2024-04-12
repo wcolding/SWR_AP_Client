@@ -70,7 +70,9 @@ enum PayoutSetting : char
 
 enum SWRFont
 {
+	Default,
 	Medium,
+	ShopItem,
 	Large
 };
 
@@ -81,11 +83,22 @@ enum SWRTextAlign
 	Right
 };
 
+enum AP_ItemType : int
+{
+	Filler = 0,
+	Progression = 1,
+	Useful = 2
+};
+
 enum SWRTextColor : int
 {
 	White     = 0xFFFFFFFF,
 	LightBlue = 0xB7F5FFFF,
 	Red       = 0xFF0000FF,
 	Yellow    = 0xFFFF00FF,
-	Green     = 0x00FF00FF
+	Green     = 0x00FF00FF,
+	
+	AP_ProgressionItem = 0xAF99EFFF,
+	AP_UsefulItem      = 0x6D8BE8FF,
+	AP_FillerItem      = 0x00EEEEFF
 };

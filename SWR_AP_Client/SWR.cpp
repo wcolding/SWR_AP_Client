@@ -18,7 +18,6 @@ namespace SWRGame
 	SWR_SaveData** saveDataPtr;
 
 	std::vector<SWR_PodPartEntry*> wattoShopData;
-	std::vector<std::string> wattoShopItemNames;
 
 	_SaveLoadProfile LoadProfile;
 	_SaveLoadProfile SaveProfile;

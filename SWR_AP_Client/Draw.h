@@ -10,6 +10,9 @@ namespace SWRGame
 	void OnDraw();
 	Color GetColorFromEnum(SWRTextColor textColor);
 	void WriteTextWrapper(std::string string, SWRFont font, int x, int y, SWRTextColor color, SWRTextAlign align);
+
+	void __fastcall PrintItemNameFullView();
+	void __fastcall PrintItemNameBuyView();
 	
 	extern SWRGameState gamestate;
 	extern int baseAddress;
@@ -19,6 +22,8 @@ namespace SWRGame
 	extern bool modifierControl;
 	extern SWR_PodPartTable apShopData;
 	extern int GetShopItemOffset();
+	extern std::vector<AP_WattoEntry> wattoShopEntries;
+	extern void Log(const char* format, ...);
 
 	extern int* menuVal;
 	extern int* menuValB; 

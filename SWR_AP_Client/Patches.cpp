@@ -162,6 +162,28 @@ void __declspec(naked) MarkShopPurchaseWrapper()
 	}
 }
 
+void __declspec(naked) FullShopDrawWrapper()
+{
+	__asm
+	{
+		pushad;
+		call SWRGame::PrintItemNameFullView;
+		popad;
+		ret;
+	}
+}
+
+void __declspec(naked) ShopBuyWindowDrawWrapper()
+{
+	__asm
+	{
+		pushad;
+		call SWRGame::PrintItemNameBuyView;
+		popad;
+		ret;
+	}
+}
+
 const char* shopPurchaseTitle = "  BUY";
 
 // models
@@ -228,11 +250,10 @@ void Patches::RewriteWattoShop()
 	// Leave vanilla item table intact
 	//
 	// Item names
-	void* apShopDataPtr = &SWRGame::apShopData;
-	void* apShopDataNamesPtr = (void*)((int)apShopDataPtr + 0x0C);
-	WritePatch(0x37943, &apShopDataNamesPtr, 4); // full shop view
-	WritePatch(0x3ECBF, &apShopDataNamesPtr, 4); // buy menu
+	HookFunction(0x3797D, &FullShopDrawWrapper);
+	HookFunction(0x3ECFB, &ShopBuyWindowDrawWrapper);
 
+	void* apShopDataPtr = &SWRGame::apShopData;
 	// Model
 	void* apShopDataModelPtr = (void*)((int)apShopDataPtr + 0x08);
 	WritePatch(0x3E9A4, &apShopDataModelPtr, 4);
