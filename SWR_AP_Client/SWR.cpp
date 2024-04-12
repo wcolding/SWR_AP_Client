@@ -428,7 +428,7 @@ namespace SWRGame
 		for (int i = 0; i < 42; i++)
 		{
 			if (i % 6 == 0)
-				apShopData.entries[i].requiredRaces |= 0x80; // mark base items so the shop doesn't display them
+				apShopData.entries[i].requiredRaces = 0xC0; // mark base items so the shop doesn't display them
 		}
 
 		//// Apply patches we don't need an AP callback for

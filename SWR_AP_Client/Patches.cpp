@@ -145,8 +145,8 @@ void __declspec(naked) SkipAcquiredItems()
 	{
 		movsx eax, bl;
 		sub eax, 01; 
-		or ecx, 0xFFFFFF00;
-		xor ecx, 0xFFFFFF00;
+		or ecx, 0xFFFFFF80;
+		xor ecx, 0xFFFFFF80;
 		ret;
 	}
 }
@@ -177,8 +177,8 @@ void Patches::RewriteWattoShop()
 	// We're using the flag 0x80 to mark an item
 	HookFunction(SKIP_ITEM_INJECT, &SkipAcquiredItems, 1);
 
-	// Write part
-	// +40914
+	// Stop game from skipping if item index matches the owned part
+	NOP(0x3E8EA, 2);
 	// can NOP
 	// eax has the offset in the table
 	//NOP(0x40914, 6);
