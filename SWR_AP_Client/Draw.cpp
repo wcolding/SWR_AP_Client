@@ -48,6 +48,7 @@ namespace SWRGame
 	}
 
 	std::chrono::steady_clock::time_point prevTime;
+	bool inRace;
 
 	void OnDraw()
 	{
@@ -66,11 +67,12 @@ namespace SWRGame
 		}
 
 		prevTime = curTime;
+		inRace = isPlayerInRace();
 
 		// Connection status
 		if (gamestate < SWRGameState::AP_Authenticated)
 			WriteTextWrapper("Not connected to AP", SWRFont::Medium, 625, 20, SWRTextColor::Red, SWRTextAlign::Right);
-		else if (!isPlayerInRace()) // only show in menus
+		else if (!inRace) // only show in menus
 			WriteTextWrapper("Connected to AP", SWRFont::Medium, 625, 20, SWRTextColor::LightBlue, SWRTextAlign::Right);
 
 		// Menu specific draws
@@ -103,6 +105,9 @@ namespace SWRGame
 
 				if (*menuValB == 3) // Pre-race "Main Menu"
 				{
+					if (inRace) // Don't draw during a race
+						return;
+
 					WriteTextWrapper("AI Modifier: " + std::to_string(aiModifier), SWRFont::Medium, 300, 160);
 
 					if (modifierControl)
