@@ -93,14 +93,16 @@ namespace SWRGame
 
 				if (*menuValB == 7) // Watto's shop
 				{
-					// 0x38
-					int cursor = *(int*)(baseAddress + 0xA295D0);
-					int itemTableOffset = (int)*(char*)(baseAddress + 0xA2A6C0 + (0x38 * cursor));
+					int itemTableOffset = GetShopItemOffset();
+
 					for (auto entry : wattoShopLocationToOffset)
 					{
+						
 						if (entry.second == itemTableOffset)
 							WriteTextWrapper(locationTable[entry.first], SWRFont::Medium, 625, 0, SWRTextColor::LightBlue, SWRTextAlign::Right);
 					}
+
+					WriteTextWrapper(std::format("Offset {}", itemTableOffset), SWRFont::Medium, 625, 10, SWRTextColor::LightBlue, SWRTextAlign::Right);
 				}
 
 				if (*menuValB == 3) // Pre-race "Main Menu"

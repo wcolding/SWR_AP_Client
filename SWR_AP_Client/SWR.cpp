@@ -219,6 +219,11 @@ namespace SWRGame
 					--*removedIndex;
 			}
 		}
+
+	int GetShopItemOffset()
+	{
+		int cursor = *(int*)(baseAddress + 0xA295D0);
+		return (int)*(char*)(baseAddress + 0xA2A6C0 + (0x38 * cursor));
 	}
 
 	void __fastcall MarkPitDroidPurchase() 
