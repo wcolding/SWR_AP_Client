@@ -76,34 +76,37 @@ namespace SWRGame
 				if (itemTable.contains(curItemId))
 				{
 					ItemInfo curItem = itemTable[curItemId];
-					if (curItem.modelId != -1)
-						curEntry->modelId = curItem.modelId;
-					else
-					{
-						// Item is progressive
-						int curPartValue;
-						int nextPartId;
 
-						switch (curItem.type)
+					switch (curItem.type)
+					{
+					case ItemType::PodPart:
+						if (curItem.param2 == -1)
 						{
-						case ItemType::PodPart:
-							// This needs a rework. Maybe we can patch the game to read the item as progressive and do this work live
-							curPartValue = 0; //temporary //(int)swrSaveData->parts[curItemId];
-							nextPartId = 7 + 5 * curItemId + curPartValue;
-							if (curPartValue == 5)
-								nextPartId--;
-							curEntry->modelId = itemTable[nextPartId].modelId;
-							break;
-						case ItemType::CircuitPass:
-							curEntry->modelId = 0x6F; // dewback for undiscovered model ids
-							break;
-						default:
-							break;
+							// Pod part is progressive
+							curEntry->modelId = 0x6E; // Use Watto as temp model. Will be overwritten when we load the shop
+							curEntry->itemType = curItem.param1;
+							curEntry->seriesId = 1; // Will be overwritten when we load the shop
 						}
+						else
+						{
+							curEntry->modelId = curItem.modelId;
+							curEntry->itemType = curItem.param1;
+							curEntry->seriesId = curItem.param2;
+						}
+						break;
+					default:
+						curEntry->itemType = 7;
+						curEntry->seriesId = 0;
+						curEntry->modelId = curItem.modelId;
+						break;
 					}
 				}
 				else
+				{
+					curEntry->itemType = 7;
+					curEntry->seriesId = 0;
 					curEntry->modelId = 0x71; // Jabba for AP Items
+				}
 			}
 		}
 	}
