@@ -211,6 +211,27 @@ namespace SWRGame
 		return apShopData.entries[offset].itemType < 7;
 	}
 
+	typedef void(__cdecl* _LoadItemModelO)(int modelId, int unk_00, int unk_01, int unk_02);
+	_LoadItemModelO LoadItemModelO;
+
+	void __fastcall LoadItemModel(int unk_00, int tableOffset)
+	{
+		int entryIndex = tableOffset / 0x10;
+		auto entry = &apShopData.entries[entryIndex];
+		if (entry->modelId == 0x6E) // check for Watto model
+		{
+			int level = (int)(swrSaveData->parts[entry->itemType]) + 1;
+			if (level > 5)
+				level = 5;
+
+			int itemTableIndex = 6 + level + (5 * entry->itemType);
+			entry->modelId = itemTable[itemTableIndex].modelId;
+			entry->seriesId = level;
+		}
+
+		LoadItemModelO(entry->modelId, -1, unk_00, 00);
+	}
+
 	int GetShopItemOffset()
 	{
 		int cursor = *(int*)(baseAddress + 0xA295D0);
@@ -224,6 +245,47 @@ namespace SWRGame
 
 		int locationOffset = 141 + progress.pitDroidCounter;
 		SendAPItem(locationOffset);
+	}
+
+	PodParts partsCache = { 0,0,0,0,0,0,0 };
+
+	typedef int(__cdecl* _UpdateStatDisplay)(int unk_00, int partType, int shopPartLevel, int shopPartHealth);
+	_UpdateStatDisplay UpdateStatDisplay;
+
+	void __fastcall UpdateProgressiveDisplays()
+	{
+		int itemCount =  *(int*)(baseAddress + 0xA295CC);
+		int entryIndex = 0;
+		int itemTableIndex = 0;
+		int cursor = *(int*)(baseAddress + 0xA295D0);
+		unsigned char partLevel;
+		SWR_PodPartEntry* entry;
+		for (int i = 0; i < itemCount; i++)
+		{
+			entryIndex = (int)*(char*)(baseAddress + 0xA2A6C0 + (0x38 * i));
+			entry = &apShopData.entries[entryIndex];
+			partLevel = swrSaveData->parts[entry->itemType];
+			if ((entry->requiredRaces & 0x20) != 0) // if entry is a progressive pod part
+			{
+				if (partLevel != partsCache[entry->itemType])
+				{
+					partsCache[entry->itemType] = partLevel;
+					partLevel++;
+					if (partLevel > 5)
+						partLevel = 5;
+
+					// Update entry data
+					itemTableIndex = 6 + partLevel + (5 * entry->itemType);
+					entry->seriesId = partLevel;
+					entry->modelId = itemTable[itemTableIndex].modelId;
+
+					UpdateShopModel(i, entry->modelId);
+
+					if (cursor == i)
+						UpdateStatDisplay(1, entry->itemType, entry->seriesId, 0xFF);
+				}
+			}
+		}
 	}
 
 	void SyncProgress()
@@ -410,6 +472,8 @@ namespace SWRGame
 		menuValB = (int*)(baseAddress + 0xA2A67C);
 
 		DrawStats = (_DrawStats)(baseAddress + 0x550D0);
+		LoadItemModelO = (_LoadItemModelO)(baseAddress + 0x54BC0);
+		UpdateStatDisplay = (_UpdateStatDisplay)(baseAddress + 0x5CF60);
 
 		versionString = std::format("Version {}.{}.{}", version.major, version.minor, version.build), 
 

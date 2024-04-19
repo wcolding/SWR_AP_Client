@@ -15,6 +15,7 @@ namespace SWRGame
 	void __fastcall PrintItemNameFullView();
 	void __fastcall PrintItemNameBuyView();
 	void __fastcall ShopDrawStats(void* obj);
+	void UpdateShopModel(int selectedIndex, int modelId);
 	
 	extern SWRGameState gamestate;
 	extern int baseAddress;

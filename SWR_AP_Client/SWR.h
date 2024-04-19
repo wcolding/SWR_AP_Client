@@ -76,7 +76,10 @@ namespace SWRGame
 	void __fastcall MarkShopPurchase();
 	void __fastcall MarkPitDroidPurchase();
 	bool __fastcall isItemPodPart();
-	int GetShopItemOffset();
+	void __fastcall LoadItemModel(int unk_00, int tableOffset);
+	int GetShopItemOffset();	
+	void __fastcall UpdateProgressiveDisplays();
+	extern void UpdateShopModel(int selectedIndex, int modelId);
 
 	// Callbacks
 	extern void ResetSaveData();

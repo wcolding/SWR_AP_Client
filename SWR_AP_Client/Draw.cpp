@@ -188,4 +188,21 @@ namespace SWRGame
 			WriteTextWrapper("for pod parts only", SWRFont::ShopItem, 100, 165, SWRTextColor::LightBlue, SWRTextAlign::Center);
 		}
 	}
+
+	typedef int(__cdecl* _LoadModel)(int modelId);
+	_LoadModel LoadModel = (_LoadModel)(0x448780);
+
+	void UpdateShopModel(int selectedIndex, int modelId)
+	{
+		int modelAddr = LoadModel(modelId);
+		int tableOffset = (98 + selectedIndex) * 4;
+
+		int* modelTableAddrA = (int*)(SWRGame::baseAddress + 0xA29900 + tableOffset);//900
+		*modelTableAddrA = modelAddr;
+
+		int* modelTableAddrB = (int*)(SWRGame::baseAddress + 0xA29160 + tableOffset);//160
+
+		int* modelDataPtr = (int*)*modelTableAddrA;
+		*modelTableAddrB = *modelDataPtr;
+	}
 }

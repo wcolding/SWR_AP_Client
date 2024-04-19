@@ -191,6 +191,18 @@ void __declspec(naked) HookShopDrawStats()
 		pushad;
 		mov ecx, ebp;
 		call SWRGame::ShopDrawStats;
+		call SWRGame::UpdateProgressiveDisplays;
+		popad;
+		ret;
+	}
+}
+
+void __declspec(naked) LoadItemModelWrapper()
+{
+	__asm
+	{
+		pushad;
+		call SWRGame::LoadItemModel;
 		popad;
 		ret;
 	}
@@ -269,7 +281,7 @@ void Patches::RewriteWattoShop()
 	void* apShopDataModelPtr = &SWRGame::apShopData.entries[0].modelId;
 	WritePatch(0x3E9A4, &apShopDataModelPtr, 4);
 
-	// Races needed
+	// Races needed - used in flag checking
 	void* apShopDataRacesPtr = &SWRGame::apShopData.entries[0].requiredRaces;
 	WritePatch(0x3E8CA, &apShopDataRacesPtr, 4);
 
@@ -279,10 +291,19 @@ void Patches::RewriteWattoShop()
 	WritePatch(0x3EB70, &apShopDataTypePtr, 4);
 	WritePatch(0x3779B, &apShopDataTypePtr, 4);
 
+	// Series Id
+	void* apShopDataSeriesPtr = &SWRGame::apShopData.entries[0].seriesId;
+	WritePatch(0x3785E, &apShopDataSeriesPtr, 4);
 
 	// Stats window render
 	// +378E1 - call +550D0
 	HookFunction(0x378D6, &HookShopDrawStats, 14);
+
+	// Handle item models and stat draw
+	// Progressive items need to calculate what the next item should be
+	// and display the correct model and stat for it
+	// On loading the shop we will calculate this
+	HookFunction(0x3E9AC, &LoadItemModelWrapper);
 }
 
 void __declspec(naked) MarkPitDroidPurchaseWrapper()
