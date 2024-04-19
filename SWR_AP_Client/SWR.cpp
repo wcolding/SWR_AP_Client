@@ -190,16 +190,23 @@ namespace SWRGame
 	void __fastcall MarkShopPurchase()
 	{
 		int tableOffset = GetShopItemOffset();
+		int cursor = *(int*)(baseAddress + 0xA295D0);
+		SWR_PodPartEntry* entry;
 
 		for (auto pair : wattoShopLocationToOffset)
 		{
 			if (pair.second == tableOffset)
 			{
-				if ((apShopData.entries[tableOffset].requiredRaces & 0x80) == 0)
+				entry = &apShopData.entries[tableOffset];
+				if ((entry->requiredRaces & 0x80) == 0)
 				{
-					apShopData.entries[tableOffset].requiredRaces |= 0x80; // mark as completed
+					entry->requiredRaces |= 0x80; // mark as completed
 					SendAPItem(pair.first);
-					swrSaveData->money -= apShopData.entries[tableOffset].cost; // manually deduct cost since we skipped the vanilla call
+					swrSaveData->money -= entry->cost; // manually deduct cost since we skipped the vanilla call
+
+					// Change model to Watto
+					entry->modelId = 0x6E;
+					UpdateShopModel(cursor, 0x6E);
 				}
 			}
 		}
@@ -218,7 +225,8 @@ namespace SWRGame
 	{
 		int entryIndex = tableOffset / 0x10;
 		auto entry = &apShopData.entries[entryIndex];
-		if ((entry->requiredRaces & 0x20) != 0)
+
+		if (((entry->requiredRaces & 0x80) == 0) && ((entry->requiredRaces & 0x20) != 0))
 		{
 			int level = (int)(swrSaveData->parts[entry->itemType]) + 1;
 			if (level > 5)
@@ -264,6 +272,11 @@ namespace SWRGame
 		{
 			entryIndex = (int)*(char*)(baseAddress + 0xA2A6C0 + (0x38 * i));
 			entry = &apShopData.entries[entryIndex];
+
+			// Don't overwrite purchased items
+			if ((entry->requiredRaces & 0x80) != 0)
+				continue;
+
 			partLevel = swrSaveData->parts[entry->itemType];
 			if ((entry->requiredRaces & 0x20) != 0) // if entry is a progressive pod part
 			{
