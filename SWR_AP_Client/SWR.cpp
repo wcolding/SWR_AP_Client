@@ -218,7 +218,7 @@ namespace SWRGame
 	{
 		int entryIndex = tableOffset / 0x10;
 		auto entry = &apShopData.entries[entryIndex];
-		if (entry->modelId == 0x6E) // check for Watto model
+		if ((entry->requiredRaces & 0x20) != 0)
 		{
 			int level = (int)(swrSaveData->parts[entry->itemType]) + 1;
 			if (level > 5)
