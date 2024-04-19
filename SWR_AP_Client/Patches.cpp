@@ -265,7 +265,6 @@ void Patches::RewriteWattoShop()
 	HookFunction(0x3797D, &FullShopDrawWrapper);
 	HookFunction(0x3ECFB, &ShopBuyWindowDrawWrapper);
 
-	void* apShopDataPtr = &SWRGame::apShopData;
 	// Model
 	void* apShopDataModelPtr = &SWRGame::apShopData.entries[0].modelId;
 	WritePatch(0x3E9A4, &apShopDataModelPtr, 4);
@@ -284,42 +283,6 @@ void Patches::RewriteWattoShop()
 	// Stats window render
 	// +378E1 - call +550D0
 	HookFunction(0x378D6, &HookShopDrawStats, 14);
-
-	//Item shop
-	//3EB6D
-	//Gets cost of part for shop
-
-	//56017
-	//Gets model of item to replace (call can be jumped)
-
-	// Overwrite functions to allow part type values out of range
-	// The display for the right side is being hidden anyway so it's fine to make these hardcoded
-	// 3EF60 index for name
-	char tradeInName[7] = {
-		0xBE, 0x00, 0x00, 0x00, 0x00, // mov esi, 0
-		0x90, 0x90                    // nop
-	};
-
-	// 56017 index for model
-	char tradeInModel[7] = {
-		0xB8, 0x00, 0x00, 0x00, 0x00, // mov eax, 0
-		0x90, 0x90                    // nop
-	};
-
-	char* tradeInIndex = tradeInModel;
-
-
-	/*WritePatch(0x3EF60, &tradeInName, 7);
-	WritePatch(0x56017, &tradeInModel, 7);
-	WritePatch(0x3EB6D, &tradeInIndex, 7);*/
-
-	// 37860 call +5cf60
-	// Sets part stat display in bottom left (can be invalid)
-	// 
-	// cdecl (ecx, eax, edx) (?, podPartType, ?) (9, 2, 1)
-	
-	//->3EF80
-	//Gets name of item to replace
 }
 
 void __declspec(naked) MarkPitDroidPurchaseWrapper()
