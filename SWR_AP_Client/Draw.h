@@ -3,6 +3,7 @@
 #include "Structs.h"
 
 typedef void(__cdecl* _WriteText)(short xPos, short yPos, int r, int g, int b, int a, const char* text, int unk_00, int unk_01);
+typedef void(__cdecl* _DrawStats)(void* obj, float x, float y);
 
 namespace SWRGame
 {
@@ -13,6 +14,7 @@ namespace SWRGame
 
 	void __fastcall PrintItemNameFullView();
 	void __fastcall PrintItemNameBuyView();
+	void __fastcall ShopDrawStats(void* obj);
 	
 	extern SWRGameState gamestate;
 	extern int baseAddress;
@@ -24,6 +26,8 @@ namespace SWRGame
 	extern int GetShopItemOffset();
 	extern std::vector<AP_WattoEntry> wattoShopEntries;
 	extern void Log(const char* format, ...);
+	extern _DrawStats DrawStats;
+	extern bool __fastcall isItemPodPart();
 
 	extern int* menuVal;
 	extern int* menuValB; 

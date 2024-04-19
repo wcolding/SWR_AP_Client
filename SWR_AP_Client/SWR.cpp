@@ -205,6 +205,12 @@ namespace SWRGame
 		}
 	}
 
+	bool __fastcall isItemPodPart()
+	{
+		int offset = GetShopItemOffset();
+		return apShopData.entries[offset].itemType < 7;
+	}
+
 	int GetShopItemOffset()
 	{
 		int cursor = *(int*)(baseAddress + 0xA295D0);
@@ -403,6 +409,8 @@ namespace SWRGame
 		menuVal = (int*)(baseAddress + 0xD87A4);
 		menuValB = (int*)(baseAddress + 0xA2A67C);
 
+		DrawStats = (_DrawStats)(baseAddress + 0x550D0);
+
 		versionString = std::format("Version {}.{}.{}", version.major, version.minor, version.build), 
 
 		queuedDeaths = 0;
@@ -425,7 +433,7 @@ namespace SWRGame
 		Patches::HookRaceRewards();
 		Patches::HookDroidShop();
 		Patches::DisableJunkyard();
-		Patches::DisableAwardsCeremony();
+		//Patches::DisableAwardsCeremony();
 		Patches::SetAPModeString();
 
 		APSetup();

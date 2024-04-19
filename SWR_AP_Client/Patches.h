@@ -21,6 +21,7 @@ namespace SWRGame
 
 	extern void __fastcall PrintItemNameFullView();
 	extern void __fastcall PrintItemNameBuyView();
+	extern void __fastcall ShopDrawStats(void* obj);
 }
 
 static class Patches

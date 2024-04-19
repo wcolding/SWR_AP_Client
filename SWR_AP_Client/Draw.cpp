@@ -177,4 +177,15 @@ namespace SWRGame
 			}
 		}
 	}
+
+	void __fastcall ShopDrawStats(void* obj)
+	{
+		if (SWRGame::isItemPodPart())
+			SWRGame::DrawStats(obj, 20.0, 135.0);
+		else
+		{
+			WriteTextWrapper("Stats will appear here", SWRFont::ShopItem, 100, 155, SWRTextColor::LightBlue, SWRTextAlign::Center);
+			WriteTextWrapper("for pod parts only", SWRFont::ShopItem, 100, 165, SWRTextColor::LightBlue, SWRTextAlign::Center);
+		}
+	}
 }

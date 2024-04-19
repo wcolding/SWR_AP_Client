@@ -18,6 +18,7 @@
 
 
 typedef void(__cdecl* _WriteText)(short xPos, short yPos, int r, int g, int b, int a, const char* text, int unk_00, int unk_01);
+typedef void(__cdecl* _DrawStats)(void* obj, float x, float y);
 
 namespace SWRGame
 {
@@ -69,9 +70,12 @@ namespace SWRGame
 	std::vector <QueuedItem> itemQueue;
 	std::vector <NotifyMsg> notifyQueue;
 
+	_DrawStats DrawStats;
+
 	void __fastcall MarkRaceCompletion(int circuit, int course);
 	void __fastcall MarkShopPurchase();
 	void __fastcall MarkPitDroidPurchase();
+	bool __fastcall isItemPodPart();
 	int GetShopItemOffset();
 
 	// Callbacks

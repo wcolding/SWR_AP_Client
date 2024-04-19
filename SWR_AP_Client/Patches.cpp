@@ -184,6 +184,18 @@ void __declspec(naked) ShopBuyWindowDrawWrapper()
 	}
 }
 
+void __declspec(naked) HookShopDrawStats()
+{
+	__asm
+	{
+		pushad;
+		mov ecx, ebp;
+		call SWRGame::ShopDrawStats;
+		popad;
+		ret;
+	}
+}
+
 const char* shopPurchaseTitle = "  BUY";
 
 // models
@@ -255,12 +267,23 @@ void Patches::RewriteWattoShop()
 
 	void* apShopDataPtr = &SWRGame::apShopData;
 	// Model
-	void* apShopDataModelPtr = (void*)((int)apShopDataPtr + 0x08);
+	void* apShopDataModelPtr = &SWRGame::apShopData.entries[0].modelId;
 	WritePatch(0x3E9A4, &apShopDataModelPtr, 4);
 
 	// Races needed
-	void* apShopDataRacesPtr = (void*)((int)apShopDataPtr + 0x02);
+	void* apShopDataRacesPtr = &SWRGame::apShopData.entries[0].requiredRaces;
 	WritePatch(0x3E8CA, &apShopDataRacesPtr, 4);
+
+	// Item type
+	void* apShopDataTypePtr = &SWRGame::apShopData.entries[0].itemType;
+	WritePatch(0x37865, &apShopDataTypePtr, 4);
+	WritePatch(0x3EB70, &apShopDataTypePtr, 4);
+	WritePatch(0x3779B, &apShopDataTypePtr, 4);
+
+
+	// Stats window render
+	// +378E1 - call +550D0
+	HookFunction(0x378D6, &HookShopDrawStats, 14);
 
 	//Item shop
 	//3EB6D
@@ -285,14 +308,14 @@ void Patches::RewriteWattoShop()
 
 	char* tradeInIndex = tradeInModel;
 
+
 	/*WritePatch(0x3EF60, &tradeInName, 7);
 	WritePatch(0x56017, &tradeInModel, 7);
 	WritePatch(0x3EB6D, &tradeInIndex, 7);*/
 
-	// todo: adapt this
-	//37862
-	//Sets part stat display in bottom left (can be invalid)
-	// call +5cf60
+	// 37860 call +5cf60
+	// Sets part stat display in bottom left (can be invalid)
+	// 
 	// cdecl (ecx, eax, edx) (?, podPartType, ?) (9, 2, 1)
 	
 	//->3EF80
