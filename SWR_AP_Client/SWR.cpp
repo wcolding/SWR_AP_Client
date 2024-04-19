@@ -366,6 +366,9 @@ namespace SWRGame
 			return;
 		
 		auto current = &swrSaveData->parts[type];
+		auto curHealth = &swrSaveData->partsHealth[type];
+		*curHealth = 0xFF;
+
 		if (*current >= 5)
 			return;
 
