@@ -86,6 +86,7 @@ namespace SWRGame
 							curEntry->modelId = 0x6E; // Use Watto as temp model. Will be overwritten when we load the shop
 							curEntry->itemType = curItem.param1;
 							curEntry->seriesId = 1; // Will be overwritten when we load the shop
+							curEntry->requiredRaces |= 0x20; // Marker for progressives
 						}
 						else
 						{

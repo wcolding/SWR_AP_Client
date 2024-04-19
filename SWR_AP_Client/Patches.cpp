@@ -145,8 +145,8 @@ void __declspec(naked) SkipAcquiredItems()
 	{
 		movsx eax, bl;
 		sub eax, 01; 
-		or ecx, 0xFFFFFF80;
-		xor ecx, 0xFFFFFF80;
+		or ecx, 0xFFFFFFA0;
+		xor ecx, 0xFFFFFFA0;
 		ret;
 	}
 }
