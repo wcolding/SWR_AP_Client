@@ -384,12 +384,20 @@ void Patches::HookSaveFiles()
 	WritePatch(0x3EB13, &blOpcode, 1); // semi-pro
 	WritePatch(0x3EB19, &blOpcode, 1); // galactic
 
-	// Limit name to 24 bytes to avoid overwriting partial seed
+	// Limit name to 20 bytes to avoid overwriting partial seed and race completion data
 	char limitName[5] = {
-		0xB9, 0x06, 0x00, 0x00, 0x00 // mov ecx, 6
+		0xB9, 0x05, 0x00, 0x00, 0x00 // mov ecx, 5
 	};
 
 	WritePatch(0x3EB41, &limitName, 5);
+
+	// Limit name entry to 16 characters
+	char limitNameEntry[6] = {
+		0xB8, 0x10, 0x00, 0x00, 0x00, // mov eax, 0x10
+		0x90                          // nop
+	};
+
+	WritePatch(0x1838B, &limitNameEntry, 6);
 }
 
 void __declspec(naked) MarkRaceCompletionWrapper()

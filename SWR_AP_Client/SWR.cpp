@@ -180,10 +180,13 @@ namespace SWRGame
 
 	void __fastcall MarkRaceCompletion(int circuit, int course)
 	{
-		int locationOffset = 145 + circuit * 7 + course;
+		int courseIndex = circuit * 7 + course;
+		int locationOffset = 145 + courseIndex;
 		SendAPItem(locationOffset);
-		swrSaveData->racesCompleted++;
-		if (swrSaveData->racesCompleted > (char)24)
+
+		int courseFlag = 1 << courseIndex;
+		swrSaveData->racesCompleted |= courseFlag;
+		if (swrSaveData->racesCompleted == 0x1FFFFFF)
 			AP_StoryComplete();
 	}
 

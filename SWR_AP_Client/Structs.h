@@ -121,8 +121,9 @@ public:
 struct SWR_SaveData
 {
 public:
-	char profileName[0x18];    // 0x00
-	uint64_t apPartialSeed;    // 0x18 - technically part of the profile name but the in-game gui limits you to 24 characters
+	char profileName[0x14];    // 0x00 - shortened to 16 characters + null + padding
+	int racesCompleted;        // 0x14 - bitfield
+	uint64_t apPartialSeed;    // 0x18
 private:
 	char unk_00[0x02];         // 0x20
 	uint16_t profileId;        // 0x22
@@ -131,9 +132,8 @@ public:
 	TrackUnlocks trackUnlocks; // 0x25
 	char progressivePasses;    // 0x29 - unk_01 being used to track progressive passes
 	uint64_t racePlacements;   // 0x2A
-	char racesCompleted;       // 0x32 - part of unk_02 used to check goal complete
 private:
-	char unk_02;               // 0x33 
+	char unk_02[0x02];         // 0x32 
 public:
 	RacerUnlocks racerUnlocks; // 0x34
 	int money;                 // 0x38
