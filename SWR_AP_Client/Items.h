@@ -118,7 +118,7 @@ static std::map<int, ItemInfo> itemTable
 	{ 66, ItemInfo("Semi Pro Circuit Pass",     ItemType::CircuitPass, 1,  NULL, 0x6F) },
 	{ 67, ItemInfo("Galactic Circuit Pass",     ItemType::CircuitPass, 2,  NULL, 0x6F) },
 	{ 68, ItemInfo("Invitational Circuit Pass", ItemType::CircuitPass, 3,  NULL, 0x6F) },
-	{ 69, ItemInfo("Progressive Circuit Pass",  ItemType::CircuitPass, -1, NULL, -1) },
+	{ 69, ItemInfo("Progressive Circuit Pass",  ItemType::CircuitPass, -1, NULL, 0x6F) },
 
 
 	// Money
