@@ -535,6 +535,29 @@ void Patches::SetAPModeString()
 	HookFunction(0x1593C, &SetAPStringWrapper, 1);
 }
 
+void __declspec(naked) SetLapsToOne()
+{
+	__asm
+	{
+		mov[edi + 0x1C8], 1;
+		ret;
+	}
+}
+
+void Patches::EnableOneLapMode()
+{
+	SWRGame::Log("Applying patch: Enable 1-Lap Mode");
+
+	// Disable setting 3 lap record
+	char disableRecord[2]{
+		0xEB, 0x3C // jmp SWREP1RCR.EXE + 3A129
+	};
+
+	WritePatch(0x3A0EB, &disableRecord, 2);
+
+	HookFunction(0x63ADE, &SetLapsToOne, 1);
+}
+
 // 8DF30 is render func
 // +17FF writes string on profile page?
 

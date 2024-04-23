@@ -47,6 +47,7 @@ public:
 	static void DisableAwardsCeremony();
 	static void DisableVanillaInvitationalUnlocks();
 	static void ScaleAIDifficulty(int option);
+	static void EnableOneLapMode();
 
 	static void HookSaveFiles();
 	static void SetAPModeString();
