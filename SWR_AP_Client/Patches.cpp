@@ -457,6 +457,7 @@ void Patches::DisableVanillaInvitationalUnlocks()
 {
 	SWRGame::Log("Applying patch: Disable Vanilla Invitational Unlocks");
 	NOP(0x3A40B, 5);
+	NOP(0x3A53D, 5);
 }
 
 typedef void(__fastcall* _SetAIDifficulty)();
