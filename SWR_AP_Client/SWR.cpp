@@ -516,7 +516,7 @@ namespace SWRGame
 		Patches::HookRaceRewards();
 		Patches::HookDroidShop();
 		Patches::DisableJunkyard();
-		//Patches::DisableAwardsCeremony();
+		Patches::DisableAwardsCeremony();
 		Patches::SetAPModeString();
 
 		APSetup();
