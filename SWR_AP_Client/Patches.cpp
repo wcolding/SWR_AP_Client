@@ -450,7 +450,8 @@ void Patches::DisableAwardsCeremony()
 
 	WritePatch(0x3AA60, &alwaysSkip, 2);
 
-	// todo: prevent credits on Galactic completion
+	// Prevent credits sequence
+	NOP(0x3A497, 5);
 }
 
 void Patches::DisableVanillaInvitationalUnlocks()
