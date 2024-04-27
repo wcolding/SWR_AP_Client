@@ -240,6 +240,9 @@ namespace SWRGame
 			entry->seriesId = level;
 		}
 
+		if ((entry->requiredRaces & 0x80) != 0)
+			LoadItemModelO(0x6E, -1, unk_00, 00);
+		else
 		LoadItemModelO(entry->modelId, -1, unk_00, 00);
 	}
 
