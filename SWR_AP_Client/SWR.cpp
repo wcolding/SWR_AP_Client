@@ -249,7 +249,7 @@ namespace SWRGame
 		if ((entry->requiredRaces & 0x80) != 0)
 			LoadItemModelO(0x6E, -1, unk_00, 00);
 		else
-		LoadItemModelO(entry->modelId, -1, unk_00, 00);
+			LoadItemModelO(entry->modelId, -1, unk_00, 00);
 	}
 
 	int GetShopItemOffset()
@@ -477,6 +477,7 @@ namespace SWRGame
 		AP_RegisterSlotDataIntCallback("AIScaling", &SetAIScaling);
 		AP_RegisterSlotDataIntCallback("AdditionalAIMultiplier", &SetAdditionalScaling);
 		AP_RegisterSlotDataIntCallback("EnableMultiplierControl", &SetEnableMultiplierControl);
+		AP_RegisterSlotDataIntCallback("OneLapMode", &SetOneLapMode);
 		AP_RegisterSlotDataMapIntIntCallback("Courses", &SetCourses);
 
 		AP_Start();

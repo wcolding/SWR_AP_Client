@@ -95,5 +95,6 @@ namespace SWRGame
 	extern void SetAIScaling(int value);
 	extern void SetAdditionalScaling(int value);
 	extern void SetEnableMultiplierControl(int value);
+	extern void SetOneLapMode(int value);
 	extern void SetCourses(std::map<int, int> courseValues);
 }

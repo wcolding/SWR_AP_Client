@@ -183,6 +183,12 @@ namespace SWRGame
 			Log("Modifier control disabled");
 	}
 
+	void SetOneLapMode(int value)
+	{
+		if (value != 0)
+			Patches::EnableOneLapMode();
+	}
+
 	void SetCourses(std::map<int, int> courseValues)
 	{
 		courseLayout = courseValues;
