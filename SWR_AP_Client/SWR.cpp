@@ -184,6 +184,12 @@ namespace SWRGame
 		int locationOffset = 145 + courseIndex;
 		SendAPItem(locationOffset);
 
+		if (invitationalCircuitPass && (circuit == 3))
+		{
+			int unlockFlag = 1 << (course + 1);
+			progress.cachedSave.trackUnlocks[3] |= (char)unlockFlag;
+		}
+
 		int courseFlag = 1 << courseIndex;
 		swrSaveData->racesCompleted |= courseFlag;
 		if (swrSaveData->racesCompleted == 0x1FFFFFF)

@@ -31,17 +31,6 @@ namespace SWRGame
 
 		// For race completions (145 - 169), do nothing
 
-		if (invitationalCircuitPass)
-		{
-			// 166 - 168
-			if ((165 < localID) && (localID < 169))
-			{
-				int index = localID - 165;
-				int flag = 1 << index;
-				progress.cachedSave.trackUnlocks[3] |= (char)flag;
-			}
-		}
-
 		// Watto
 		if (wattoShopLocationToOffset.contains(localID))
 		{
