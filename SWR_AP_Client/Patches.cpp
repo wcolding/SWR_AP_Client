@@ -101,6 +101,63 @@ void Patches::DisablePartDamage()
 	WritePatch(DAMAGE_APPLY_OPCODE, &forceUnupgraded, 6);
 }
 
+void __fastcall HandleCourseChange(int nextCircuit, int structPtr)
+{
+	char* selectedCircuit = (char*)(structPtr + 0x5E);
+	char nextCircuitUnlocks;
+	int* cursor = (int*)(SWRGame::baseAddress + 0xA295D0);
+
+	if ((nextCircuit > *selectedCircuit) && (*selectedCircuit < 3))
+	{
+		while (nextCircuit <= 3)
+		{
+			nextCircuitUnlocks = SWRGame::swrSaveData->trackUnlocks[nextCircuit];
+			if ((nextCircuitUnlocks & 0x01) != 0)
+			{
+				*selectedCircuit = nextCircuit;
+				*cursor = 0; // Force selection of the first course on change
+				break;
+			}
+			nextCircuit++;
+		}
+	}
+	else if ((nextCircuit < *selectedCircuit) && (*selectedCircuit > 0))
+	{
+		while (nextCircuit >= 0)
+		{
+			nextCircuitUnlocks = SWRGame::swrSaveData->trackUnlocks[nextCircuit];
+			if ((nextCircuitUnlocks & 0x01) != 0)
+			{
+				*selectedCircuit = nextCircuit;
+				*cursor = 0; // Force selection of the first course on change
+				break;
+			}
+			nextCircuit--;
+		}
+	}
+
+}
+
+// call at +3B70C and +3B741
+void __declspec(naked) HandleCourseChangeWrapper()
+{
+	__asm
+	{
+		pushad;
+		mov edx, esi;
+		xor ecx, ecx;
+		mov cl, al;
+		call HandleCourseChange;
+		popad;
+
+		push eax;
+		mov eax, 0x00E295D4;
+		mov [eax], ebp;
+		pop eax;
+		ret;
+	}
+}
+
 void __declspec(naked) DefaultToFirstCourse()
 {
 	// eax row # / circuit
@@ -123,7 +180,7 @@ void __declspec(naked) DefaultToFirstCourse()
 }
 
 // Avoid player being able to select locked courses
-// Default to first course on locked circuits
+// Skip locked circuits and select first course on changing circuits
 void Patches::FixCourseSelection()
 {
 	SWRGame::Log("Applying patch: Fix Course Selection");
@@ -133,7 +190,18 @@ void Patches::FixCourseSelection()
 
 	WritePatch(ERROR_CURSOR_OPCODE, &forceSkipErrorCursor, 2);
 
-	HookFunction(DEFAULT_FIRST_COURSE_INJECT, &DefaultToFirstCourse, 2);
+	//HookFunction(DEFAULT_FIRST_COURSE_INJECT, &DefaultToFirstCourse, 2);
+	HookFunction(0x3B70C, &HandleCourseChangeWrapper);
+	HookFunction(0x3B741, &HandleCourseChangeWrapper);
+
+	// Replace push instruction we overwrote
+	char push[6] = {
+		0x6A, 0x58,            // push 0x58
+		0x90, 0x90, 0x90, 0x90 // nop
+	};
+
+	WritePatch(0x3B711, &push, 6);
+	WritePatch(0x3B746, &push, 6);
 }
 
 void __declspec(naked) SkipAcquiredItems()

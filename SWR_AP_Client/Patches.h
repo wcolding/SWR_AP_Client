@@ -18,6 +18,7 @@ namespace SWRGame
 	extern float GetAIScaleByCircuit(float val, int baseCircuit, int targetCircuit);
 	extern SWR_PodPartTable apShopData;
 	extern void ChangeAIModifier(float amount);
+	extern SWR_SaveData* swrSaveData;
 
 	extern void __fastcall PrintItemNameFullView();
 	extern void __fastcall PrintItemNameBuyView();
