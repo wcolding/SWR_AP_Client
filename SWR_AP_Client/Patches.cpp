@@ -101,6 +101,20 @@ void Patches::DisablePartDamage()
 	WritePatch(DAMAGE_APPLY_OPCODE, &forceUnupgraded, 6);
 }
 
+int GetFirstAvailableInvitational()
+{
+	int flag = 0;
+	int invUnlocks = (int)SWRGame::swrSaveData->trackUnlocks[3];
+	for (int i = 0; i < 4; i++)
+	{
+		flag = 1 << i;
+		if ((invUnlocks & flag) != 0)
+			return i;
+	}
+
+	return -1;
+}
+
 void __fastcall HandleCourseChange(int nextCircuit, int structPtr)
 {
 	char* selectedCircuit = (char*)(structPtr + 0x5E);
@@ -109,8 +123,9 @@ void __fastcall HandleCourseChange(int nextCircuit, int structPtr)
 
 	if ((nextCircuit > *selectedCircuit) && (*selectedCircuit < 3))
 	{
-		while (nextCircuit <= 3)
+		while (nextCircuit < 3)
 		{
+
 			nextCircuitUnlocks = SWRGame::swrSaveData->trackUnlocks[nextCircuit];
 			if ((nextCircuitUnlocks & 0x01) != 0)
 			{
@@ -119,6 +134,16 @@ void __fastcall HandleCourseChange(int nextCircuit, int structPtr)
 				break;
 			}
 			nextCircuit++;
+		}
+
+		if (nextCircuit == 3)
+		{
+			int invAvailable = GetFirstAvailableInvitational();
+			if (invAvailable != -1)
+			{
+				*selectedCircuit = nextCircuit;
+				*cursor = 0; // Index zero is always the first selectable course on this screen
+			}
 		}
 	}
 	else if ((nextCircuit < *selectedCircuit) && (*selectedCircuit > 0))
