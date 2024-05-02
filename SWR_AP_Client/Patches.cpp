@@ -183,6 +183,27 @@ void __declspec(naked) HandleCourseChangeWrapper()
 	}
 }
 
+void __fastcall CapCursor()
+{
+	int* cursor = (int*)(SWRGame::baseAddress + 0xA295D0);
+	int numItems= *(int*)(SWRGame::baseAddress + 0xA295CC) - 1;
+	++*cursor;
+
+	if (*cursor > numItems)
+		*cursor = numItems;
+}
+
+void __declspec(naked) CapCursorWrapper()
+{
+	__asm
+	{
+		pushad;
+		call CapCursor;
+		popad;
+		ret;
+	}
+}
+
 void __declspec(naked) DefaultToFirstCourse()
 {
 	// eax row # / circuit
@@ -227,6 +248,9 @@ void Patches::FixCourseSelection()
 
 	WritePatch(0x3B711, &push, 6);
 	WritePatch(0x3B746, &push, 6);
+
+	// Cap the cursor on course selection screen
+	HookFunction(0x3B219, &CapCursorWrapper, 1);
 }
 
 void __declspec(naked) SkipAcquiredItems()
