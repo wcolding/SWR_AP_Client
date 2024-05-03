@@ -45,6 +45,15 @@ namespace SWRGame
 			ProcessMessages();
 			ProcessDeathQueue();
 			ProcessItemQueue();
+
+			if (GetKeyState(VK_HOME) & 0x80)
+				ChangeAIModifier(0.100);
+			if (GetKeyState(VK_END) & 0x80)
+				ChangeAIModifier(-0.100);
+			if (GetKeyState(VK_PRIOR) & 0x80)
+				ChangeAIModifier(0.010);
+			if (GetKeyState(VK_NEXT) & 0x80)
+				ChangeAIModifier(-0.010);
 		}
 		
 		Sleep(50);
@@ -520,7 +529,7 @@ namespace SWRGame
 		//// Apply patches we don't need an AP callback for
 		Patches::HookSaveFiles();
 		Patches::HookDraw();
-		Patches::HookInput();
+		//Patches::HookInput();
 		Patches::FixCourseSelection();
 		Patches::RewriteWattoShop();
 		Patches::HookRaceRewards();

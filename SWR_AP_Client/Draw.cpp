@@ -167,7 +167,11 @@ namespace SWRGame
 					WriteTextWrapper("AI Modifier: " + std::to_string(aiModifier), SWRFont::Medium, 300, 160);
 
 					if (modifierControl)
-						WriteTextWrapper("Unlocked", SWRFont::Medium, 300, 170, SWRTextColor::LightBlue);
+					{
+						WriteTextWrapper("Unlocked", SWRFont::Medium, 300, 170, SWRTextColor::LightBlue); 
+						WriteTextWrapper("Increase: Home/Page Up", SWRFont::Medium, 300, 180, SWRTextColor::White);
+						WriteTextWrapper("Decrease: End/Page Down", SWRFont::Medium, 300, 190, SWRTextColor::White);
+					}
 					else
 						WriteTextWrapper("Locked", SWRFont::Medium, 300, 170, SWRTextColor::Red);
 				}
