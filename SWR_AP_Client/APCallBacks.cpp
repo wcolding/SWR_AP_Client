@@ -159,6 +159,7 @@ namespace SWRGame
 	void SetInvitationalCircuitPass(int value)
 	{
 		invitationalCircuitPass = value == 1;
+		if (invitationalCircuitPass)
 		Patches::DisableVanillaInvitationalUnlocks();
 	}
 
