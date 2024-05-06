@@ -29,6 +29,7 @@ You will need to run the Windows copy of the game with a DLL override in order f
 	* Jabba - items for other non-racer worlds
 	* Ithorian - circuit pass
 	* Dewback - money
+ 	* Racers - themselves
 	* Watto - purchased
 
 ### Known Bugs
