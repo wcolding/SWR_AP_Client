@@ -576,7 +576,8 @@ void Patches::DisableVanillaInvitationalUnlocks()
 	SWRGame::Log("Applying patch: Disable Vanilla Invitational Unlocks");
 	NOP(0x3A40B, 5);
 	NOP(0x3A53D, 5); // Prevents writing the unlock
-	NOP(0x3A402, 5); // Prevents auto selecting the invitational circuit after finishing another circuit
+	NOP(0x3A402, 5); // Prevents auto selecting the invitational circuit after finishing amateur or semi-pro circuits
+	NOP(0x3A538, 5); // Prevents auto selecting the invitational circuit after finishing galactic circuit
 }
 
 typedef void(__fastcall* _SetAIDifficulty)();
