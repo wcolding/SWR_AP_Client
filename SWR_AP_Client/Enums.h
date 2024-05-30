@@ -45,11 +45,12 @@ enum DeathState : int
 
 enum ItemType : int
 {
-	PodPart     = 0,
-	Racer       = 1,
-	PitDroid    = 2,
-	CircuitPass = 3,
-	Money       = 4
+	PodPart      = 0,
+	Racer        = 1,
+	PitDroid     = 2,
+	CircuitPass  = 3,
+	Money        = 4,
+	CourseUnlock = 5
 };
 
 enum SWRGameState : int

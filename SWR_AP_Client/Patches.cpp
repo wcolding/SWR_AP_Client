@@ -580,6 +580,12 @@ void Patches::DisableVanillaInvitationalUnlocks()
 	NOP(0x3A538, 5); // Prevents auto selecting the invitational circuit after finishing galactic circuit
 }
 
+void Patches::DisableVanillaCourseUnlocks()
+{
+	SWRGame::Log("Applying patch: Disable Vanilla Course Unlocks");
+	NOP(0x3A461, 6);
+}
+
 typedef void(__fastcall* _SetAIDifficulty)();
 _SetAIDifficulty SetAIDifficulty;
 

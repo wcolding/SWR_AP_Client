@@ -111,7 +111,33 @@ static std::map<int, std::string> locationTable
 	{184, "Racer Unlock - Ando Prime Centrum"},
 
 	{185, "Racer Unlock - Executioner" },
-	{186, "Racer Unlock - Sunken City" }
+	{186, "Racer Unlock - Sunken City" },
+
+	// Course Unlock Shuffle
+	{ 187, "Amateur Race 1 - Course Unlock" },
+	{ 188, "Amateur Race 2 - Course Unlock" },
+	{ 189, "Amateur Race 3 - Course Unlock" },
+	{ 190, "Amateur Race 4 - Course Unlock" },
+	{ 191, "Amateur Race 5 - Course Unlock" },
+	{ 192, "Amateur Race 6 - Course Unlock" },
+
+	{ 193, "Semi-Pro Race 1 - Course Unlock" },
+	{ 194, "Semi-Pro Race 2 - Course Unlock" },
+	{ 195, "Semi-Pro Race 3 - Course Unlock" },
+	{ 196, "Semi-Pro Race 4 - Course Unlock" },
+	{ 197, "Semi-Pro Race 5 - Course Unlock" },
+	{ 198, "Semi-Pro Race 6 - Course Unlock" },
+
+	{ 199, "Galactic Race 1 - Course Unlock" },
+	{ 200, "Galactic Race 2 - Course Unlock" },
+	{ 201, "Galactic Race 3 - Course Unlock" },
+	{ 202, "Galactic Race 4 - Course Unlock" },
+	{ 203, "Galactic Race 5 - Course Unlock" },
+	{ 204, "Galactic Race 6 - Course Unlock" },
+
+	{ 205, "Invitational Race 1 - Course Unlock" },
+	{ 206, "Invitational Race 2 - Course Unlock" },
+	{ 207, "Invitational Race 3 - Course Unlock" }
 };
 
 // We'll check the unlocked racer flags and map them to the location IDs
@@ -246,4 +272,36 @@ static std::map<int, int> courseIdToVanillaCircuit
 	{ 0x0B, 3 }, // Abyss
 	{ 0x15, 3 }, // The Gauntlet
 	{ 0x0F, 3 }  // Inferno
+};
+
+static std::map<int, int> courseClearToUnlock
+{
+	// Amateur
+	{145, 187},
+	{146, 188},
+	{147, 189},
+	{148, 190},
+	{149, 191},
+	{150, 192},
+
+	// Semi-Pro
+	{152, 193},
+	{153, 194},
+	{154, 195},
+	{155, 196},
+	{156, 197},
+	{157, 198},
+
+	// Galactic
+	{159, 199},
+	{160, 200},
+	{161, 201},
+	{162, 202},
+	{163, 203},
+	{164, 204},
+
+	// Invitational
+	{166, 205},
+	{167, 206},
+	{168, 207}
 };

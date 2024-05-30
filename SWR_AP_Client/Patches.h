@@ -47,6 +47,7 @@ public:
 	static void HookRaceRewards();
 	static void DisableAwardsCeremony();
 	static void DisableVanillaInvitationalUnlocks();
+	static void DisableVanillaCourseUnlocks();
 	static void ScaleAIDifficulty(int option);
 	static void EnableOneLapMode();
 

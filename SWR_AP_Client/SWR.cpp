@@ -199,6 +199,12 @@ namespace SWRGame
 			progress.cachedSave.trackUnlocks[3] |= (char)unlockFlag;
 		}
 
+		if (shuffledCourseUnlocks)
+		{
+			if (courseClearToUnlock.contains(locationOffset))
+				SendAPItem(courseClearToUnlock[locationOffset]);
+		}
+
 		int courseFlag = 1 << courseIndex;
 		swrSaveData->racesCompleted |= courseFlag;
 		if (swrSaveData->racesCompleted == 0x1FFFFFF)
@@ -372,9 +378,8 @@ namespace SWRGame
 
 	void InitSaveData()
 	{
-		// Reset values of progressive/stackable items (except circuit pass)
+		// Reset values of progressive/stackable items (except circuit pass and course unlocks)
 		// AP will send items on connect so we will recalculate from the base values
-		//swrSaveData->money = 400;
 		swrSaveData->pitDroids = 1;
 		memset(&swrSaveData->parts, 0, 7);
 
@@ -423,6 +428,21 @@ namespace SWRGame
 		swrSaveData->money += amount;
 	}
 
+	void GiveCourseUnlock(int circuit)
+	{
+		int curUnlock = swrSaveData->trackUnlocks[circuit];
+		int curFlag = 0;
+		for (int i = 0; i < 7; i++)
+		{
+			curFlag = 1 << i;
+			if ((curUnlock & curFlag) == 0)
+			{
+				swrSaveData->trackUnlocks[circuit] |= curFlag;
+				return;
+			}
+		}
+	}
+
 	void ProcessItemQueue()
 	{
 		if (!itemQueue.empty() && isSaveDataReady())
@@ -450,6 +470,10 @@ namespace SWRGame
 			case ItemType::Money:
 				if (item.notify)
 					GiveMoney(itemInfo.param1);
+				break;
+			case ItemType::CourseUnlock:
+				if (item.notify)
+					GiveCourseUnlock(itemInfo.param1);
 				break;
 			default:
 				break;
@@ -482,7 +506,7 @@ namespace SWRGame
 
 		AP_RegisterSlotDataIntCallback("StartingRacers", &SetStartingRacers);
 		AP_RegisterSlotDataIntCallback("DisablePartDamage", &SetDisablePartDamage);
-		AP_RegisterSlotDataIntCallback("EnableInvitationalCircuitPass", &SetInvitationalCircuitPass);
+		AP_RegisterSlotDataIntCallback("CourseUnlockMode", &SetCourseUnlockMode);
 		AP_RegisterSlotDataIntCallback("AIScaling", &SetAIScaling);
 		AP_RegisterSlotDataIntCallback("AdditionalAIMultiplier", &SetAdditionalScaling);
 		AP_RegisterSlotDataIntCallback("EnableMultiplierControl", &SetEnableMultiplierControl);
