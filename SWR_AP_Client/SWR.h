@@ -66,6 +66,7 @@ namespace SWRGame
 
 	bool invitationalCircuitPass = false;
 	bool shuffledCourseUnlocks = false;
+	bool hintShop = false;
 
 	SWRGameState gamestate;
 	std::vector <QueuedItem> itemQueue;
@@ -79,6 +80,7 @@ namespace SWRGame
 	bool __fastcall isItemPodPart();
 	void __fastcall LoadItemModel(int unk_00, int tableOffset);
 	int GetShopItemOffset();	
+	void SendShopHints(int coursesCompleted);
 	void __fastcall UpdateProgressiveDisplays();
 	extern void UpdateShopModel(int selectedIndex, int modelId);
 
@@ -97,5 +99,6 @@ namespace SWRGame
 	extern void SetAdditionalScaling(int value);
 	extern void SetEnableMultiplierControl(int value);
 	extern void SetOneLapMode(int value);
+	extern void SetAutoHintShop(int value);
 	extern void SetCourses(std::map<int, int> courseValues);
 }

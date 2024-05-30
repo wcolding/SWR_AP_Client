@@ -19,7 +19,9 @@ namespace SWRGame
 	extern bool shuffledCourseUnlocks;
 	extern float aiModifier;
 	extern bool modifierControl;
+	extern bool hintShop;
 	extern SWR_PodPartTable apShopData;
+	extern void SendShopHints(int coursesCompleted);
 
 	void ResetSaveData();
 	void ReceiveItem(int64_t itemID, bool notify);
@@ -35,5 +37,6 @@ namespace SWRGame
 	void SetAdditionalScaling(int value);
 	void SetEnableMultiplierControl(int value);
 	void SetOneLapMode(int value);
+	void SetAutoHintShop(int value);
 	void SetCourses(std::map<int, int> courseValues);
 }

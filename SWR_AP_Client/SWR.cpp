@@ -187,6 +187,32 @@ namespace SWRGame
 		}
 	}
 
+	int CalculateRacesCompleted()
+	{
+		int count = 0;
+		int flag;
+
+		for (int i = 0; i < 25; i++)
+		{
+			flag = 1 << i;
+			if ((swrSaveData->racesCompleted & flag) != 0)
+				count++;
+		}
+		
+		return count;
+	}
+
+	int prevRacesCount = 0;
+
+	void SendShopHints(int coursesCompleted)
+	{
+		std::vector<int64_t> locations;
+		for (auto id : shopUnlockHintsTable[coursesCompleted])
+			locations.push_back(id + SWR_AP_BASE_ID);
+
+		AP_SendLocationScouts(locations, 1);
+	}
+
 	void __fastcall MarkRaceCompletion(int circuit, int course)
 	{
 		int courseIndex = circuit * 7 + course;
@@ -207,6 +233,20 @@ namespace SWRGame
 
 		int courseFlag = 1 << courseIndex;
 		swrSaveData->racesCompleted |= courseFlag;
+
+		if (hintShop)
+		{
+			int completed = CalculateRacesCompleted();
+			if ((completed < 17) && (completed % 2 == 0))
+			{
+				if (completed != prevRacesCount)
+				{
+					SendShopHints(completed);
+					prevRacesCount = completed;
+				}
+			}
+		}
+
 		if (swrSaveData->racesCompleted == 0x1FFFFFF)
 			AP_StoryComplete();
 	}
@@ -511,6 +551,7 @@ namespace SWRGame
 		AP_RegisterSlotDataIntCallback("AdditionalAIMultiplier", &SetAdditionalScaling);
 		AP_RegisterSlotDataIntCallback("EnableMultiplierControl", &SetEnableMultiplierControl);
 		AP_RegisterSlotDataIntCallback("OneLapMode", &SetOneLapMode);
+		AP_RegisterSlotDataIntCallback("AutoHintShop", &SetAutoHintShop);
 		AP_RegisterSlotDataMapIntIntCallback("Courses", &SetCourses);
 
 		AP_Start();

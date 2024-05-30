@@ -199,6 +199,15 @@ namespace SWRGame
 			Patches::EnableOneLapMode();
 	}
 
+	void SetAutoHintShop(int value)
+	{
+		if (value != 0)
+		{
+			hintShop = true;
+			SendShopHints(0); // hint initial shop checks
+		}
+	}
+
 	void SetCourses(std::map<int, int> courseValues)
 	{
 		courseLayout = courseValues;
