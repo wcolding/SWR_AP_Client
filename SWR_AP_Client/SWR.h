@@ -65,6 +65,7 @@ namespace SWRGame
 	uint64_t partialSeed = 0;
 
 	bool invitationalCircuitPass = false;
+	bool shuffledCourseUnlocks = false;
 
 	SWRGameState gamestate;
 	std::vector <QueuedItem> itemQueue;
@@ -91,7 +92,7 @@ namespace SWRGame
 
 	extern void SetStartingRacers(int value);
 	extern void SetDisablePartDamage(int value);
-	extern void SetInvitationalCircuitPass(int value);
+	extern void SetCourseUnlockMode(int value);
 	extern void SetAIScaling(int value);
 	extern void SetAdditionalScaling(int value);
 	extern void SetEnableMultiplierControl(int value);

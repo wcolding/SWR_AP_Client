@@ -131,6 +131,11 @@ static std::map<int, ItemInfo> itemTable
 	{ 75, ItemInfo("2100 Truguts",  ItemType::Money, 2100,  NULL, 0x6F) },
 	{ 76, ItemInfo("2800 Truguts",  ItemType::Money, 2800,  NULL, 0x6F) },
 	{ 77, ItemInfo("3500 Truguts",  ItemType::Money, 3500,  NULL, 0x6F) },
+
+	{ 78, ItemInfo("Amateur Course Unlock", ItemType::CourseUnlock, 0, NULL, 0xF4) },
+	{ 79, ItemInfo("Amateur Course Unlock", ItemType::CourseUnlock, 1, NULL, 0xF4) },
+	{ 80, ItemInfo("Amateur Course Unlock", ItemType::CourseUnlock, 2, NULL, 0xF4) },
+	{ 81, ItemInfo("Amateur Course Unlock", ItemType::CourseUnlock, 3, NULL, 0xF4) }
 };
 
 

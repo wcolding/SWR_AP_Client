@@ -16,6 +16,7 @@ namespace SWRGame
 	extern std::vector <QueuedItem> itemQueue;
 	extern void QueueNotifyMsg(std::string _msg);
 	extern bool invitationalCircuitPass;
+	extern bool shuffledCourseUnlocks;
 	extern float aiModifier;
 	extern bool modifierControl;
 	extern SWR_PodPartTable apShopData;
@@ -29,7 +30,7 @@ namespace SWRGame
 
 	void SetStartingRacers(int value);
 	void SetDisablePartDamage(int value);
-	void SetInvitationalCircuitPass(int value);
+	void SetCourseUnlockMode(int value);
 	void SetAIScaling(int value);
 	void SetAdditionalScaling(int value);
 	void SetEnableMultiplierControl(int value);

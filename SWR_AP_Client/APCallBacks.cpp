@@ -156,11 +156,20 @@ namespace SWRGame
 			Patches::DisablePartDamage();
 	}
 
-	void SetInvitationalCircuitPass(int value)
+	void SetCourseUnlockMode(int value)
 	{
-		invitationalCircuitPass = value == 1;
-		if (invitationalCircuitPass)
-		Patches::DisableVanillaInvitationalUnlocks();
+		if (value == 1)
+		{
+			invitationalCircuitPass = true;
+			Patches::DisableVanillaInvitationalUnlocks();
+		}
+		else if (value == 2)
+		{
+			shuffledCourseUnlocks = true; 
+			Patches::DisableVanillaCourseUnlocks();
+			Patches::DisableVanillaInvitationalUnlocks();
+		}
+
 	}
 
 	void SetAIScaling(int value)
