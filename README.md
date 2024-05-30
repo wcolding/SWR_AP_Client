@@ -10,12 +10,18 @@ More information on randomization using the apworld can be found on the [apworld
 You will need the following to play this randomizer:
 * An [Archipelago installation](https://github.com/ArchipelagoMW/Archipelago/releases) and the [latest apworld release](https://github.com/wcolding/SWR_apworld/releases) (for generating seeds)
 * [The latest release](https://github.com/wcolding/SWR_AP_Client/releases) of this client
-* A `dinput.dll (x86)` release of [Ultimate ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases).
-	* If you are already using `dinput.dll` for another injected mod/fix you should be able to use `dsound.dll` instead for all subsequent instructions.
-* The Windows version of the game. Development has been conducted with the Steam version. The GOG release appears to work but has not been tested extensively.
+* A dll release of [Ultimate ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases)
+	* Confirmed working dlls include `dinput.dll` and `dsound.dll`
+	*  **Be sure to download the dll itself from the release notes and *not* `Ultimate-ASI-Loader.zip`**
+* The Windows version of the game. Development has been conducted with the Steam version. The GOG release appears to work but has not been tested extensively
+* The [x86 Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist) if not already installed
 
 ### How do I use this?
-Put the `dinput.dll` from Ultimate ASI Loader into your game's main directory. Put the entire `scripts` folder from the client release in the base folder as well. Run the game and a window should pop up asking if you want to connect to Archipelago. Enter the server address and port (e.g.: `archipelago.gg:12345`), your slot name, and a password if applicable.
+1. Place the Ultimate ASI Loader dll file (`dinput` or `dsound`) into your game's main directory
+2. Place the entire `scripts` folder from the client release into the main directory as well
+	* **Note: Place the *folder* into the main directory, not its contents. ASI Loader is looking for a folder named "scripts"!**
+3. Run the game and a window should pop up asking if you want to connect to Archipelago. Enter the server address and port (e.g.: `archipelago.gg:12345`), your slot name, and a password if applicable.
+4. Click `Log In`. If all goes well you should see "Connected to AP" and a seed number in the upper right hand corner of the game
 
 #### Note for Steam Deck/Proton/Wine users:
 You will need to run the Windows copy of the game with a DLL override in order for the mod to load. You can add `WINEDLLOVERRIDES="dinput=n,b" %command%` to the launch options in the game properties in Steam to do this. If using `dsound`, put that instead.
@@ -27,7 +33,7 @@ You will need to run the Windows copy of the game with a DLL override in order f
 * The game contains no text client. To use commands such as hints it's recommended you use the text client included with AP
 * Pod parts appear as their original models in the shop. Other items are represented by the following models:
 	* Jabba - items for other non-racer worlds
-	* Ithorian - circuit pass
+	* Ithorian - circuit pass / course unlocks
 	* Dewback - money
  	* Racers - themselves
 	* Watto - purchased
