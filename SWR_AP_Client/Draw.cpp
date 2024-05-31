@@ -146,6 +146,9 @@ namespace SWRGame
 		// Menu specific draws
 		if (menuVal != nullptr)
 		{
+			int settingsAddr = *(int*)(baseAddress + 0xBFDB8);
+			bool trackMirrored = *(bool*)(settingsAddr + 0x6E);
+
 			switch (*menuVal)
 			{
 			case 1: // Start Menu
@@ -156,10 +159,17 @@ namespace SWRGame
 				WriteTextWrapper("IMPORTANT : Create a new save for each new seed!", SWRFont::Medium, 310, 120, SWRTextColor::LightBlue, SWRTextAlign::Center);
 				break;
 			case 3: // Everything else?
+				if (*menuValB == 12) // Course select screen
+				{
+					if (trackMirrored)
+						WriteTextWrapper("Mirrored", SWRFont::ShopItem, 160, 75, SWRTextColor::Yellow, SWRTextAlign::Center);
+				}
+
 				if (*menuValB == 13) // Track info screen
 				{
 					WriteTextWrapper("Rewards are locked to \"Fair\" but are farmable", SWRFont::Medium, 50, 300);
-					// write mirrored msg?
+					if (trackMirrored)
+						WriteTextWrapper("Mirrored", SWRFont::ShopItem, 160, 50, SWRTextColor::Yellow, SWRTextAlign::Center);
 				}
 
 				if (*menuValB == 3) // Pre-race "Main Menu"
