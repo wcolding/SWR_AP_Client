@@ -13,6 +13,7 @@ namespace SWRGame
 	extern void __fastcall MarkRaceCompletion(int circuit, int course);
 	extern void __fastcall MarkShopPurchase();
 	extern void __fastcall MarkPitDroidPurchase();
+	extern int __fastcall CalculateRacesCompleted();
 	extern uint64_t partialSeed;
 	extern float GetAIScaleFromParts();
 	extern float GetAIScaleByCircuit(float val, int baseCircuit, int targetCircuit);

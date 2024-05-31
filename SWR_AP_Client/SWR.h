@@ -82,6 +82,7 @@ namespace SWRGame
 	int GetShopItemOffset();	
 	void SendShopHints(int coursesCompleted);
 	void __fastcall UpdateProgressiveDisplays();
+	int __fastcall CalculateRacesCompleted();
 	extern void UpdateShopModel(int selectedIndex, int modelId);
 
 	// Callbacks

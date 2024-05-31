@@ -256,14 +256,18 @@ void Patches::FixCourseSelection()
 void __declspec(naked) SkipAcquiredItems()
 {
 	// Vanilla behavior subtracts 3 from the total unlocked courses to account for the defaults
-	// In AP we start with 1 so we will subtract 1
-	// We also need to mask ecx to ensure a correct cmp result
+	// In AP we'll manually count actual completed courses
+	// Mask ecx to ensure a correct cmp result
 	__asm
 	{
-		movsx eax, bl;
-		sub eax, 01; 
-		or ecx, 0xFFFFFFA0;
-		xor ecx, 0xFFFFFFA0;
+		or ecx, SWRGame::shopDisplayMask;
+		xor ecx, SWRGame::shopDisplayMask;
+		push ecx;
+		push edx;
+		call SWRGame::CalculateRacesCompleted;
+		mov eax, edx;
+		pop edx;
+		pop ecx;
 		ret;
 	}
 }
@@ -338,7 +342,7 @@ void Patches::RewriteWattoShop()
 	// We're using the flag 0x80 to mark an item
 	HookFunction(SKIP_ITEM_INJECT, &SkipAcquiredItems, 1);
 
-	// Stop game from skipping if item index matches the owned part
+	// Stop game from skipping what it thinks are owned parts
 	NOP(0x3E8EA, 2);
 
 	// Intercept vanilla call to swap owned and shop items
