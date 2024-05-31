@@ -694,9 +694,9 @@ void __fastcall SetCourse(int raceSettingsStruct, int index)
 	bool* mirroredSetting = (bool*)(raceSettingsStruct + 0x6E);
 	*mirroredSetting = SWRGame::courseLayout[index].mirrored;
 
-	int* courseID = (int*)(raceSettingsStruct + 0x5D);
+	char* courseID = (char*)(raceSettingsStruct + 0x5D);
 	int* mappingAddr = (int*)(0x4C0018 + 4 * index);
-	*courseID = *mappingAddr;
+	*courseID = (char)*mappingAddr;
 }
 
 void __declspec(naked) SetCourseHook()
