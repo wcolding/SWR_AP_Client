@@ -67,6 +67,7 @@ namespace SWRGame
 	bool invitationalCircuitPass = false;
 	bool shuffledCourseUnlocks = false;
 	bool hintShop = false;
+	int shopDisplayMask = 0xFFFFFFA0;
 
 	SWRGameState gamestate;
 	std::vector <QueuedItem> itemQueue;

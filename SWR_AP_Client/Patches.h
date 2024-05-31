@@ -20,6 +20,7 @@ namespace SWRGame
 	extern SWR_PodPartTable apShopData;
 	extern void ChangeAIModifier(float amount);
 	extern SWR_SaveData* swrSaveData;
+	extern int shopDisplayMask;
 
 	extern void __fastcall PrintItemNameFullView();
 	extern void __fastcall PrintItemNameBuyView();

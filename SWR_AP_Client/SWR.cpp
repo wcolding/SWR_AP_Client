@@ -187,7 +187,7 @@ namespace SWRGame
 		}
 	}
 
-	int CalculateRacesCompleted()
+	int __fastcall CalculateRacesCompleted()
 	{
 		int count = 0;
 		int flag;
