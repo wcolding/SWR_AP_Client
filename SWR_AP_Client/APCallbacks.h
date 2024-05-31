@@ -23,6 +23,8 @@ namespace SWRGame
 	extern SWR_PodPartTable apShopData;
 	extern void SendShopHints(int coursesCompleted);
 
+	std::map<int, RandomizedCourseData> courseLayout;
+
 	void ResetSaveData();
 	void ReceiveItem(int64_t itemID, bool notify);
 	void SetLocationChecked(int64_t locID);

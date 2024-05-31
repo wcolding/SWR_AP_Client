@@ -22,6 +22,8 @@ namespace SWRGame
 	extern SWR_SaveData* swrSaveData;
 	extern int shopDisplayMask;
 
+	extern std::map<int, RandomizedCourseData> courseLayout;
+
 	extern void __fastcall PrintItemNameFullView();
 	extern void __fastcall PrintItemNameBuyView();
 	extern void __fastcall ShopDrawStats(void* obj);
@@ -52,6 +54,7 @@ public:
 	static void DisableVanillaCourseUnlocks();
 	static void ScaleAIDifficulty(int option);
 	static void EnableOneLapMode();
+	static void EnableMirroredCourses();
 
 	static void HookSaveFiles();
 	static void SetAPModeString();

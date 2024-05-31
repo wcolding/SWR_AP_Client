@@ -157,7 +157,10 @@ namespace SWRGame
 				break;
 			case 3: // Everything else?
 				if (*menuValB == 13) // Track info screen
+				{
 					WriteTextWrapper("Rewards are locked to \"Fair\" but are farmable", SWRFont::Medium, 50, 300);
+					// write mirrored msg?
+				}
 
 				if (*menuValB == 3) // Pre-race "Main Menu"
 				{

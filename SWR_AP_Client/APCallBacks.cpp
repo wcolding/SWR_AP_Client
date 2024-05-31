@@ -7,8 +7,6 @@
 
 namespace SWRGame
 {
-	std::map<int, int> courseLayout;
-
 	void ResetSaveData()
 	{
 		Log("ResetSaveData called by AP");
@@ -210,10 +208,17 @@ namespace SWRGame
 
 	void SetCourses(std::map<int, int> courseValues)
 	{
-		courseLayout = courseValues;
+		for (int i = 0; i < courseValues.size(); i++)
+		{
+			if ((courseValues[i] & 0x80) != 0)
+				courseLayout[i].mirrored = true;
 
-		for (int i = 0; i < courseLayout.size(); i++)
-			memcpy((void*)(baseAddress + COURSE_MAPPINGS_OFFSET + 4 * i), &courseLayout[i], 4);
+			courseLayout[i].id = courseValues[i];
+			courseLayout[i].id |= 0x80; 
+			courseLayout[i].id ^= 0x80;
+		
+			memcpy((void*)(baseAddress + COURSE_MAPPINGS_OFFSET + 4 * i), &courseLayout[i].id, 4);
+		}
 
 		Log("Courses set");
 	}

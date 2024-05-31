@@ -689,6 +689,34 @@ void Patches::EnableOneLapMode()
 	HookFunction(0x63ADE, &SetLapsToOne, 1);
 }
 
+void __fastcall SetCourse(int raceSettingsStruct, int index)
+{
+	bool* mirroredSetting = (bool*)(raceSettingsStruct + 0x6E);
+	*mirroredSetting = SWRGame::courseLayout[index].mirrored;
+
+	int* courseID = (int*)(raceSettingsStruct + 0x5D);
+	int* mappingAddr = (int*)(0x4C0018 + 4 * index);
+	*courseID = *mappingAddr;
+}
+
+void __declspec(naked) SetCourseHook()
+{
+	__asm
+	{
+		pushad;
+		mov ecx, esi;
+		call SetCourse;
+		popad;
+		ret;
+	}
+}
+
+void Patches::EnableMirroredCourses()
+{
+	SWRGame::Log("Applying patch: Enable Mirrored Courses");
+	HookFunction(0x3B380, &SetCourseHook, 5);
+}
+
 // 8DF30 is render func
 // +17FF writes string on profile page?
 

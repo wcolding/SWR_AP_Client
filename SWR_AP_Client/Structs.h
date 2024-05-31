@@ -196,3 +196,9 @@ struct Color
 {
 	int r, g, b, a;
 };
+
+struct RandomizedCourseData
+{
+	int id;
+	bool mirrored = false;
+};

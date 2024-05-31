@@ -602,6 +602,7 @@ namespace SWRGame
 		Patches::DisableJunkyard();
 		Patches::DisableAwardsCeremony();
 		Patches::SetAPModeString();
+		Patches::EnableMirroredCourses();
 
 		APSetup();
 	}
