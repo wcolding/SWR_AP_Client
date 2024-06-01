@@ -6,6 +6,7 @@
 
 #include <chrono>
 #include <map>
+#include <set>
 
 #define LOAD_PROFILE_FUNC 0x21850
 #define SAVE_PROFILE_FUNC 0x219D0
@@ -206,9 +207,9 @@ namespace SWRGame
 
 	void SendShopHints(int coursesCompleted)
 	{
-		std::vector<int64_t> locations;
+		std::set<int64_t> locations;
 		for (auto id : shopUnlockHintsTable[coursesCompleted])
-			locations.push_back(id + SWR_AP_BASE_ID);
+			locations.insert(id + SWR_AP_BASE_ID);
 
 		AP_SendLocationScouts(locations, 1);
 	}
@@ -523,10 +524,10 @@ namespace SWRGame
 
 	void ScoutWattoShop()
 	{
-		std::vector<int64_t> locations;
+		std::set<int64_t> locations;
 
 		for (int i = 100; i < 135; i++)
-			locations.push_back(i + SWR_AP_BASE_ID);
+			locations.insert(i + SWR_AP_BASE_ID);
 
 		AP_SendLocationScouts(locations, 0);
 	}
