@@ -130,7 +130,7 @@ namespace SWRGame
 			{
 				const std::chrono::duration<float> deltaTime = curTime - prevTime;
 				notifyQueue[0].timeRemaining -= deltaTime.count();
-				WriteTextWrapper(notifyQueue[0].msg, SWRFont::Large, 10, 16, SWRTextColor::LightBlue);
+				WriteTextWrapper(notifyQueue[0].msg, SWRFont::ShopItem, 10, 10, SWRTextColor::White);
 			}
 		}
 
