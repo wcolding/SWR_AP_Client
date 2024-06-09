@@ -8,13 +8,9 @@ typedef void(__cdecl* _DrawStats)(void* obj, float x, float y);
 namespace SWRGame
 {
 	_WriteText WriteText;
-	void OnDraw();
 	Color GetColorFromEnum(SWRTextColor textColor);
 	void WriteTextWrapper(std::string string, SWRFont font, int x, int y, SWRTextColor color, SWRTextAlign align);
 
-	void __fastcall PrintItemNameFullView();
-	void __fastcall PrintItemNameBuyView();
-	void __fastcall ShopDrawStats(void* obj);
 	void UpdateShopModel(int selectedIndex, int modelId);
 	
 	extern SWRGameState gamestate;
@@ -34,4 +30,16 @@ namespace SWRGame
 	extern int* menuValB; 
 	extern std::string fullSeedName;
 	extern std::string versionString;
+}
+
+namespace SWRGame::DrawEvents
+{
+	void __fastcall OnDraw();
+	void __fastcall OnDrawCourseSelect();
+	void __fastcall OnDrawTrackInfo();
+	void __fastcall OnDrawPreRaceMenu();
+	void __fastcall OnDrawShopFullView();
+	void __fastcall OnDrawShopBuyView();
+	void __fastcall OnDrawShopStats(void* obj);
+	void __fastcall OnDrawInRace();
 }
