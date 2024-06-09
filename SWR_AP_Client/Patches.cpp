@@ -785,25 +785,9 @@ void Patches::HookDraw()
 {
 	OriginalRenderTexture = (_RenderTexture)(SWRGame::baseAddress + 0x8DF30);
 	HookFunction(oRenderTextureCallOffset, &HookedRenderTexture, 0);
-
-	// +21360    00421360
-
-	// Course Select
-	// +3b240
-	// 3B3CA
 	HookFunction(0x3B3CA, &courseSelectHook, 5);
-
-	// course info
-	// 43b9db
 	HookFunction(0x3B9DB, &courseInfoHook);
-
-	// pre race menu
-	// 368A0
-	// 36A8C
 	HookFunction(0x36A8C, &preRaceMenuHook, 2);
-
-	// in race
-	// 60950
 	HookFunction(0x6096E, &inRaceHook, 1);
 }
 
