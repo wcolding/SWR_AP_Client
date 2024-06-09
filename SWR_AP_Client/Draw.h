@@ -5,6 +5,8 @@
 typedef void(__cdecl* _WriteText)(short xPos, short yPos, int r, int g, int b, int a, const char* text, int unk_00, int unk_01);
 typedef void(__cdecl* _DrawStats)(void* obj, float x, float y);
 
+#define MAX_NOTIFICATIONS 5
+
 namespace SWRGame
 {
 	_WriteText WriteText;
