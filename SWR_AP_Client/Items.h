@@ -115,7 +115,7 @@ static std::map<int, ItemInfo> itemTable
 
 	// Misc
 	{ 65, ItemInfo("Pit Droid",                 ItemType::PitDroid, NULL,  NULL, 0x6D) },
-	{ 66, ItemInfo("Semi Pro Circuit Pass",     ItemType::CircuitPass, 1,  NULL, 0xF4) },
+	{ 66, ItemInfo("Semi-Pro Circuit Pass",     ItemType::CircuitPass, 1,  NULL, 0xF4) },
 	{ 67, ItemInfo("Galactic Circuit Pass",     ItemType::CircuitPass, 2,  NULL, 0xF4) },
 	{ 68, ItemInfo("Invitational Circuit Pass", ItemType::CircuitPass, 3,  NULL, 0xF4) },
 	{ 69, ItemInfo("Progressive Circuit Pass",  ItemType::CircuitPass, -1, NULL, 0xF4) },
@@ -133,9 +133,9 @@ static std::map<int, ItemInfo> itemTable
 	{ 77, ItemInfo("3500 Truguts",  ItemType::Money, 3500,  NULL, 0x6F) },
 
 	{ 78, ItemInfo("Amateur Course Unlock", ItemType::CourseUnlock, 0, NULL, 0xF4) },
-	{ 79, ItemInfo("Amateur Course Unlock", ItemType::CourseUnlock, 1, NULL, 0xF4) },
-	{ 80, ItemInfo("Amateur Course Unlock", ItemType::CourseUnlock, 2, NULL, 0xF4) },
-	{ 81, ItemInfo("Amateur Course Unlock", ItemType::CourseUnlock, 3, NULL, 0xF4) }
+	{ 79, ItemInfo("Semi-Pro Course Unlock", ItemType::CourseUnlock, 1, NULL, 0xF4) },
+	{ 80, ItemInfo("Galactic Course Unlock", ItemType::CourseUnlock, 2, NULL, 0xF4) },
+	{ 81, ItemInfo("Invitational Course Unlock", ItemType::CourseUnlock, 3, NULL, 0xF4) }
 };
 
 
