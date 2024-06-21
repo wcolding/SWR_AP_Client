@@ -67,6 +67,8 @@ namespace SWRGame
 	bool invitationalCircuitPass = false;
 	bool shuffledCourseUnlocks = false;
 	bool hintShop = false;
+	int deathLinkAmnesty = 0;
+	int livesRemaining = 0;
 	int shopDisplayMask = 0xFFFFFFA0;
 
 	SWRGameState gamestate;
@@ -102,5 +104,6 @@ namespace SWRGame
 	extern void SetEnableMultiplierControl(int value);
 	extern void SetOneLapMode(int value);
 	extern void SetAutoHintShop(int value);
+	extern void SetDeathLinkAmnesty(int value);
 	extern void SetCourses(std::map<int, int> courseValues);
 }

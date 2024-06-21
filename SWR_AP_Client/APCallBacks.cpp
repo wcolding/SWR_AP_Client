@@ -206,6 +206,12 @@ namespace SWRGame
 		}
 	}
 
+	void SetDeathLinkAmnesty(int value)
+	{
+		deathLinkAmnesty = value;
+		livesRemaining = value;
+	}
+
 	void SetCourses(std::map<int, int> courseValues)
 	{
 		for (int i = 0; i < courseValues.size(); i++)

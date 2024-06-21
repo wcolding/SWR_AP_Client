@@ -144,6 +144,7 @@ namespace SWRGame
 		playerPodData->status |= PodStatus::Destroyed;
 		queuedDeaths--;
 		deathState = DeathState::Deathlink;
+		QueueNotifyMsg("~k~5DeathLink received");
 
 		Log("Killing player");
 		Log("Queued deaths: %i", queuedDeaths);
@@ -160,9 +161,20 @@ namespace SWRGame
 		{
 			if (deathState == DeathState::Alive)
 			{
-				AP_DeathLinkSend();
 				Log("Pod destroyed!");
 				deathState = DeathState::Local;
+				if (deathLinkAmnesty > 0)
+				{
+					livesRemaining--;
+					QueueNotifyMsg(std::format("~k~4Lives remaining: {}", livesRemaining));
+				}
+
+				if (livesRemaining < 1)
+				{
+					QueueNotifyMsg("~k~5Sending DeathLink");
+					AP_DeathLinkSend();
+					livesRemaining = deathLinkAmnesty;
+				}
 			}
 		}
 		else
@@ -553,6 +565,7 @@ namespace SWRGame
 		AP_RegisterSlotDataIntCallback("EnableMultiplierControl", &SetEnableMultiplierControl);
 		AP_RegisterSlotDataIntCallback("OneLapMode", &SetOneLapMode);
 		AP_RegisterSlotDataIntCallback("AutoHintShop", &SetAutoHintShop);
+		AP_RegisterSlotDataIntCallback("DeathLinkAmnesty", &SetDeathLinkAmnesty);
 		AP_RegisterSlotDataMapIntIntCallback("Courses", &SetCourses);
 
 		AP_Start();
