@@ -3,7 +3,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-
 #define DEFAULT_RACERS_OPCODE 0x3DA37
 #define CHECK_PIT_DROIDS_OPCODE 0x3D845
 #define CHECK_PITDROID_SHOP_FROM_MENU 0x36A3E
@@ -288,7 +287,7 @@ void __declspec(naked) FullShopDrawWrapper()
 	__asm
 	{
 		pushad;
-		call SWRGame::PrintItemNameFullView;
+		call SWRGame::DrawEvents::OnDrawShopFullView;
 		popad;
 		ret;
 	}
@@ -299,7 +298,7 @@ void __declspec(naked) ShopBuyWindowDrawWrapper()
 	__asm
 	{
 		pushad;
-		call SWRGame::PrintItemNameBuyView;
+		call SWRGame::DrawEvents::OnDrawShopBuyView;
 		popad;
 		ret;
 	}
@@ -311,7 +310,7 @@ void __declspec(naked) HookShopDrawStats()
 	{
 		pushad;
 		mov ecx, ebp;
-		call SWRGame::ShopDrawStats;
+		call SWRGame::DrawEvents::OnDrawShopStats;
 		call SWRGame::UpdateProgressiveDisplays;
 		popad;
 		ret;
@@ -727,15 +726,69 @@ const DWORD oRenderTextureCallOffset = 0x8DD28;
 void __cdecl HookedRenderTexture(int a, void* b)
 {
 	__asm pushad;
-	SWRGame::OnDraw();
+	SWRGame::DrawEvents::OnDraw();
 	__asm popad;
 	OriginalRenderTexture(a, b);
+}
+
+void __declspec(naked) courseSelectHook()
+{
+	__asm
+	{
+		pushad;
+		call SWRGame::DrawEvents::OnDrawCourseSelect;
+		popad;
+		movsx eax, byte ptr[esi + 0x5D]; 
+		lea eax, [eax + eax * 2];
+		shl eax, 02;
+		ret;
+	}
+}
+
+void __declspec(naked) courseInfoHook()
+{
+	__asm
+	{
+		pushad;
+		call SWRGame::DrawEvents::OnDrawTrackInfo;
+		popad;
+		mov ebp, 0xA0;
+		ret;
+	}
+}
+
+void __declspec(naked) preRaceMenuHook()
+{
+	__asm
+	{
+		pushad;
+		call SWRGame::DrawEvents::OnDrawPreRaceMenu;
+		popad;
+		movsx eax, byte ptr[edi + 0x50C308]
+		ret;
+	}
+}
+
+void __declspec(naked) inRaceHook()
+{
+	__asm
+	{
+		pushad;
+		call SWRGame::DrawEvents::OnDrawInRace;
+		popad;
+		mov edx, [0xE27820];
+		ret;
+	}
 }
 
 void Patches::HookDraw()
 {
 	OriginalRenderTexture = (_RenderTexture)(SWRGame::baseAddress + 0x8DF30);
 	HookFunction(oRenderTextureCallOffset, &HookedRenderTexture, 0);
+	HookFunction(0x3B3CA, &courseSelectHook, 5);
+	HookFunction(0x3B9DB, &courseInfoHook);
+	HookFunction(0x36A8C, &preRaceMenuHook, 2);
+	HookFunction(0x6096E, &inRaceHook, 1);
 }
 
 int prevInput = 0;

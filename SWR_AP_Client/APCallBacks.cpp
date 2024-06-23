@@ -120,7 +120,7 @@ namespace SWRGame
 		{
 			AP_ItemSendMessage* sendMsg = static_cast<AP_ItemSendMessage*>(msg);
 			if (strcmp(sendMsg->recvPlayer.c_str(), serverInfo.player) != 0)
-				QueueNotifyMsg("Sent " + sendMsg->item + " to " + sendMsg->recvPlayer);
+				QueueNotifyMsg("~k~1Sent ~4" + sendMsg->item + "~1 to ~2" + sendMsg->recvPlayer);
 
 			AP_ClearLatestMessage();
 			break;
@@ -129,9 +129,9 @@ namespace SWRGame
 		{
 			AP_ItemRecvMessage* recvMsg = static_cast<AP_ItemRecvMessage*>(msg);
 			if (strcmp(recvMsg->sendPlayer.c_str(), serverInfo.player) != 0)
-				QueueNotifyMsg("Received " + recvMsg->item + " from " + recvMsg->sendPlayer);
+				QueueNotifyMsg("~k~1Received ~4" + recvMsg->item + "~1 from ~2" + recvMsg->sendPlayer);
 			else
-				QueueNotifyMsg("You found your " + recvMsg->item);
+				QueueNotifyMsg("~k~1You found your ~4" + recvMsg->item);
 
 			AP_ClearLatestMessage();
 			break;
@@ -204,6 +204,12 @@ namespace SWRGame
 			hintShop = true;
 			SendShopHints(0); // hint initial shop checks
 		}
+	}
+
+	void SetDeathLinkAmnesty(int value)
+	{
+		deathLinkAmnesty = value;
+		livesRemaining = value;
 	}
 
 	void SetCourses(std::map<int, int> courseValues)

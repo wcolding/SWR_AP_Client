@@ -24,11 +24,22 @@ namespace SWRGame
 
 	extern std::map<int, RandomizedCourseData> courseLayout;
 
-	extern void __fastcall PrintItemNameFullView();
+	
 	extern void __fastcall PrintItemNameBuyView();
 	extern void __fastcall ShopDrawStats(void* obj);
 	extern void __fastcall LoadItemModel(int unk_00, int tableOffset);
 	extern void __fastcall UpdateProgressiveDisplays();
+}
+namespace SWRGame::DrawEvents
+{
+	extern void __fastcall OnDraw();
+	extern void __fastcall OnDrawShopFullView();
+	extern void __fastcall OnDrawShopBuyView();
+	extern void __fastcall OnDrawShopStats(void* obj);
+	extern void __fastcall OnDrawCourseSelect();
+	extern void __fastcall OnDrawTrackInfo();
+	extern void __fastcall OnDrawPreRaceMenu();
+	extern void __fastcall OnDrawInRace();
 }
 
 static class Patches
