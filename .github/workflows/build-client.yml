@@ -31,5 +31,5 @@ jobs:
           with:
             name: APCpp-win
             path: |
-              SWR_AP_Client\SWR_AP_Client\external\APCpp\out\build\x86-Release\*
+              SWR_AP_Client\SWR_AP_Client\SWR_AP_Client\external\APCpp\out\build\x86-Release\*
        
