@@ -64,6 +64,8 @@ namespace SWRGame
 	std::string versionString = "";
 	uint64_t partialSeed = 0;
 
+	CourseUnlockMode courseUnlockMode;
+	bool progressiveCircuits = false;
 	bool invitationalCircuitPass = false;
 	bool shuffledCourseUnlocks = false;
 	bool hintShop = false;

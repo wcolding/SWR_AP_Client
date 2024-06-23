@@ -86,9 +86,10 @@ enum SWRTextAlign
 
 enum AP_ItemType : int
 {
-	Filler = 0,
-	Progression = 1,
-	Useful = 2
+	Filler      = 0x00,
+	Progression = 0x01,
+	Useful      = 0x02,
+	Trap        = 0x04
 };
 
 enum SWRTextColor : int
@@ -102,4 +103,11 @@ enum SWRTextColor : int
 	AP_ProgressionItem = 0xAF99EFFF,
 	AP_UsefulItem      = 0x6D8BE8FF,
 	AP_FillerItem      = 0x00EEEEFF
+};
+
+enum CourseUnlockMode : int
+{
+	CircuitPassNoInv = 0,
+	CircuitPassInvitational = 1,
+	Shuffle = 2
 };

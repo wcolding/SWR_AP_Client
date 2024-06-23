@@ -4,6 +4,7 @@
 #include "Patches.h"
 
 #include <format>
+#include <cstdlib>
 
 namespace SWRGame
 {
@@ -40,6 +41,70 @@ namespace SWRGame
 			SWRGame::progress.pitDroidCounter++;
 	}
 
+	std::vector<int> GetDisguiseItems()
+	{
+		std::vector<int> items;
+		
+		// Money items
+		for (int i = 75; i < 77; i++)
+			items.push_back(i);
+
+		// Progression items
+		switch (courseUnlockMode)
+		{
+		case CourseUnlockMode::CircuitPassInvitational:
+			if (progressiveCircuits)
+				items.push_back(69);
+			else
+				items.push_back(68);
+			[[fallthrough]];
+		case CourseUnlockMode::CircuitPassNoInv:
+			if (progressiveCircuits)
+			{
+				items.push_back(69);
+				items.push_back(69);
+			}
+			else
+			{
+				items.push_back(66);
+				items.push_back(67);
+			}
+			break;
+		case CourseUnlockMode::Shuffle:
+			for (int i = 78; i < 81; i++)
+				items.push_back(i);
+			break;
+		default:
+			break;
+		}
+
+		// Vroom vroom racers
+		items.push_back(44); // Sebulba
+		items.push_back(61); // Ben Quadrinaros
+
+		return items;
+	}
+
+	std::map<ItemType, AP_ItemType> gameToAPTypes
+	{
+		{ItemType::CircuitPass, AP_ItemType::Progression},
+		{ItemType::CourseUnlock, AP_ItemType::Progression},
+		{ItemType::Money, AP_ItemType::Useful},
+		{ItemType::Racer, AP_ItemType::Filler}
+	};
+
+	void DisguiseTrap(AP_NetworkItem& item)
+	{
+		auto disguises = GetDisguiseItems();
+		int index = rand() % disguises.size();
+		ItemInfo info = itemTable[disguises[index]];
+
+		item.flags = gameToAPTypes[info.type];
+		item.item = disguises[index] + SWR_AP_BASE_ID;
+		item.itemName = info.name;
+		item.playerName = std::string(serverInfo.player);
+	}
+
 	void RecvLocationInfo(std::vector<AP_NetworkItem> items)
 	{
 		Log("Received location info: %i items", items.size());
@@ -49,14 +114,18 @@ namespace SWRGame
 
 		for (auto item : items)
 		{
-			curItemId = item.item - SWR_AP_BASE_ID;
-			curLocId = item.location - SWR_AP_BASE_ID;
+			AP_NetworkItem itemCopy = item;
+			if (itemCopy.flags == AP_ItemType::Trap)
+				DisguiseTrap(itemCopy);
+
+			curItemId = itemCopy.item - SWR_AP_BASE_ID;
+			curLocId = itemCopy.location - SWR_AP_BASE_ID;
 			if (wattoShopLocationToOffset.contains(curLocId))
 			{
 				SWR_PodPartEntry* curEntry = &apShopData.entries[wattoShopLocationToOffset[curLocId]];
 				wattoShopEntries.push_back({ 
-					(AP_ItemType)item.flags, 
-					std::format("{} [{}]", item.itemName.c_str(), item.playerName.c_str()),
+					(AP_ItemType)itemCopy.flags,
+					std::format("{} [{}]", itemCopy.itemName.c_str(), itemCopy.playerName.c_str()),
 					wattoShopLocationToOffset[curLocId]
 					});
 				curEntry->displayText = (char*)wattoShopEntries.back().displayName.c_str();
@@ -142,6 +211,11 @@ namespace SWRGame
 		}
 	}
 
+	void SetProgressiveCircuits(int value)
+	{
+		progressiveCircuits = value != 0;
+	}
+
 	void SetStartingRacers(int value)
 	{
 		progress.unlockedRacers = (RacerUnlocks)value;
@@ -156,12 +230,13 @@ namespace SWRGame
 
 	void SetCourseUnlockMode(int value)
 	{
-		if (value == 1)
+		courseUnlockMode = (CourseUnlockMode)value;
+		if (courseUnlockMode == CourseUnlockMode::CircuitPassInvitational)
 		{
 			invitationalCircuitPass = true;
 			Patches::DisableVanillaInvitationalUnlocks();
 		}
-		else if (value == 2)
+		else if (courseUnlockMode == CourseUnlockMode::Shuffle)
 		{
 			shuffledCourseUnlocks = true; 
 			Patches::DisableVanillaCourseUnlocks();
