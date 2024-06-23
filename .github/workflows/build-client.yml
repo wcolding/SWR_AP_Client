@@ -43,4 +43,4 @@ jobs:
           with: 
             name: SWR_AP_Client
             path: |
-              SWR_AP_Client\SWR_AP_Client\dist\*
+              dist\*
