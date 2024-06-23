@@ -34,7 +34,10 @@ jobs:
 
         - name: Build Client
           run: |
-            msbuild SWR_AP_Client\SWR_AP_Client.sln /p:Configuration=Release /p:Platform="x86"
+            ls
+            cd SWR_AP_Client
+            ls
+            msbuild SWR_AP_Client.sln /p:Configuration=Release /p:Platform="x86"
 
         - name: Create artifact
           uses: actions/upload-artifact@v3
