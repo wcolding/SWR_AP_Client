@@ -23,13 +23,13 @@ jobs:
         - name: Move APCpp
           run: |
             cd ..
-            mkdir out\build\x86-Release
-            copy build/Release/APCpp.dll out\build\x86-Release
-            copy build/Release/APCpp.lib out\build\x86-Release
+            mkdir SWR_AP_Client\external\APCpp\out\build\x86-Release
+            copy SWR_AP_Client\external\APCpp\build\Release\APCpp.dll SWR_AP_Client\external\APCpp\out\build\x86-Release
+            copy SWR_AP_Client\external\APCpp\build\Release\APCpp.lib SWR_AP_Client\external\APCpp\out\build\x86-Release
         - name: Artifact
           uses: actions/upload-artifact@v3
           with:
             name: APCpp-win
             path: |
-              out\build\x86-Release\*
+              SWR_AP_Client\external\APCpp\out\build\x86-Release\*
        
