@@ -19,7 +19,6 @@ jobs:
             cmake -G "Visual Studio 17 2022" -A Win32 `
               -DUSE_ZLIB=OFF `
               -DCMAKE_BUILD_TYPE=Release ..
-            cd build
             cmake --build . --config Release
         - name: Move APCpp
           run: |
