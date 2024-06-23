@@ -12,6 +12,7 @@ jobs:
         - uses: actions/checkout@v1
           with:
             submodules: 'recursive'
+            
         - name: Build APCpp
           run: |
             mkdir SWR_AP_Client\external\APCpp\build
@@ -20,16 +21,24 @@ jobs:
               -DUSE_ZLIB=OFF `
               -DCMAKE_BUILD_TYPE=Release ..
             cmake --build . --config Release
-        - name: Move APCpp
+            
+        - name: Move APCpp for linking/copying
           run: |
             cd ..
             mkdir SWR_AP_Client\SWR_AP_Client\external\APCpp\out\build\x86-Release
             copy SWR_AP_Client\SWR_AP_Client\external\APCpp\build\Release\APCpp.dll SWR_AP_Client\SWR_AP_Client\external\APCpp\out\build\x86-Release
             copy SWR_AP_Client\SWR_AP_Client\external\APCpp\build\Release\APCpp.lib SWR_AP_Client\SWR_AP_Client\external\APCpp\out\build\x86-Release
-        - name: Artifact
+        
+        - name: Add msbuild
+          uses: microsoft/setup-msbuild@v2
+
+        - name: Build Client
+          run: |
+            msbuild SWR_AP_Client\SWR_AP_Client.sln /p:Configuration=Release /p:Platform="x86"
+
+        - name: Create artifact
           uses: actions/upload-artifact@v3
-          with:
-            name: APCpp-win
+          with: 
+            name: SWR_AP_Client
             path: |
-              SWR_AP_Client\SWR_AP_Client\SWR_AP_Client\external\APCpp\out\build\x86-Release\*
-       
+              SWR_AP_Client\SWR_AP_Client\dist\*
