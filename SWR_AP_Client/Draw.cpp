@@ -55,11 +55,12 @@ namespace SWRGame
 	AP_WattoEntry* GetItemEntry()
 	{
 		int index = GetShopItemOffset();
-		for (int i = 0; i < wattoShopEntries.size(); i++)
+
+		for (auto offsetMapping : wattoShopLocationToOffset)
 		{
-			cachedEntry = wattoShopEntries[i];
-			if (cachedEntry.tableOffset == index)
-				return &cachedEntry;
+			if (index == offsetMapping.second)
+				if (wattoShopEntries.contains(offsetMapping.first))
+					return &wattoShopEntries[offsetMapping.first];
 		}
 
 		return nullptr;

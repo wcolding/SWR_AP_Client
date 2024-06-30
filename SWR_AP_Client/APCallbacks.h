@@ -11,10 +11,12 @@ namespace SWRGame
 	extern AP_ServerInfo serverInfo;
 	extern void Log(const char* format, ...);
 
-	std::vector<AP_WattoEntry> wattoShopEntries;
+	std::map<int, AP_WattoEntry> wattoShopEntries;
 	extern int queuedDeaths;
 	extern std::vector <QueuedItem> itemQueue;
 	extern void QueueNotifyMsg(std::string _msg);
+	extern CourseUnlockMode courseUnlockMode;
+	extern bool progressiveCircuits;
 	extern bool invitationalCircuitPass;
 	extern bool shuffledCourseUnlocks;
 	extern float aiModifier;
@@ -34,6 +36,7 @@ namespace SWRGame
 	void QueueDeath();
 	void ProcessMessages();
 
+	void SetProgressiveCircuits(int value);
 	void SetStartingRacers(int value);
 	void SetDisablePartDamage(int value);
 	void SetCourseUnlockMode(int value);
