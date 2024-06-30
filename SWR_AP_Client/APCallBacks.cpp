@@ -123,12 +123,13 @@ namespace SWRGame
 			if (wattoShopLocationToOffset.contains(curLocId))
 			{
 				SWR_PodPartEntry* curEntry = &apShopData.entries[wattoShopLocationToOffset[curLocId]];
-				wattoShopEntries.push_back({ 
+				wattoShopEntries[curLocId] = { 
 					(AP_ItemType)itemCopy.flags,
 					std::format("{} [{}]", itemCopy.itemName.c_str(), itemCopy.playerName.c_str()),
 					wattoShopLocationToOffset[curLocId]
-					});
-				curEntry->displayText = (char*)wattoShopEntries.back().displayName.c_str();
+					};
+
+				curEntry->displayText = (char*)wattoShopEntries[curLocId].displayName.c_str();
 				if (itemTable.contains(curItemId))
 				{
 					ItemInfo curItem = itemTable[curItemId];
