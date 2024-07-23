@@ -103,7 +103,7 @@ void Patches::DisablePartDamage()
 int GetFirstAvailableInvitational()
 {
 	int flag = 0;
-	int invUnlocks = (int)SWRGame::swrSaveData->trackUnlocks[3];
+	int invUnlocks = (int)SWRGame::progress.swrSaveData->trackUnlocks[3];
 	for (int i = 0; i < 4; i++)
 	{
 		flag = 1 << i;
@@ -125,7 +125,7 @@ void __fastcall HandleCircuitChange(int nextCircuit, int structPtr)
 		while (nextCircuit < 3)
 		{
 
-			nextCircuitUnlocks = SWRGame::swrSaveData->trackUnlocks[nextCircuit];
+			nextCircuitUnlocks = SWRGame::progress.swrSaveData->trackUnlocks[nextCircuit];
 			if ((nextCircuitUnlocks & 0x01) != 0)
 			{
 				*selectedCircuit = nextCircuit;
@@ -149,7 +149,7 @@ void __fastcall HandleCircuitChange(int nextCircuit, int structPtr)
 	{
 		while (nextCircuit >= 0)
 		{
-			nextCircuitUnlocks = SWRGame::swrSaveData->trackUnlocks[nextCircuit];
+			nextCircuitUnlocks = SWRGame::progress.swrSaveData->trackUnlocks[nextCircuit];
 			if ((nextCircuitUnlocks & 0x01) != 0)
 			{
 				*selectedCircuit = nextCircuit;

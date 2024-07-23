@@ -176,7 +176,15 @@ struct AP_ProgressData
 {
 	RacerUnlocks unlockedRacers;
 	SWR_SaveData cachedSave;
+	SWR_SaveData* swrSaveData;
 	int pitDroidCounter = 1;
+	bool hasSemiProPass = false;
+	bool hasGalacticPass = false;
+	bool hasInvitationalPass = false;
+	int amateurUnlocks = 1;
+	int semiProUnlocks = 0;
+	int galacticUnlocks = 0;
+	int invitationalUnlocks = 0;
 };
 
 struct AP_WattoEntry

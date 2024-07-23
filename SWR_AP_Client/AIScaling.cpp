@@ -19,7 +19,7 @@ namespace SWRGame
 
 		for (int i = 0; i < 7; i++)
 		{
-			playerScore += (float)swrSaveData->parts[i] * (float)swrSaveData->partsHealth[i] * (float)partWeights[i];
+			playerScore += (float)progress.swrSaveData->parts[i] * (float)progress.swrSaveData->partsHealth[i] * (float)partWeights[i];
 			maxScore += (float)6 * (float)255 * (float)partWeights[i];
 		}
 

@@ -58,8 +58,6 @@ namespace SWRGame
 	AP_ProgressData progress;
 	SWR_PodPartTable apShopData;
 
-	SWR_SaveData* swrSaveData;
-
 	std::string fullSeedName = "";
 	std::string versionString = "";
 	uint64_t partialSeed = 0;

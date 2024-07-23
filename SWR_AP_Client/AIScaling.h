@@ -12,7 +12,7 @@ namespace SWRGame
 
 	extern int* menuVal;
 	extern int* menuValB;
-	extern SWR_SaveData* swrSaveData;
+	extern AP_ProgressData progress;
 	
 	extern void Log(const char* format, ...);
 }

@@ -36,7 +36,7 @@ namespace SWRGame
 	void Update()
 	{
 		// Only act on matching save data
-		if (swrSaveData->apPartialSeed == partialSeed)
+		if (progress.swrSaveData->apPartialSeed == partialSeed)
 		{
 			SyncProgress();
 
@@ -90,7 +90,7 @@ namespace SWRGame
 		if (*saveDataPtr == nullptr)
 			return false;
 
-		swrSaveData = *saveDataPtr;
+		progress.swrSaveData = *saveDataPtr;
 		return true;
 	}
 
@@ -208,7 +208,7 @@ namespace SWRGame
 		for (int i = 0; i < 25; i++)
 		{
 			flag = 1 << i;
-			if ((swrSaveData->racesCompleted & flag) != 0)
+			if ((progress.swrSaveData->racesCompleted & flag) != 0)
 				count++;
 		}
 		
@@ -245,7 +245,7 @@ namespace SWRGame
 		}
 
 		int courseFlag = 1 << courseIndex;
-		swrSaveData->racesCompleted |= courseFlag;
+		progress.swrSaveData->racesCompleted |= courseFlag;
 
 		if (hintShop)
 		{
@@ -260,7 +260,7 @@ namespace SWRGame
 			}
 		}
 
-		if (swrSaveData->racesCompleted == 0x1FFFFFF)
+		if (progress.swrSaveData->racesCompleted == 0x1FFFFFF)
 			AP_StoryComplete();
 	}
 
@@ -279,7 +279,7 @@ namespace SWRGame
 				{
 					entry->requiredRaces |= 0x80; // mark as completed
 					SendAPItem(pair.first);
-					swrSaveData->money -= entry->cost; // manually deduct cost since we skipped the vanilla call
+					progress.swrSaveData->money -= entry->cost; // manually deduct cost since we skipped the vanilla call
 
 					// Change model to Watto
 					entry->modelId = 0x6E;
@@ -305,7 +305,7 @@ namespace SWRGame
 
 		if (((entry->requiredRaces & 0x80) == 0) && ((entry->requiredRaces & 0x20) != 0))
 		{
-			int level = (int)(swrSaveData->parts[entry->itemType]) + 1;
+			int level = (int)(progress.swrSaveData->parts[entry->itemType]) + 1;
 			if (level > 5)
 				level = 5;
 
@@ -357,7 +357,7 @@ namespace SWRGame
 			if ((entry->requiredRaces & 0x80) != 0)
 				continue;
 
-			partLevel = swrSaveData->parts[entry->itemType];
+			partLevel = progress.swrSaveData->parts[entry->itemType];
 			if ((entry->requiredRaces & 0x20) != 0) // if entry is a progressive pod part
 			{
 				if (partLevel != partsCache[entry->itemType])
@@ -389,18 +389,18 @@ namespace SWRGame
 		if (invitationalCircuitPass)
 		{
 			// Unlock any invitational tracks unlocked on a previous load
-			swrSaveData->trackUnlocks[3] |= progress.cachedSave.trackUnlocks[3];
-			progress.cachedSave.trackUnlocks[3] = swrSaveData->trackUnlocks[3];
+			progress.swrSaveData->trackUnlocks[3] |= progress.cachedSave.trackUnlocks[3];
+			progress.cachedSave.trackUnlocks[3] = progress.swrSaveData->trackUnlocks[3];
 		}
 
 		// Racer Unlock Checks
-		if (swrSaveData->racerUnlocks != progress.cachedSave.racerUnlocks)
+		if (progress.swrSaveData->racerUnlocks != progress.cachedSave.racerUnlocks)
 		{
 			RacerUnlocks curRacer;
 			for (int i = 0; i < RACERS_COUNT; i++)
 			{
 				curRacer = (RacerUnlocks)(1 << i);
-				if ((swrSaveData->racerUnlocks & curRacer) != 0)
+				if ((progress.swrSaveData->racerUnlocks & curRacer) != 0)
 				{
 					if (racerUnlockTable.contains(curRacer))
 					{
@@ -410,16 +410,16 @@ namespace SWRGame
 				}
 			}
 
-			progress.cachedSave.racerUnlocks = swrSaveData->racerUnlocks;
+			progress.cachedSave.racerUnlocks = progress.swrSaveData->racerUnlocks;
 		}
 
 		// Progressive circuit passes
-		if (sessionProgressivePasses > swrSaveData->progressivePasses)
+		if (sessionProgressivePasses > progress.swrSaveData->progressivePasses)
 		{
-			swrSaveData->progressivePasses = sessionProgressivePasses;
-			Log("Progressive circuit passes: %i", (int)swrSaveData->progressivePasses);
-			for (int i = 0; i < swrSaveData->progressivePasses; i++) 
-				swrSaveData->trackUnlocks[i+1] |= 0x01;
+			progress.swrSaveData->progressivePasses = sessionProgressivePasses;
+			Log("Progressive circuit passes: %i", (int)progress.swrSaveData->progressivePasses);
+			for (int i = 0; i < progress.swrSaveData->progressivePasses; i++) 
+				progress.swrSaveData->trackUnlocks[i+1] |= 0x01;
 		}
 	}
 
@@ -433,8 +433,8 @@ namespace SWRGame
 	{
 		// Reset values of progressive/stackable items (except circuit pass and course unlocks)
 		// AP will send items on connect so we will recalculate from the base values
-		swrSaveData->pitDroids = 1;
-		memset(&swrSaveData->parts, 0, 7);
+		progress.swrSaveData->pitDroids = 1;
+		memset(&progress.swrSaveData->parts, 0, 7);
 
 		Log("Save data initialized");
 	}
@@ -444,8 +444,8 @@ namespace SWRGame
 		if (!isSaveDataReady())
 			return;
 		
-		auto current = &swrSaveData->parts[type];
-		auto curHealth = &swrSaveData->partsHealth[type];
+		auto current = &progress.swrSaveData->parts[type];
+		auto curHealth = &progress.swrSaveData->partsHealth[type];
 		*curHealth = 0xFF;
 
 		if (*current >= 5)
@@ -465,7 +465,7 @@ namespace SWRGame
 
 	void GivePitDroid()
 	{
-		swrSaveData->pitDroids++;
+		progress.swrSaveData->pitDroids++;
 	}
 
 	void GiveCircuitPass(int type)
@@ -473,24 +473,24 @@ namespace SWRGame
 		if (type == -1)
 			sessionProgressivePasses++;
 		else
-			swrSaveData->trackUnlocks[type] |= 0x01;
+			progress.swrSaveData->trackUnlocks[type] |= 0x01;
 	}
 
 	void GiveMoney(int amount)
 	{
-		swrSaveData->money += amount;
+		progress.swrSaveData->money += amount;
 	}
 
 	void GiveCourseUnlock(int circuit)
 	{
-		int curUnlock = swrSaveData->trackUnlocks[circuit];
+		int curUnlock = progress.swrSaveData->trackUnlocks[circuit];
 		int curFlag = 0;
 		for (int i = 0; i < 7; i++)
 		{
 			curFlag = 1 << i;
 			if ((curUnlock & curFlag) == 0)
 			{
-				swrSaveData->trackUnlocks[circuit] |= curFlag;
+				progress.swrSaveData->trackUnlocks[circuit] |= curFlag;
 				return;
 			}
 		}
@@ -582,7 +582,7 @@ namespace SWRGame
 		WriteText = (_WriteText)(baseAddress + 0x503E0);
 
 		saveDataPtr = (SWR_SaveData**)(baseAddress + SAVE_DATA_PTR_OFFSET);
-		swrSaveData = nullptr;
+		progress.swrSaveData = nullptr;
 
 		menuVal = (int*)(baseAddress + 0xD87A4);
 		menuValB = (int*)(baseAddress + 0xA2A67C);
@@ -643,7 +643,7 @@ namespace SWRGame
 			// Wait for game to load
 			if (isSaveDataReady())
 			{
-				if (swrSaveData->apPartialSeed == partialSeed) 
+				if (progress.swrSaveData->apPartialSeed == partialSeed) 
 				{
 					InitSaveData();
 					gamestate = SWRGameState::Save_Initialized;
