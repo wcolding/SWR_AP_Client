@@ -23,8 +23,6 @@ namespace SWRGame
 	_SaveLoadProfile LoadProfile;
 	_SaveLoadProfile SaveProfile;
 
-	char sessionProgressivePasses = 0;
-
 	void QueueNotifyMsg(std::string _msg)
 	{
 		NotifyMsg newMsg;
@@ -388,9 +386,14 @@ namespace SWRGame
 
 		if (invitationalCircuitPass)
 		{
-			// Unlock any invitational tracks unlocked on a previous load
-			progress.swrSaveData->trackUnlocks[3] |= progress.cachedSave.trackUnlocks[3];
-			progress.cachedSave.trackUnlocks[3] = progress.swrSaveData->trackUnlocks[3];
+			// Flags are set on receiving a SetLocationChecked packet for the invitational courses
+			// If using inv circuit pass, they queue the next course for unlocking, which happens here once the save is ready
+			if (progress.invitationalFlags != 0)
+			{
+				progress.swrSaveData->trackUnlocks[3] |= progress.invitationalFlags;
+				progress.cachedSave.trackUnlocks[3] = progress.swrSaveData->trackUnlocks[3];
+				progress.invitationalFlags = 0;
+			}
 		}
 
 		// Racer Unlock Checks
@@ -411,15 +414,6 @@ namespace SWRGame
 			}
 
 			progress.cachedSave.racerUnlocks = progress.swrSaveData->racerUnlocks;
-		}
-
-		// Progressive circuit passes
-		if (sessionProgressivePasses > progress.swrSaveData->progressivePasses)
-		{
-			progress.swrSaveData->progressivePasses = sessionProgressivePasses;
-			Log("Progressive circuit passes: %i", (int)progress.swrSaveData->progressivePasses);
-			for (int i = 0; i < progress.swrSaveData->progressivePasses; i++) 
-				progress.swrSaveData->trackUnlocks[i+1] |= 0x01;
 		}
 	}
 
@@ -471,9 +465,36 @@ namespace SWRGame
 	void GiveCircuitPass(int type)
 	{
 		if (type == -1)
-			sessionProgressivePasses++;
+		{
+			progress.progressivePasses++;
+
+			if (progress.progressivePasses > progress.swrSaveData->progressivePasses)
+			{
+				progress.swrSaveData->progressivePasses = progress.progressivePasses;
+				Log("Progressive circuit passes: %i", (int)progress.swrSaveData->progressivePasses);
+				for (int i = 0; i < progress.swrSaveData->progressivePasses; i++)
+					progress.swrSaveData->trackUnlocks[i + 1] |= 0x01;
+			}
+		}
 		else
+		{
 			progress.swrSaveData->trackUnlocks[type] |= 0x01;
+
+			switch ((Circuit)type)
+			{
+			case Circuit::SemiPro:
+				progress.hasSemiProPass = true;
+				break;
+			case Circuit::Galactic:
+				progress.hasGalacticPass = true;
+				break;
+			case Circuit::Invitational:
+				progress.hasInvitationalPass = true;
+				break;
+			default:
+				break;
+			}
+		}
 	}
 
 	void GiveMoney(int amount)
@@ -481,18 +502,24 @@ namespace SWRGame
 		progress.swrSaveData->money += amount;
 	}
 
-	void GiveCourseUnlock(int circuit)
+	void GiveCourseUnlock(Circuit circuit)
 	{
-		int curUnlock = progress.swrSaveData->trackUnlocks[circuit];
-		int curFlag = 0;
-		for (int i = 0; i < 7; i++)
+		switch (circuit)
 		{
-			curFlag = 1 << i;
-			if ((curUnlock & curFlag) == 0)
-			{
-				progress.swrSaveData->trackUnlocks[circuit] |= curFlag;
-				return;
-			}
+		case Circuit::Amateur:
+			progress.amateurUnlocks++;
+			break;
+		case Circuit::SemiPro:
+			progress.semiProUnlocks++;
+			break;
+		case Circuit::Galactic:
+			progress.galacticUnlocks++;
+			break;
+		case Circuit::Invitational:
+			progress.invitationalUnlocks++;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -525,8 +552,7 @@ namespace SWRGame
 					GiveMoney(itemInfo.param1);
 				break;
 			case ItemType::CourseUnlock:
-				if (item.notify)
-					GiveCourseUnlock(itemInfo.param1);
+				GiveCourseUnlock((Circuit)itemInfo.param1);
 				break;
 			default:
 				break;

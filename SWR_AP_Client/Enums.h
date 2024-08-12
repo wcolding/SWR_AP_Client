@@ -111,3 +111,11 @@ enum CourseUnlockMode : int
 	CircuitPassInvitational = 1,
 	Shuffle = 2
 };
+
+enum Circuit : int
+{
+	Amateur      = 0,
+	SemiPro      = 1,
+	Galactic     = 2,
+	Invitational = 3
+};

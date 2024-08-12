@@ -181,10 +181,12 @@ struct AP_ProgressData
 	bool hasSemiProPass = false;
 	bool hasGalacticPass = false;
 	bool hasInvitationalPass = false;
+	int progressivePasses = 0;
 	int amateurUnlocks = 1;
 	int semiProUnlocks = 0;
 	int galacticUnlocks = 0;
 	int invitationalUnlocks = 0;
+	int invitationalFlags = 0;
 };
 
 struct AP_WattoEntry

@@ -19,7 +19,8 @@ namespace SWRGame
 	extern float GetAIScaleByCircuit(float val, int baseCircuit, int targetCircuit);
 	extern SWR_PodPartTable apShopData;
 	extern void ChangeAIModifier(float amount);
-	extern AP_ProgressData progress;
+	extern AP_ProgressData progress;	
+	extern CourseUnlockMode courseUnlockMode;
 	extern int shopDisplayMask;
 
 	extern std::map<int, RandomizedCourseData> courseLayout;

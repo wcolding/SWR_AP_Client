@@ -28,7 +28,18 @@ namespace SWRGame
 		if (locationTable.contains(localID))
 			Log("Setting location '%s' as checked", locationTable[localID].c_str());
 
-		// For race completions (145 - 169), do nothing
+		// For race completions (145 - 165), do nothing
+
+		// If using Invitational Circuit Pass, make sure subsequent invitational levels are unlocked
+		if (invitationalCircuitPass)
+		{
+			if ((165 < localID) && (localID < 169))
+			{
+				int flag = localID - 165;
+				SWRGame::progress.invitationalFlags |= 1 << flag;
+			}
+		}
+			
 
 		// Watto
 		if (wattoShopLocationToOffset.contains(localID))

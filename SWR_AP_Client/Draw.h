@@ -28,6 +28,9 @@ namespace SWRGame
 	extern void Log(const char* format, ...);
 	extern _DrawStats DrawStats;
 	extern bool __fastcall isItemPodPart();
+	extern AP_ProgressData progress;
+	extern CourseUnlockMode courseUnlockMode;
+	extern bool progressiveCircuits;
 
 	extern int* menuVal;
 	extern int* menuValB; 

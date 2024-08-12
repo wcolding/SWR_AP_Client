@@ -114,11 +114,38 @@ int GetFirstAvailableInvitational()
 	return -1;
 }
 
+char GetBitfieldFromOwned(int owned)
+{
+	if (owned == 0)
+		return 0;
+
+	char bitfield = 0;
+	owned--;
+	while (owned > -1)
+	{
+		bitfield |= (char)(1 << owned);
+		owned--;
+	}
+
+	return bitfield;
+}
+
+void RecalculateCourseUnlocks()
+{
+	SWRGame::progress.swrSaveData->trackUnlocks[0] = GetBitfieldFromOwned(SWRGame::progress.amateurUnlocks);
+	SWRGame::progress.swrSaveData->trackUnlocks[1] = GetBitfieldFromOwned(SWRGame::progress.semiProUnlocks);
+	SWRGame::progress.swrSaveData->trackUnlocks[2] = GetBitfieldFromOwned(SWRGame::progress.galacticUnlocks);
+	SWRGame::progress.swrSaveData->trackUnlocks[3] = GetBitfieldFromOwned(SWRGame::progress.invitationalUnlocks);
+}
+
 void __fastcall HandleCircuitChange(int nextCircuit, int structPtr)
 {
 	char* selectedCircuit = (char*)(structPtr + 0x5E);
 	char nextCircuitUnlocks;
 	int* cursor = (int*)(SWRGame::baseAddress + 0xA295D0);
+
+	if (SWRGame::courseUnlockMode == CourseUnlockMode::Shuffle)
+		RecalculateCourseUnlocks();
 
 	if ((nextCircuit > *selectedCircuit) && (*selectedCircuit < 3))
 	{
@@ -467,6 +494,7 @@ void __fastcall InitAPSave(int offset)
 {
 	SWR_SaveData* saveData = (SWR_SaveData*)(SWRGame::baseAddress + 0xA35A60 + offset);
 	saveData->cutscenesBitfield = 0xFFFFFFFF;
+	//saveData->racerUnlocks = (RacerUnlocks)0;
 	saveData->apPartialSeed = SWRGame::partialSeed;
 	saveData->progressivePasses = 0;
 	saveData->racesCompleted = 0;
