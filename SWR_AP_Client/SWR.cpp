@@ -31,6 +31,19 @@ namespace SWRGame
 		notifyQueue.push_back(newMsg);
 	}
 
+	int lastMenuToggleState = 0;
+	void APMenuLoop()
+	{
+		int menuToggleState = GetKeyState(VK_F2) & 0x80;
+		if ((menuToggleState != 0) && (lastMenuToggleState == 0))
+		{
+			displayAPMenu = !displayAPMenu;
+			Log("displayAPMenu changed to %s", displayAPMenu ? "true" : "false");
+		}
+
+		lastMenuToggleState = menuToggleState;
+	}
+
 	void Update()
 	{
 		// Only act on matching save data
@@ -54,7 +67,9 @@ namespace SWRGame
 			if (GetKeyState(VK_NEXT) & 0x80)
 				ChangeAIModifier(-0.010);
 		}
-		
+
+		APMenuLoop();
+
 		Sleep(50);
 	}
 
@@ -688,5 +703,7 @@ namespace SWRGame
 
 			gamestate = SWRGameState::Ready;
 		}
+
+		APMenuLoop();
 	}
 }

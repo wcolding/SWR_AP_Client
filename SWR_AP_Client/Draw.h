@@ -15,6 +15,9 @@ namespace SWRGame
 	void WriteTextWrapper(std::string string, SWRFont font, int x, int y, SWRTextColor color, SWRTextAlign align);
 
 	void UpdateShopModel(int selectedIndex, int modelId);
+
+	bool displayAPMenu = false;
+	void DrawAPMenu();
 	
 	extern SWRGameState gamestate;
 	extern int baseAddress;

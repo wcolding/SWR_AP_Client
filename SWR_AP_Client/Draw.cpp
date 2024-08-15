@@ -83,6 +83,13 @@ namespace SWRGame
 		{ AP_ItemType::Useful, "Useful" }
 	};
 
+	std::map<CourseUnlockMode, std::string> courseUnlockModeMap
+	{
+		{ CourseUnlockMode::CircuitPassNoInv, "Circuit Pass" },
+		{ CourseUnlockMode::CircuitPassInvitational, "Circuit Pass Invitational" },
+		{ CourseUnlockMode::Shuffle, "Shuffle" },
+	};
+
 	typedef int(__cdecl* _LoadModel)(int modelId);
 	_LoadModel LoadModel = (_LoadModel)(0x448780);
 
@@ -186,8 +193,7 @@ namespace SWRGame
 			switch (*menuVal)
 			{
 			case 1: // Start Menu
-				WriteTextWrapper(versionString, SWRFont::Medium, 625, 0, SWRTextColor::LightBlue, SWRTextAlign::Right);
-				WriteTextWrapper(fullSeedName, SWRFont::Medium, 625, 10, SWRTextColor::Yellow, SWRTextAlign::Right);
+				
 				break;
 			case 2: // Profile select
 				WriteTextWrapper("IMPORTANT : Create a new save for each new seed!", SWRFont::Medium, 310, 120, SWRTextColor::LightBlue, SWRTextAlign::Center);
@@ -196,6 +202,9 @@ namespace SWRGame
 				break;
 			}
 		}
+
+		if (displayAPMenu)
+			DrawAPMenu();
 	}
 
 	void __fastcall DrawEvents::OnDrawShopStats(void* obj)
@@ -263,6 +272,21 @@ namespace SWRGame
 		}
 	}
 
+	void DrawAPMenu()
+	{
+		WriteTextWrapper(versionString, SWRFont::Medium, 625, 0, SWRTextColor::LightBlue, SWRTextAlign::Right);
+		WriteTextWrapper(fullSeedName, SWRFont::Medium, 625, 10, SWRTextColor::Yellow, SWRTextAlign::Right);
+
+		WriteTextWrapper("Options:", SWRFont::Medium, 360, 40, SWRTextColor::Green, SWRTextAlign::Left);
+		WriteTextWrapper("Course Unlock Mode: " + courseUnlockModeMap[courseUnlockMode], SWRFont::Medium, 360, 50, SWRTextColor::Green, SWRTextAlign::Left);
+		DrawCourseUnlockInfo(360, 60);
+
+		// Credits
+		WriteTextWrapper("~oArchipelago mod developed by ~2Will Colding", SWRFont::Small, 10, 420, SWRTextColor::Yellow, SWRTextAlign::Left);
+		WriteTextWrapper("~oSpecial thanks to:", SWRFont::Small, 10, 430, SWRTextColor::Yellow, SWRTextAlign::Left);
+		WriteTextWrapper("~o~2Galeforce ~3and ~4the SWE1R modding community ~3for text rendering help", SWRFont::Small, 20, 440, SWRTextColor::Yellow, SWRTextAlign::Left);
+		WriteTextWrapper("~o~2Barbaloot, Br00ty, ghoststrike49, dopin, WazaAenor, ~3and ~4the AP Discord community ~3for testing/feedback", SWRFont::Small, 20, 450, SWRTextColor::Yellow, SWRTextAlign::Left);
+		WriteTextWrapper("~o~2my friends ~3for listening to me ramble on about this project", SWRFont::Small, 20, 460, SWRTextColor::Yellow, SWRTextAlign::Left);
 	}
 
 	void __fastcall DrawEvents::OnDrawCourseSelect()

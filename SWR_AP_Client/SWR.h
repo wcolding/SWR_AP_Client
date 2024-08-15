@@ -35,13 +35,14 @@ namespace SWRGame
 
 	void Init();
 	void StartupSequenceLoop();
-	void Update();
+	void Update(); 
 	void InitSaveData();
 	void QueueNotifyMsg(std::string _msg);
 
 
 	extern void OnDraw();
 	extern _WriteText WriteText;
+	extern bool displayAPMenu;
 
 	int* menuVal = nullptr;
 	int* menuValB = nullptr;
