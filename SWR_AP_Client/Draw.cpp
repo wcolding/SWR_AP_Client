@@ -32,6 +32,9 @@ namespace SWRGame
 
 		switch (font)
 		{
+		case SWRFont::Small:
+			string = "~F4" + string;
+			break;
 		case SWRFont::ShopItem:
 			string = "~f4" + string;
 			break;
