@@ -209,10 +209,7 @@ namespace SWRGame
 		}
 	}
 
-	int unlocksTextX = 150;
-	int unlocksTextY = 320;
-
-	void DrawCircuitAvailable(std::string name, Circuit circuit, int yOffset)
+	void DrawCircuitAvailable(std::string name, Circuit circuit, int x, int y)
 	{
 		std::string formatted = name + ": ";
 		bool available = false;
@@ -239,7 +236,33 @@ namespace SWRGame
 
 		formatted += available ? "open" : "closed";
 		SWRTextColor color = available ? SWRTextColor::Green : SWRTextColor::Red;
-		WriteTextWrapper(formatted, SWRFont::Medium, unlocksTextX, unlocksTextY + yOffset, color, SWRTextAlign::Left);
+		WriteTextWrapper(formatted, SWRFont::Medium, x, y, color, SWRTextAlign::Left);
+	}
+
+	void DrawCourseUnlockInfo(int x, int y)
+	{
+		switch (courseUnlockMode)
+		{
+		case CourseUnlockMode::CircuitPassInvitational:
+			DrawCircuitAvailable("Invitational", Circuit::Invitational, x, y + 30);
+			[[fallthrough]];
+		case CourseUnlockMode::CircuitPassNoInv:
+			WriteTextWrapper("Circuits available:", SWRFont::Medium, x, y, SWRTextColor::LightBlue, SWRTextAlign::Left);
+			DrawCircuitAvailable("Semi-Pro", Circuit::SemiPro, x, y + 10);
+			DrawCircuitAvailable("Galactic", Circuit::Galactic, x, y + 20);
+			break;
+		case CourseUnlockMode::Shuffle:
+			WriteTextWrapper("Course Unlocks:", SWRFont::Medium, x, y, SWRTextColor::LightBlue, SWRTextAlign::Left);
+			WriteTextWrapper("Amateur: " + std::to_string(progress.amateurUnlocks), SWRFont::Medium, x, y + 10, SWRTextColor::Green, SWRTextAlign::Left);
+			WriteTextWrapper("Semi-Pro: " + std::to_string(progress.semiProUnlocks), SWRFont::Medium, x, y + 20, SWRTextColor::Green, SWRTextAlign::Left);
+			WriteTextWrapper("Galactic: " + std::to_string(progress.galacticUnlocks), SWRFont::Medium, x, y + 30, SWRTextColor::Green, SWRTextAlign::Left);
+			WriteTextWrapper("Invitational: " + std::to_string(progress.invitationalUnlocks), SWRFont::Medium, x, y + 40, SWRTextColor::Green, SWRTextAlign::Left);
+			break;
+		default:
+			break;
+		}
+	}
+
 	}
 
 	void __fastcall DrawEvents::OnDrawCourseSelect()
@@ -247,26 +270,7 @@ namespace SWRGame
 		if (trackMirrored())
 			WriteTextWrapper("Mirrored", SWRFont::ShopItem, 160, 75, SWRTextColor::Yellow, SWRTextAlign::Center);
 
-		switch (courseUnlockMode)
-		{
-		case CourseUnlockMode::CircuitPassInvitational:
-			DrawCircuitAvailable("Invitational", Circuit::Invitational, 30);
-			[[fallthrough]];
-		case CourseUnlockMode::CircuitPassNoInv:
-			WriteTextWrapper("Circuits available:", SWRFont::Medium, unlocksTextX, unlocksTextY, SWRTextColor::LightBlue, SWRTextAlign::Left);
-			DrawCircuitAvailable("Semi-Pro", Circuit::SemiPro, 10);
-			DrawCircuitAvailable("Galactic", Circuit::Galactic, 20);
-			break;
-		case CourseUnlockMode::Shuffle:
-			WriteTextWrapper("Course Unlocks:", SWRFont::Medium, unlocksTextX, unlocksTextY, SWRTextColor::LightBlue, SWRTextAlign::Left);
-			WriteTextWrapper("Amateur: " + std::to_string(progress.amateurUnlocks), SWRFont::Medium, unlocksTextX, unlocksTextY + 10, SWRTextColor::Green, SWRTextAlign::Left);
-			WriteTextWrapper("Semi-Pro: " + std::to_string(progress.semiProUnlocks), SWRFont::Medium, unlocksTextX, unlocksTextY + 20, SWRTextColor::Green, SWRTextAlign::Left);
-			WriteTextWrapper("Galactic: " + std::to_string(progress.galacticUnlocks), SWRFont::Medium, unlocksTextX, unlocksTextY + 30, SWRTextColor::Green, SWRTextAlign::Left);
-			WriteTextWrapper("Invitational: " + std::to_string(progress.invitationalUnlocks), SWRFont::Medium, unlocksTextX, unlocksTextY + 40, SWRTextColor::Green, SWRTextAlign::Left);
-			break;
-		default:
-			break;
-		}
+		DrawCourseUnlockInfo(150, 320);
 	}
 
 	void __fastcall DrawEvents::OnDrawTrackInfo()
