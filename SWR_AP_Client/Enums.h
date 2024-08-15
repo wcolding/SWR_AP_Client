@@ -72,6 +72,7 @@ enum PayoutSetting : char
 enum SWRFont
 {
 	Default,
+	Small,
 	Medium,
 	ShopItem,
 	Large
