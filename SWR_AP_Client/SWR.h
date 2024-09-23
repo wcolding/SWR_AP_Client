@@ -105,7 +105,8 @@ namespace SWRGame
 	extern void SetAdditionalScaling(int value);
 	extern void SetEnableMultiplierControl(int value);
 	extern void SetOneLapMode(int value);
-	extern void SetAutoHintShop(int value);
+	extern void SetAutoHintShop(int value); 
+	extern void SetShopCosts(std::map<int, int> costs);
 	extern void SetDeathLinkAmnesty(int value);
 	extern void SetCourses(std::map<int, int> courseValues);
 }

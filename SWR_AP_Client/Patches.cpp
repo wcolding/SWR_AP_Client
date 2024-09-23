@@ -411,6 +411,10 @@ void Patches::RewriteWattoShop()
 	WritePatch(0x3EB70, &apShopDataTypePtr, 4);
 	WritePatch(0x3779B, &apShopDataTypePtr, 4);
 
+	// Cost
+	void* apShopDataCostPtr = &SWRGame::apShopData.entries[0].cost;
+	WritePatch(0x3EBAE, &apShopDataCostPtr, 4);
+
 	// Series Id
 	void* apShopDataSeriesPtr = &SWRGame::apShopData.entries[0].seriesId;
 	WritePatch(0x3785E, &apShopDataSeriesPtr, 4);

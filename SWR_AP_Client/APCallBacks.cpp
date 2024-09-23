@@ -304,4 +304,12 @@ namespace SWRGame
 
 		Log("Courses set");
 	}
+
+	void SetShopCosts(std::map<int, int> costs)
+	{
+		for (auto entry : costs)
+			apShopData.entries[entry.first].cost = entry.second;
+		
+		Log("Shop costs set");
+	}
 }

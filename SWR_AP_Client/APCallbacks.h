@@ -45,6 +45,7 @@ namespace SWRGame
 	void SetEnableMultiplierControl(int value);
 	void SetOneLapMode(int value);
 	void SetAutoHintShop(int value);
+	void SetShopCosts(std::map<int, int> costs);
 	void SetDeathLinkAmnesty(int value);
 	void SetCourses(std::map<int, int> courseValues);
 }

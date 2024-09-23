@@ -567,6 +567,7 @@ namespace SWRGame
 		AP_RegisterSlotDataIntCallback("AutoHintShop", &SetAutoHintShop);
 		AP_RegisterSlotDataIntCallback("DeathLinkAmnesty", &SetDeathLinkAmnesty);
 		AP_RegisterSlotDataMapIntIntCallback("Courses", &SetCourses);
+		AP_RegisterSlotDataMapIntIntCallback("ShopCosts", &SetShopCosts);
 		AP_Start();
 	}
 
