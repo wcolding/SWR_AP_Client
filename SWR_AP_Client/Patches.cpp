@@ -114,7 +114,7 @@ int GetFirstAvailableInvitational()
 	return -1;
 }
 
-void __fastcall HandleCourseChange(int nextCircuit, int structPtr)
+void __fastcall HandleCircuitChange(int nextCircuit, int structPtr)
 {
 	char* selectedCircuit = (char*)(structPtr + 0x5E);
 	char nextCircuitUnlocks;
@@ -163,7 +163,7 @@ void __fastcall HandleCourseChange(int nextCircuit, int structPtr)
 }
 
 // call at +3B70C and +3B741
-void __declspec(naked) HandleCourseChangeWrapper()
+void __declspec(naked) HandleCircuitChangeWrapper()
 {
 	__asm
 	{
@@ -171,7 +171,7 @@ void __declspec(naked) HandleCourseChangeWrapper()
 		mov edx, esi;
 		xor ecx, ecx;
 		mov cl, al;
-		call HandleCourseChange;
+		call HandleCircuitChange;
 		popad;
 
 		push eax;
@@ -236,8 +236,8 @@ void Patches::FixCourseSelection()
 	WritePatch(ERROR_CURSOR_OPCODE, &forceSkipErrorCursor, 2);
 
 	//HookFunction(DEFAULT_FIRST_COURSE_INJECT, &DefaultToFirstCourse, 2);
-	HookFunction(0x3B70C, &HandleCourseChangeWrapper);
-	HookFunction(0x3B741, &HandleCourseChangeWrapper);
+	HookFunction(0x3B70C, &HandleCircuitChangeWrapper);
+	HookFunction(0x3B741, &HandleCircuitChangeWrapper);
 
 	// Replace push instruction we overwrote
 	char push[6] = {
@@ -410,6 +410,10 @@ void Patches::RewriteWattoShop()
 	WritePatch(0x37865, &apShopDataTypePtr, 4);
 	WritePatch(0x3EB70, &apShopDataTypePtr, 4);
 	WritePatch(0x3779B, &apShopDataTypePtr, 4);
+
+	// Cost
+	void* apShopDataCostPtr = &SWRGame::apShopData.entries[0].cost;
+	WritePatch(0x3EBAE, &apShopDataCostPtr, 4);
 
 	// Series Id
 	void* apShopDataSeriesPtr = &SWRGame::apShopData.entries[0].seriesId;
