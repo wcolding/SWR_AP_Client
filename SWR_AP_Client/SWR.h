@@ -22,7 +22,7 @@ typedef void(__cdecl* _DrawStats)(void* obj, float x, float y);
 
 namespace SWRGame
 {
-	AP_NetworkVersion version = { 0, 6, 0 };
+	AP_NetworkVersion version = { 0, 7, 0 };
 
 	void Log(const char* format, ...);
 	void SyncProgress();
