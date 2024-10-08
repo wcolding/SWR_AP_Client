@@ -14,9 +14,11 @@ namespace SWRGame
     extern void Init();
     extern void Update();
     extern void StartupSequenceLoop();
+    extern std::string GetVersionString();
 }
 
 bool debugConsole = false;
+std::string title = "";
 
 DWORD WINAPI ModThread(LPVOID hModule)
 {
@@ -55,6 +57,7 @@ INT_PTR WINAPI APLoginDialog(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
     switch (uMsg) {
     case WM_INITDIALOG:
+        SetWindowTextA(hwnd, title.c_str());
         // Load config from file
         if (file.read(ini))
         {
@@ -110,6 +113,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     {
     case DLL_PROCESS_ATTACH:
     {
+        title = std::format("Star Wars Episode I Racer Archipelago Client - {}", SWRGame::GetVersionString());
         if (DialogBox(hModule, MAKEINTRESOURCE(IDD_FORMVIEW), NULL, APLoginDialog) == 1)
         {
             DWORD threadID = 0;

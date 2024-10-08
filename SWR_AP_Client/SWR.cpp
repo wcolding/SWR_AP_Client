@@ -570,6 +570,11 @@ namespace SWRGame
 		AP_RegisterSlotDataMapIntIntCallback("ShopCosts", &SetShopCosts);
 		AP_Start();
 	}
+	std::string GetVersionString()
+	{
+		versionString = std::format("Version {}.{}.{}", version.major, version.minor, version.build);
+		return versionString;
+	}
 
 	void Init()
 	{
@@ -591,8 +596,6 @@ namespace SWRGame
 		DrawStats = (_DrawStats)(baseAddress + 0x550D0);
 		LoadItemModelO = (_LoadItemModelO)(baseAddress + 0x54BC0);
 		UpdateStatDisplay = (_UpdateStatDisplay)(baseAddress + 0x5CF60);
-
-		versionString = std::format("Version {}.{}.{}", version.major, version.minor, version.build), 
 
 		queuedDeaths = 0;
 		

@@ -33,12 +33,12 @@ namespace SWRGame
 
 	void ProcessItemQueue();
 
+	std::string GetVersionString();
 	void Init();
 	void StartupSequenceLoop();
 	void Update();
 	void InitSaveData();
 	void QueueNotifyMsg(std::string _msg);
-
 
 	extern void OnDraw();
 	extern _WriteText WriteText;
