@@ -97,6 +97,8 @@ INT_PTR WINAPI APLoginDialog(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         case IDC_NO_AP:
             EndDialog(hwnd, 2);
             return FALSE;
+        case IDCANCEL:
+            exit(0);
         case IDC_CHECK_RELEASES:
             std::string releasesUrl = "start https://github.com/wcolding/SWR_AP_Client/releases";
             system(releasesUrl.c_str());
