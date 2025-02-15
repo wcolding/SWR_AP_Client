@@ -12,7 +12,7 @@ You will need the following to play this randomizer:
 * [The latest release](https://github.com/wcolding/SWR_AP_Client/releases) of this client
 * A dll release of [Ultimate ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases)
 	* Confirmed working dlls include `dinput.dll` and `dsound.dll`
-	*  **Be sure to download the dll itself from the release notes and *not* `Ultimate-ASI-Loader.zip`**
+	*  **Be sure to download the dll itself from the "Win32" column of the release notes and *not* `Ultimate-ASI-Loader.zip`**
 * The Windows version of the game. Development has been conducted with the Steam version. The GOG release appears to work but has not been tested extensively
 * The [x86 Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist) if not already installed
 
