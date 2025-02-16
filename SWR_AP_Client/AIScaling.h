@@ -5,6 +5,7 @@ namespace SWRGame
 {
 	float GetAIScaleFromParts();
 	float GetAIScaleByCircuit(float val, int baseCircuit, int targetCircuit);
+	float GetAIScaleVanilla(float val);
 	void ChangeAIModifier(float amount);
 
 	float aiModifier = 1.0f;

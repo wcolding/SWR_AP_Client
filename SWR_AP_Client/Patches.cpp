@@ -615,6 +615,12 @@ void __fastcall AIScaleFromParts()
 	*aiMultiplier = SWRGame::GetAIScaleFromParts();
 }
 
+void __fastcall AIScaleVanilla()
+{
+	float* aiMultiplier = (float*)(SWRGame::baseAddress + 0xC707C);
+	*aiMultiplier = SWRGame::GetAIScaleVanilla(*aiMultiplier);
+}
+
 void __declspec(naked) SetAIDifficultyWrapper()
 {
 	__asm
@@ -632,8 +638,10 @@ void Patches::ScaleAIDifficulty(int option)
 	SWRGame::Log("Applying patch: Scale AI Difficulty");
 	if (option == 1)
 		SetAIDifficulty = AIScaleByCircuit;
-	else
+	else if (option == 2)
 		SetAIDifficulty = AIScaleFromParts;
+	else if (option == 0)
+		SetAIDifficulty = AIScaleVanilla;
 
 	HookFunction(0x66ABD, &SetAIDifficultyWrapper, 1);
 }

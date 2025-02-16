@@ -65,6 +65,11 @@ namespace SWRGame
 		return val;
 	}
 
+	float GetAIScaleVanilla(float val)
+	{
+		return val * aiModifier;
+	}
+
 	void ChangeAIModifier(float amount)
 	{
 		if (!modifierControl)

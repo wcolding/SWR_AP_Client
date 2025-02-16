@@ -248,8 +248,7 @@ namespace SWRGame
 
 	void SetAIScaling(int value)
 	{
-		if (value != 0)
-			Patches::ScaleAIDifficulty(value);
+		Patches::ScaleAIDifficulty(value);
 	}
 
 	void SetAdditionalScaling(int value)
