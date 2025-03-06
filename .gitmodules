@@ -1,3 +1,7 @@
 [submodule "SWR_AP_Client/external/APCpp"]
 	path = SWR_AP_Client/external/APCpp
 	url = https://github.com/N00byKing/APCpp.git
+[submodule "SWR_AP_Client/external/SWRMemTools"]
+	path = SWR_AP_Client/external/SWRMemTools
+	url = https://github.com/wcolding/SWRMemTools.git
+	branch = main
