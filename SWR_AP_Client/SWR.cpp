@@ -478,16 +478,22 @@ namespace SWRGame
 
 	void GiveCourseUnlock(int circuit)
 	{
-		int curUnlock = swrSaveData->trackUnlocks[circuit];
-		int curFlag = 0;
-		for (int i = 0; i < 7; i++)
+		switch (circuit)
 		{
-			curFlag = 1 << i;
-			if ((curUnlock & curFlag) == 0)
-			{
-				swrSaveData->trackUnlocks[circuit] |= curFlag;
-				return;
-			}
+		case AMATEUR_CIRCUIT:
+			saveManager.GiveAmateurCourse();
+			break;
+		case SEMIPRO_CIRCUIT:
+			saveManager.GiveSemiproCourse();
+			break;
+		case GALACTIC_CIRCUIT:
+			saveManager.GiveGalacticCourse();
+			break;
+		case INVITATIONAL_CIRCUIT:
+			saveManager.GiveInvitationalCourse();
+			break;
+		default:
+			break;
 		}
 	}
 
