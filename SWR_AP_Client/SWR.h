@@ -59,6 +59,7 @@ namespace SWRGame
 	SWR_PodPartTable apShopData;
 
 	SWR_SaveData* swrSaveData;
+	SWRMemTools::SaveManager saveManager(reinterpret_cast<SWRMemTools::SaveData*>(swrSaveData));
 
 	std::string fullSeedName = "";
 	std::string versionString = "";

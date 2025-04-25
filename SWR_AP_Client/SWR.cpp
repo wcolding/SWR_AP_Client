@@ -433,8 +433,7 @@ namespace SWRGame
 	{
 		// Reset values of progressive/stackable items (except circuit pass and course unlocks)
 		// AP will send items on connect so we will recalculate from the base values
-		swrSaveData->pitDroids = 1;
-		memset(&swrSaveData->parts, 0, 7);
+		saveManager.InitializeSaveData();
 
 		Log("Save data initialized");
 	}
