@@ -468,11 +468,6 @@ namespace SWRGame
 		}
 	}
 
-	void GivePitDroid()
-	{
-		swrSaveData->pitDroids++;
-	}
-
 	void GiveCircuitPass(int type)
 	{
 		if (type == -1)
@@ -520,7 +515,7 @@ namespace SWRGame
 				saveManager.GiveRacer(static_cast<SWRMemTools::RacerUnlocks>(itemInfo.param1));
 				break;
 			case ItemType::PitDroid:
-				GivePitDroid();
+				saveManager.GivePitDroid();
 				break;
 			case ItemType::CircuitPass:
 				GiveCircuitPass(itemInfo.param1);
