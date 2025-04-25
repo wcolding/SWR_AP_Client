@@ -497,7 +497,7 @@ namespace SWRGame
 
 	void ProcessItemQueue()
 	{
-		if (!itemQueue.empty() && isSaveDataReady())
+		if (!itemQueue.empty() && saveManager.isSaveReady())
 		{
 			QueuedItem item = itemQueue.front();
 			ItemInfo itemInfo = item.info;
