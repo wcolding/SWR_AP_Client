@@ -476,11 +476,6 @@ namespace SWRGame
 			swrSaveData->trackUnlocks[type] |= 0x01;
 	}
 
-	void GiveMoney(int amount)
-	{
-		swrSaveData->money += amount;
-	}
-
 	void GiveCourseUnlock(int circuit)
 	{
 		int curUnlock = swrSaveData->trackUnlocks[circuit];
@@ -522,7 +517,7 @@ namespace SWRGame
 				break;
 			case ItemType::Money:
 				if (item.notify)
-					GiveMoney(itemInfo.param1);
+					saveManager.GiveMoney(itemInfo.param1);
 				break;
 			case ItemType::CourseUnlock:
 				if (item.notify)
