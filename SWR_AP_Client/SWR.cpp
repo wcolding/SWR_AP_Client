@@ -396,10 +396,10 @@ namespace SWRGame
 		// Racer Unlock Checks
 		if (swrSaveData->racerUnlocks != progress.cachedSave.racerUnlocks)
 		{
-			RacerUnlocks curRacer;
+			SWRMemTools::RacerUnlocks curRacer;
 			for (int i = 0; i < RACERS_COUNT; i++)
 			{
-				curRacer = (RacerUnlocks)(1 << i);
+				curRacer = (SWRMemTools::RacerUnlocks)(1 << i);
 				if ((swrSaveData->racerUnlocks & curRacer) != 0)
 				{
 					if (racerUnlockTable.contains(curRacer))
@@ -460,7 +460,7 @@ namespace SWRGame
 
 	void GiveRacer(int racerID)
 	{
-		progress.unlockedRacers = (RacerUnlocks)(progress.unlockedRacers | racerID);
+		progress.unlockedRacers = (SWRMemTools::RacerUnlocks)((int)progress.unlockedRacers | racerID);
 	}
 
 	void GivePitDroid()
