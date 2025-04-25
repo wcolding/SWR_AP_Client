@@ -468,11 +468,6 @@ namespace SWRGame
 		}
 	}
 
-	void GiveRacer(int racerID)
-	{
-		saveManager.GiveRacer(static_cast<SWRMemTools::RacerUnlocks>(racerID));
-	}
-
 	void GivePitDroid()
 	{
 		swrSaveData->pitDroids++;
@@ -522,7 +517,7 @@ namespace SWRGame
 				GivePart(itemInfo.param1, itemInfo.param2);
 				break;
 			case ItemType::Racer:
-				GiveRacer(itemInfo.param1);
+				saveManager.GiveRacer(static_cast<SWRMemTools::RacerUnlocks>(itemInfo.param1));
 				break;
 			case ItemType::PitDroid:
 				GivePitDroid();
