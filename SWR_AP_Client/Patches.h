@@ -2,11 +2,13 @@
 #include "Enums.h"
 #include "Structs.h"
 #include "Locations.h"
+#include "SWRMemTools/include/Save.h"
 
 namespace SWRGame
 {
 	extern int baseAddress;
 	extern AP_ProgressData progress;
+	extern SWRMemTools::SaveManager saveManager;
 	extern void Log(const char* format, ...);
 	extern char saveDirectory[64];
 	extern void OnDraw();

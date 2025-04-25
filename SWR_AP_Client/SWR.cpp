@@ -459,7 +459,7 @@ namespace SWRGame
 
 	void GiveRacer(int racerID)
 	{
-		progress.unlockedRacers = (SWRMemTools::RacerUnlocks)((int)progress.unlockedRacers | racerID);
+		saveManager.GiveRacer(static_cast<SWRMemTools::RacerUnlocks>(racerID));
 	}
 
 	void GivePitDroid()

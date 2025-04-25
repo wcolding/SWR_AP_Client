@@ -176,7 +176,6 @@ public:
 
 struct AP_ProgressData
 {
-	SWRMemTools::RacerUnlocks unlockedRacers;
 	SWR_SaveData cachedSave;
 	int pitDroidCounter = 1;
 };

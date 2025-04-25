@@ -2,12 +2,14 @@
 #include "Structs.h"
 #include "Items.h"
 #include "APCpp/Archipelago.h"
+#include "SWRMemTools/include/Save.h"
 
 #define COURSE_MAPPINGS_OFFSET 0xC0018
 
 namespace SWRGame
 {
 	extern AP_ProgressData progress;
+	extern SWRMemTools::SaveManager saveManager;
 	extern AP_ServerInfo serverInfo;
 	extern void Log(const char* format, ...);
 
