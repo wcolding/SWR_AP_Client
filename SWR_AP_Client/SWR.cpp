@@ -440,21 +440,32 @@ namespace SWRGame
 
 	void GivePart(int type, int part)
 	{
-		if (!isSaveDataReady())
-			return;
-		
-		auto current = &swrSaveData->parts[type];
-		auto curHealth = &swrSaveData->partsHealth[type];
-		*curHealth = 0xFF;
-
-		if (*current >= 5)
-			return;
-
-		if (part == -1) // Progressive
-			++*current;
-		else
-			if (*current < (char)part)
-				*current = (char)part;
+		switch (type)
+		{
+		case TRACTION_PART:
+			saveManager.GiveTractionPart(part);
+			break;
+		case TURNING_PART:
+			saveManager.GiveTurningPart(part);
+			break;
+		case ACCELERATION_PART:
+			saveManager.GiveAccelerationPart(part);
+			break;
+		case TOP_SPEED_PART:
+			saveManager.GiveTopSpeedPart(part);
+			break;
+		case AIR_BRAKE_PART:
+			saveManager.GiveAirbrakePart(part);
+			break;
+		case COOLING_PART:
+			saveManager.GiveCoolingPart(part);
+			break;
+		case REPAIR_PART:
+			saveManager.GiveRepairPart(part);
+			break;
+		default:
+			break;
+		}
 	}
 
 	void GiveRacer(int racerID)
