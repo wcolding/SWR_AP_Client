@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "Enums.h"
+#include "external/SWRMemTools/include/Save.h"
 
 struct AP_ServerInfo
 {
@@ -135,7 +136,7 @@ public:
 private:
 	char unk_02[0x02];         // 0x32 
 public:
-	RacerUnlocks racerUnlocks; // 0x34
+	SWRMemTools::RacerUnlocks racerUnlocks; // 0x34
 	int money;                 // 0x38
 	int cutscenesBitfield;     // 0x3C
 	char pitDroids;            // 0x40
@@ -145,6 +146,7 @@ private:
 	char pad;                  // 0x4F
 };
 static_assert(sizeof(SWR_SaveData) == 0x50, "RacerSaveData resized!");
+
 
 // Not entirely sure what this structure is
 struct GameStatus
@@ -174,7 +176,6 @@ public:
 
 struct AP_ProgressData
 {
-	RacerUnlocks unlockedRacers;
 	SWR_SaveData cachedSave;
 	int pitDroidCounter = 1;
 };

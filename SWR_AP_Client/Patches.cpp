@@ -61,7 +61,7 @@ void Patches::LimitAvailableRacers()
 	};                 
 
 	// Overwrite 0 with racers value
-	RacerUnlocks* unlockedRacersPtr = &SWRGame::progress.unlockedRacers;
+	SWRMemTools::RacerUnlocks* unlockedRacersPtr = &SWRGame::saveManager.apRacerUnlocks;
 	memcpy(&limitRacers[2], &unlockedRacersPtr, 4);
 
 	WritePatch(DEFAULT_RACERS_OPCODE, &limitRacers, 6);

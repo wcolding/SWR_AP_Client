@@ -219,7 +219,7 @@ namespace SWRGame
 
 	void SetStartingRacers(int value)
 	{
-		progress.unlockedRacers = (RacerUnlocks)value;
+		saveManager.apRacerUnlocks = static_cast<SWRMemTools::RacerUnlocks>(value);
 		Patches::LimitAvailableRacers();
 	}
 

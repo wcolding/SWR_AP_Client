@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Enums.h"
+#include "SWRMemTools/include/Save.h"
 
 static std::map<int, std::string> locationTable
 {
@@ -141,28 +142,28 @@ static std::map<int, std::string> locationTable
 };
 
 // We'll check the unlocked racer flags and map them to the location IDs
-static std::map<RacerUnlocks, int> racerUnlockTable
+static std::map<SWRMemTools::RacerUnlocks, int> racerUnlockTable
 {
-	{ RacerUnlocks::TeemtoPagalies, 170 },
-	{ RacerUnlocks::Sebulba, 171 },
-	{ RacerUnlocks::RattsTyerell, 172 },
-	{ RacerUnlocks::AldarBeedo, 173 },
-	{ RacerUnlocks::Mawhonic, 174 },
+	{ SWRMemTools::RacerUnlocks::TeemtoPagalies, 170 },
+	{ SWRMemTools::RacerUnlocks::Sebulba, 171 },
+	{ SWRMemTools::RacerUnlocks::RattsTyerell, 172 },
+	{ SWRMemTools::RacerUnlocks::AldarBeedo, 173 },
+	{ SWRMemTools::RacerUnlocks::Mawhonic, 174 },
 
-	{ RacerUnlocks::ArkBumpyRoose, 175 },
-	{ RacerUnlocks::WanSandage, 176 },
-	{ RacerUnlocks::MarsGuo, 177 },
-	{ RacerUnlocks::CleggHoldfast, 178 },
-	{ RacerUnlocks::NevaKee, 179 },
+	{ SWRMemTools::RacerUnlocks::ArkBumpyRoose, 175 },
+	{ SWRMemTools::RacerUnlocks::WanSandage, 176 },
+	{ SWRMemTools::RacerUnlocks::MarsGuo, 177 },
+	{ SWRMemTools::RacerUnlocks::CleggHoldfast, 178 },
+	{ SWRMemTools::RacerUnlocks::NevaKee, 179 },
 
-	{ RacerUnlocks::BozzieBaranta, 180 },
-	{ RacerUnlocks::BolesRoor, 181 },
-	{ RacerUnlocks::FudSang, 182 },
-	{ RacerUnlocks::BenQuadrinaros, 183 },
-	{ RacerUnlocks::SlideParamita, 184 },
+	{ SWRMemTools::RacerUnlocks::BozzieBaranta, 180 },
+	{ SWRMemTools::RacerUnlocks::BolesRoor, 181 },
+	{ SWRMemTools::RacerUnlocks::FudSang, 182 },
+	{ SWRMemTools::RacerUnlocks::BenQuadrinaros, 183 },
+	{ SWRMemTools::RacerUnlocks::SlideParamita, 184 },
 
-	{ RacerUnlocks::ToyDampner, 185 },
-	{ RacerUnlocks::BullseyeNavior, 186 }
+	{ SWRMemTools::RacerUnlocks::ToyDampner, 185 },
+	{ SWRMemTools::RacerUnlocks::BullseyeNavior, 186 }
 };
 
 static std::map<int, int> courseSlotToId

@@ -396,10 +396,10 @@ namespace SWRGame
 		// Racer Unlock Checks
 		if (swrSaveData->racerUnlocks != progress.cachedSave.racerUnlocks)
 		{
-			RacerUnlocks curRacer;
+			SWRMemTools::RacerUnlocks curRacer;
 			for (int i = 0; i < RACERS_COUNT; i++)
 			{
-				curRacer = (RacerUnlocks)(1 << i);
+				curRacer = (SWRMemTools::RacerUnlocks)(1 << i);
 				if ((swrSaveData->racerUnlocks & curRacer) != 0)
 				{
 					if (racerUnlockTable.contains(curRacer))
@@ -411,15 +411,6 @@ namespace SWRGame
 			}
 
 			progress.cachedSave.racerUnlocks = swrSaveData->racerUnlocks;
-		}
-
-		// Progressive circuit passes
-		if (sessionProgressivePasses > swrSaveData->progressivePasses)
-		{
-			swrSaveData->progressivePasses = sessionProgressivePasses;
-			Log("Progressive circuit passes: %i", (int)swrSaveData->progressivePasses);
-			for (int i = 0; i < swrSaveData->progressivePasses; i++) 
-				swrSaveData->trackUnlocks[i+1] |= 0x01;
 		}
 	}
 
@@ -433,72 +424,65 @@ namespace SWRGame
 	{
 		// Reset values of progressive/stackable items (except circuit pass and course unlocks)
 		// AP will send items on connect so we will recalculate from the base values
-		swrSaveData->pitDroids = 1;
-		memset(&swrSaveData->parts, 0, 7);
+		saveManager.InitializeSaveData();
 
 		Log("Save data initialized");
 	}
 
 	void GivePart(int type, int part)
 	{
-		if (!isSaveDataReady())
-			return;
-		
-		auto current = &swrSaveData->parts[type];
-		auto curHealth = &swrSaveData->partsHealth[type];
-		*curHealth = 0xFF;
-
-		if (*current >= 5)
-			return;
-
-		if (part == -1) // Progressive
-			++*current;
-		else
-			if (*current < (char)part)
-				*current = (char)part;
-	}
-
-	void GiveRacer(int racerID)
-	{
-		progress.unlockedRacers = (RacerUnlocks)(progress.unlockedRacers | racerID);
-	}
-
-	void GivePitDroid()
-	{
-		swrSaveData->pitDroids++;
-	}
-
-	void GiveCircuitPass(int type)
-	{
-		if (type == -1)
-			sessionProgressivePasses++;
-		else
-			swrSaveData->trackUnlocks[type] |= 0x01;
-	}
-
-	void GiveMoney(int amount)
-	{
-		swrSaveData->money += amount;
+		switch (type)
+		{
+		case TRACTION_PART:
+			saveManager.GiveTractionPart(part);
+			break;
+		case TURNING_PART:
+			saveManager.GiveTurningPart(part);
+			break;
+		case ACCELERATION_PART:
+			saveManager.GiveAccelerationPart(part);
+			break;
+		case TOP_SPEED_PART:
+			saveManager.GiveTopSpeedPart(part);
+			break;
+		case AIR_BRAKE_PART:
+			saveManager.GiveAirbrakePart(part);
+			break;
+		case COOLING_PART:
+			saveManager.GiveCoolingPart(part);
+			break;
+		case REPAIR_PART:
+			saveManager.GiveRepairPart(part);
+			break;
+		default:
+			break;
+		}
 	}
 
 	void GiveCourseUnlock(int circuit)
 	{
-		int curUnlock = swrSaveData->trackUnlocks[circuit];
-		int curFlag = 0;
-		for (int i = 0; i < 7; i++)
+		switch (circuit)
 		{
-			curFlag = 1 << i;
-			if ((curUnlock & curFlag) == 0)
-			{
-				swrSaveData->trackUnlocks[circuit] |= curFlag;
-				return;
-			}
+		case AMATEUR_CIRCUIT:
+			saveManager.GiveAmateurCourse();
+			break;
+		case SEMIPRO_CIRCUIT:
+			saveManager.GiveSemiproCourse();
+			break;
+		case GALACTIC_CIRCUIT:
+			saveManager.GiveGalacticCourse();
+			break;
+		case INVITATIONAL_CIRCUIT:
+			saveManager.GiveInvitationalCourse();
+			break;
+		default:
+			break;
 		}
 	}
 
 	void ProcessItemQueue()
 	{
-		if (!itemQueue.empty() && isSaveDataReady())
+		if (!itemQueue.empty() && saveManager.isSaveReady())
 		{
 			QueuedItem item = itemQueue.front();
 			ItemInfo itemInfo = item.info;
@@ -512,17 +496,17 @@ namespace SWRGame
 				GivePart(itemInfo.param1, itemInfo.param2);
 				break;
 			case ItemType::Racer:
-				GiveRacer(itemInfo.param1);
+				saveManager.GiveRacer(static_cast<SWRMemTools::RacerUnlocks>(itemInfo.param1));
 				break;
 			case ItemType::PitDroid:
-				GivePitDroid();
+				saveManager.GivePitDroid();
 				break;
 			case ItemType::CircuitPass:
-				GiveCircuitPass(itemInfo.param1);
+				saveManager.GiveCircuitPass(itemInfo.param1);
 				break;
 			case ItemType::Money:
 				if (item.notify)
-					GiveMoney(itemInfo.param1);
+					saveManager.GiveMoney(itemInfo.param1);
 				break;
 			case ItemType::CourseUnlock:
 				if (item.notify)

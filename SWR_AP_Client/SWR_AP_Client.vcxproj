@@ -84,8 +84,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>APCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)external\APCpp\out\build\x86-Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>APCpp.lib;SWRMemTools.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)external\SWRMemTools\build\;$(ProjectDir)external\APCpp\out\build\x86-Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(TargetPath)" "$(SolutionDir)dist\$(ProjectName).asi*" /f /y &amp;&amp; xcopy "$(ProjectDir)external\APCpp\out\build\x86-Release\APCpp.dll" "$(SolutionDir)dist\APCpp.dll*" /f /y</Command>
