@@ -412,15 +412,6 @@ namespace SWRGame
 
 			progress.cachedSave.racerUnlocks = swrSaveData->racerUnlocks;
 		}
-
-		// Progressive circuit passes
-		if (sessionProgressivePasses > swrSaveData->progressivePasses)
-		{
-			swrSaveData->progressivePasses = sessionProgressivePasses;
-			Log("Progressive circuit passes: %i", (int)swrSaveData->progressivePasses);
-			for (int i = 0; i < swrSaveData->progressivePasses; i++) 
-				swrSaveData->trackUnlocks[i+1] |= 0x01;
-		}
 	}
 
 	void ProcessDeathQueue()
@@ -468,14 +459,6 @@ namespace SWRGame
 		}
 	}
 
-	void GiveCircuitPass(int type)
-	{
-		if (type == -1)
-			sessionProgressivePasses++;
-		else
-			swrSaveData->trackUnlocks[type] |= 0x01;
-	}
-
 	void GiveCourseUnlock(int circuit)
 	{
 		switch (circuit)
@@ -519,7 +502,7 @@ namespace SWRGame
 				saveManager.GivePitDroid();
 				break;
 			case ItemType::CircuitPass:
-				GiveCircuitPass(itemInfo.param1);
+				saveManager.GiveCircuitPass(itemInfo.param1);
 				break;
 			case ItemType::Money:
 				if (item.notify)
