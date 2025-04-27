@@ -281,6 +281,11 @@ namespace SWRGame
 		}
 	}
 
+	void SetDeathLink(int value)
+	{
+		deathLink = value;
+	}
+
 	void SetDeathLinkAmnesty(int value)
 	{
 		deathLinkAmnesty = value;

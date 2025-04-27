@@ -161,7 +161,9 @@ namespace SWRGame
 		{
 			if (deathState == DeathState::Alive)
 			{
-				Log("Pod destroyed!");
+				if (!deathLink)
+					return;
+
 				deathState = DeathState::Local;
 				if (deathLinkAmnesty > 0)
 				{
@@ -540,6 +542,7 @@ namespace SWRGame
 		AP_RegisterSlotDataIntCallback("EnableMultiplierControl", &SetEnableMultiplierControl);
 		AP_RegisterSlotDataIntCallback("OneLapMode", &SetOneLapMode);
 		AP_RegisterSlotDataIntCallback("AutoHintShop", &SetAutoHintShop);
+		AP_RegisterSlotDataIntCallback("DeathLink", &SetDeathLink);
 		AP_RegisterSlotDataIntCallback("DeathLinkAmnesty", &SetDeathLinkAmnesty);
 		AP_RegisterSlotDataMapIntIntCallback("Courses", &SetCourses);
 		AP_RegisterSlotDataMapIntIntCallback("ShopCosts", &SetShopCosts);

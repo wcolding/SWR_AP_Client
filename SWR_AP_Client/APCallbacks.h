@@ -24,6 +24,7 @@ namespace SWRGame
 	extern float aiModifier;
 	extern bool modifierControl;
 	extern bool hintShop;
+	extern bool deathLink;
 	extern int deathLinkAmnesty;
 	extern int livesRemaining;
 	extern SWR_PodPartTable apShopData;
@@ -48,6 +49,7 @@ namespace SWRGame
 	void SetOneLapMode(int value);
 	void SetAutoHintShop(int value);
 	void SetShopCosts(std::map<int, int> costs);
+	void SetDeathLink(int value);
 	void SetDeathLinkAmnesty(int value);
 	void SetCourses(std::map<int, int> courseValues);
 }
