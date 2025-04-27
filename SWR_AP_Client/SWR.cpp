@@ -420,15 +420,6 @@ namespace SWRGame
 			KillPod();
 	}
 
-	void InitSaveData()
-	{
-		// Reset values of progressive/stackable items (except circuit pass and course unlocks)
-		// AP will send items on connect so we will recalculate from the base values
-		saveManager.InitializeSaveData();
-
-		Log("Save data initialized");
-	}
-
 	void GivePart(int type, int part)
 	{
 		switch (type)
@@ -633,7 +624,8 @@ namespace SWRGame
 			{
 				if (swrSaveData->apPartialSeed == partialSeed) 
 				{
-					InitSaveData();
+					saveManager.ResetSaveData();
+					Log("Save data reset");
 					gamestate = SWRGameState::Save_Initialized;
 				}
 			}
