@@ -22,12 +22,14 @@ std::string title = "";
 
 DWORD WINAPI ModThread(LPVOID hModule)
 {
+    FILE* pFile = nullptr;
     if (debugConsole)
     {
-        FILE* pFile = nullptr;
         AllocConsole();
         freopen_s(&pFile, "CONOUT$", "w", stdout);
     }
+    else
+        freopen_s(&pFile, "SWR_AP_Client_log.txt", "w", stdout);
 
     SWRGame::Init();
 
