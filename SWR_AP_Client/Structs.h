@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include "Enums.h"
-#include "external/SWRMemTools/include/Save.h"
+#include "SWRMemTools/include/Save.h"
 
 struct AP_ServerInfo
 {
