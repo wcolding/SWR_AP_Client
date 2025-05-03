@@ -502,8 +502,7 @@ namespace SWRGame
 					saveManager.GiveMoney(itemInfo.param1);
 				break;
 			case ItemType::CourseUnlock:
-				if (item.notify)
-					GiveCourseUnlock(itemInfo.param1);
+				GiveCourseUnlock(itemInfo.param1);
 				break;
 			default:
 				break;
