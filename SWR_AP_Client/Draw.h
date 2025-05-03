@@ -2,6 +2,7 @@
 #include "Enums.h"
 #include "Structs.h"
 #include <map>
+#include "SWRMemTools/include/Shop.h"
 
 typedef void(__cdecl* _WriteText)(short xPos, short yPos, int r, int g, int b, int a, const char* text, int unk_00, int unk_01);
 typedef void(__cdecl* _DrawStats)(void* obj, float x, float y);
@@ -16,6 +17,7 @@ namespace SWRGame
 
 	void UpdateShopModel(int selectedIndex, int modelId);
 	
+	extern SWRMemTools::SaveManager saveManager;
 	extern SWRGameState gamestate;
 	extern int baseAddress;
 	extern std::vector <NotifyMsg> notifyQueue;
@@ -33,6 +35,11 @@ namespace SWRGame
 	extern int* menuValB; 
 	extern std::string fullSeedName;
 	extern std::string versionString;
+	extern AP_ProgressData progress;
+
+	std::string availableShopChecksStr;
+	std::string availablePitDroidChecksStr;
+	SWRMemTools::ShopManager shopManager(reinterpret_cast<SWRMemTools::Shop*>(&apShopData));
 }
 
 namespace SWRGame::DrawEvents
