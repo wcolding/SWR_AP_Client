@@ -24,7 +24,7 @@ You will need the following to play this randomizer:
 4. Click `Log In`. If all goes well you should see "Connected to AP" and a seed number in the upper right hand corner of the game
 
 #### Note for Steam Deck/Proton/Wine users:
-You will need to run the Windows copy of the game with a DLL override in order for the mod to load. You can add `WINEDLLOVERRIDES="dinput=n,b" %command%` to the launch options in the game properties in Steam to do this. If using `dsound`, put that instead.
+You will need to run the Windows copy of the game with a DLL override in order for the mod to load. You can add `WINEDLLOVERRIDES="dinput=n,b" %command%` to the launch options in the game properties in Steam to do this. If using `dsound`, put that instead. **As of client version 0.7.0 you may also need to install `vcrun2022` using Protontricks/Winetricks.**
 
 ### Anything else I should know?
 * You need to create a new profile for each new seed you play
@@ -41,7 +41,6 @@ You will need to run the Windows copy of the game with a DLL override in order f
 ### Known Bugs
 * Progressive Item stat displays may be the incorrect level
 * Pod parts for other players currently have stat displays that can be ignored
-* On receiving an item during a race the mini map display may move to the upper left for the duration of the text notification
 * When using Invitational Circuit Pass the course may not increment after each race like in other cups. The course should still unlock but you may have to manually select it
 
 ### General tips for running this old game on modern hardware
