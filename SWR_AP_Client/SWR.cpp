@@ -549,7 +549,21 @@ namespace SWRGame
 	}
 	std::string GetVersionString()
 	{
-		versionString = std::format("Version {}.{}.{}", version.major, version.minor, version.build);
+		std::string suffix = "";
+
+#ifdef SWR_RELEASE
+		suffix = "Release";
+#else
+
+		time_t now = time(nullptr);
+		struct tm time;
+		localtime_s(&time, &now);
+		suffix = std::format("build {:02}{:02}{:02}", time.tm_year - 100, time.tm_mon + 1, time.tm_mday);
+		
+#endif // SWR_RELEASE
+
+		versionString = std::format("Version {}.{}.{} {}", version.major, version.minor, version.build, suffix);
+
 		return versionString;
 	}
 
