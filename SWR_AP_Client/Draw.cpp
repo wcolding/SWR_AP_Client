@@ -219,10 +219,6 @@ namespace SWRGame
 			WriteTextWrapper("Mirrored", SWRFont::ShopItem, 160, 50, SWRTextColor::Yellow, SWRTextAlign::Center);
 	}
 
-
-	char* buyPartsStrPtr = reinterpret_cast<char*>(0x004C09D0);
-	char* buyPitDroidsStrPtr = reinterpret_cast<char*>(0x004C098C);
-
 	void __fastcall DrawEvents::OnDrawPreRaceMenu()
 	{
 		WriteTextWrapper("AI Modifier: " + std::to_string(aiModifier), SWRFont::Medium, 300, 160);
@@ -237,12 +233,15 @@ namespace SWRGame
 			WriteTextWrapper("Locked", SWRFont::Medium, 300, 170, SWRTextColor::Red);
 
 		int completedCourses = saveManager.GetCompletedCourseCount();
-		availableShopChecksStr = std::format("~f4~sBuy Parts - {} checks ", shopManager.GetAvailableShopChecks(completedCourses));
-		memcpy(buyPartsStrPtr, availableShopChecksStr.c_str(), availableShopChecksStr.length()+1);
+		availableShopChecksStr = std::format(" - {} checks ", shopManager.GetAvailableShopChecks(completedCourses));
+		WriteTextWrapper(availableShopChecksStr, SWRFont::ShopItem, 110, 110, SWRTextColor::AP_ProgressionItem);
 
 		int pitDroidChecksAvailable = 4 - SWRGame::progress.pitDroidCounter;
-		availablePitDroidChecksStr = std::format("~f4~sBuy Pit Droids - {} checks ", pitDroidChecksAvailable);
-		memcpy(buyPitDroidsStrPtr, availablePitDroidChecksStr.c_str(), availablePitDroidChecksStr.length()+1);
+		if (pitDroidChecksAvailable > 0)
+		{
+			availablePitDroidChecksStr = std::format(" - {} checks ", pitDroidChecksAvailable);
+			WriteTextWrapper(availablePitDroidChecksStr, SWRFont::ShopItem, 140, 120, SWRTextColor::AP_ProgressionItem);
+		}
 	}
 
 	void __fastcall DrawEvents::OnDrawInRace()
