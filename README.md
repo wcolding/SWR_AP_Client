@@ -45,3 +45,5 @@ You will need to run the Windows copy of the game with a DLL override in order f
 
 ### General tips for running this old game on modern hardware
 **Windowed mode** - You can use [dgVoodoo2](https://github.com/dege-diosg/dgVoodoo2/releases). You should move the 4 dlls out of `MS\x86` into your game directory and then place `dgVoodoo.conf` and `dgVoodooCpl.exe` into that same directory. Run `dgVoodooCpl.exe` and change the `Appearance` setting to windowed. You may also want to go to the DirectX tab and uncheck `dgVoodoo Watermark`.
+
+**Device enumeration errors / crashes** - You may need to use a dinput wrapper that translates the calls into dinput8 ones. [dinputto8](https://github.com/elishacloud/dinputto8/releases) has been helpful for some people in getting this game running on Windows 10 and 11 devices. You will need to use `dsound` for ASI loader in this case.
