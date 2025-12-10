@@ -85,6 +85,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>$(ProjectDir)external\APCpp\build_debug\APCpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>dsound.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -105,10 +106,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>APCpp.lib;SWRMemTools.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)external\SWRMemTools\build\;$(ProjectDir)external\APCpp\out\build\x86-Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)external\SWRMemTools\build\;$(ProjectDir)external\APCpp\out\build\x86-Release\;C:\Program Files (x86)\Microsoft DirectX SDK\Lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>dsound.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(TargetPath)" "$(SolutionDir)dist\$(ProjectName).asi*" /f /y &amp;&amp; xcopy "$(ProjectDir)external\APCpp\out\build\x86-Release\APCpp.dll" "$(SolutionDir)dist\APCpp.dll*" /f /y</Command>
+      <Command>xcopy "$(TargetPath)" "$(SolutionDir)dist\dsound.dll*" /f /y &amp;&amp; xcopy "$(ProjectDir)external\APCpp\out\build\x86-Release\APCpp.dll" "$(SolutionDir)dist\APCpp.dll*" /f /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDbgSymbols|Win32'">
@@ -130,16 +132,18 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>APCpp.lib;SWRMemTools.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)external\SWRMemTools\build\;$(ProjectDir)external\APCpp\out\build\x86-Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)external\SWRMemTools\build\;$(ProjectDir)external\APCpp\out\build\x86-Release\;C:\Program Files (x86)\Microsoft DirectX SDK\Lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>dsound.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(TargetPath)" "$(SolutionDir)dist\$(ProjectName).asi*" /f /y &amp;&amp; xcopy "$(ProjectDir)external\APCpp\out\build\x86-Release\APCpp.dll" "$(SolutionDir)dist\APCpp.dll*" /f /y</Command>
+      <Command>xcopy "$(TargetPath)" "$(SolutionDir)dist\dsound.dll*" /f /y &amp;&amp; xcopy "$(ProjectDir)external\APCpp\out\build\x86-Release\APCpp.dll" "$(SolutionDir)dist\APCpp.dll*" /f /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AIScaling.h" />
     <ClInclude Include="APCallbacks.h" />
     <ClInclude Include="Draw.h" />
+    <ClInclude Include="DsoundProxy.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Items.h" />
     <ClInclude Include="Locations.h" />
@@ -158,6 +162,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SWR_AP_Client.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dsound.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

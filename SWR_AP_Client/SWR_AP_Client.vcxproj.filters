@@ -45,6 +45,9 @@
     <ClInclude Include="AIScaling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DsoundProxy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -70,5 +73,10 @@
     <ResourceCompile Include="SWR_AP_Client.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dsound.def">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

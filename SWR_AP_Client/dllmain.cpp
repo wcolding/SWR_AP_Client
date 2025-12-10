@@ -6,6 +6,7 @@
 
 #include "resource.h"
 #include "Structs.h"
+#include "DsoundProxy.h"
 
 namespace SWRGame
 {
@@ -122,13 +123,14 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     {
     case DLL_PROCESS_ATTACH:
     {
+        originalDllCalls.Setup();
         title = std::format("Star Wars Episode I Racer Archipelago Client - {}", SWRGame::GetVersionString());
         if (DialogBox(hModule, MAKEINTRESOURCE(IDD_FORMVIEW), NULL, APLoginDialog) == 1)
         {
             DWORD threadID = 0;
             CreateThread(NULL, 0, ModThread, hModule, 0, &threadID);
         }
-        
+
 
         break;
     }
@@ -138,5 +140,4 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         break;
     }
     return TRUE;
-}
-
+    }
