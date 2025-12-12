@@ -24,6 +24,8 @@ std::string title = "";
 
 DWORD WINAPI ModThread(LPVOID hModule)
 {
+    Sleep(1000);
+    originalDllCalls.Setup();
     FILE* pFile = nullptr;
     if (debugConsole)
     {
@@ -123,7 +125,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     {
     case DLL_PROCESS_ATTACH:
     {
-        originalDllCalls.Setup();
         title = std::format("Star Wars Episode I Racer Archipelago Client - {}", SWRGame::GetVersionString());
         if (DialogBox(hModule, MAKEINTRESOURCE(IDD_FORMVIEW), NULL, APLoginDialog) == 1)
         {
