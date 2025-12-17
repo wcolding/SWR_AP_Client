@@ -22,10 +22,10 @@ namespace SWRGame
 bool debugConsole = false;
 std::string title = "";
 
-DWORD WINAPI ModThread(LPVOID hModule)
+bool gameLoaded = false;
+
+DWORD WINAPI InjectThread(LPVOID hModule)
 {
-    Sleep(1000);
-    originalDllCalls.Setup();
     FILE* pFile = nullptr;
     if (debugConsole)
     {
@@ -35,6 +35,34 @@ DWORD WINAPI ModThread(LPVOID hModule)
     else
         freopen_s(&pFile, "SWR_AP_Client_log.txt", "w", stdout);
 
+    int pattern = 0x0424448B;
+    int* searchArea = reinterpret_cast<int*>(0x423CC0);
+
+    if (*searchArea == pattern) {
+        printf("Game is loaded\n");
+    }
+    else {
+        printf("Game is not loaded, checking for steamclient.dll...");
+        HMODULE steamClient = nullptr;
+
+        while (steamClient == nullptr) {
+            steamClient = GetModuleHandle(L"steamclient.dll");
+        }
+
+        printf("found!\n");
+    }
+
+    gameLoaded = true;
+    originalDllCalls.Setup();
+    printf("Dsound hook set up!\n");
+
+    return 0;
+}
+
+DWORD WINAPI ModThread(LPVOID hModule)
+{
+    while (!gameLoaded) {}
+    Sleep(1000); // todo: actually detect rest of game loaded
     SWRGame::Init();
 
     while (SWRGame::gamestate != SWRGameState::Ready) 
@@ -125,10 +153,12 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     {
     case DLL_PROCESS_ATTACH:
     {
+        DWORD threadID = 0;
+        CreateThread(NULL, 0, InjectThread, hModule, 0, &threadID);
+
         title = std::format("Star Wars Episode I Racer Archipelago Client - {}", SWRGame::GetVersionString());
         if (DialogBox(hModule, MAKEINTRESOURCE(IDD_FORMVIEW), NULL, APLoginDialog) == 1)
         {
-            DWORD threadID = 0;
             CreateThread(NULL, 0, ModThread, hModule, 0, &threadID);
         }
 
