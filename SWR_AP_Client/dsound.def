@@ -1,4 +1,4 @@
-LIBRARY "DSOUND_PROXY"
+LIBRARY "SWR_AP_Client"
 EXPORTS
     DirectSoundCaptureCreate = DirectSoundCaptureCreate @6
     DirectSoundCaptureCreate8 = DirectSoundCaptureCreate8 @12
