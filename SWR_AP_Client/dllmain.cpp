@@ -49,7 +49,11 @@ DWORD WINAPI InjectThread(LPVOID hModule)
             steamClient = GetModuleHandle(L"steamclient.dll");
         }
 
-        printf("found!\n");
+        printf("found!\nWaiting for rest of game to load...");
+
+        while (*searchArea != pattern) {}
+
+        printf("done!\n");
     }
 
     gameLoaded = true;
@@ -62,7 +66,7 @@ DWORD WINAPI InjectThread(LPVOID hModule)
 DWORD WINAPI ModThread(LPVOID hModule)
 {
     while (!gameLoaded) {}
-    Sleep(1000); // todo: actually detect rest of game loaded
+    Sleep(1000);
     SWRGame::Init();
 
     while (SWRGame::gamestate != SWRGameState::Ready) 
