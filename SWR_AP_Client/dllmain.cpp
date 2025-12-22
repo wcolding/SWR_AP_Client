@@ -22,9 +22,7 @@ namespace SWRGame
 bool debugConsole = false;
 std::string title = "";
 
-bool gameLoaded = false;
-
-DWORD WINAPI InjectThread(LPVOID hModule)
+DWORD WINAPI ModThread(LPVOID hModule)
 {
     FILE* pFile = nullptr;
     if (debugConsole)
@@ -34,7 +32,7 @@ DWORD WINAPI InjectThread(LPVOID hModule)
     }
     else
         freopen_s(&pFile, "SWR_AP_Client_log.txt", "w", stdout);
-
+    
     int pattern = 0x0424448B;
     int* searchArea = reinterpret_cast<int*>(0x423CC0);
 
@@ -56,17 +54,8 @@ DWORD WINAPI InjectThread(LPVOID hModule)
         printf("done!\n");
     }
 
-    gameLoaded = true;
-    originalDllCalls.Setup();
-    printf("Dsound hook set up!\n");
-
-    return 0;
-}
-
-DWORD WINAPI ModThread(LPVOID hModule)
-{
-    while (!gameLoaded) {}
     Sleep(1000);
+
     SWRGame::Init();
 
     while (SWRGame::gamestate != SWRGameState::Ready) 
@@ -158,7 +147,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     case DLL_PROCESS_ATTACH:
     {
         DWORD threadID = 0;
-        CreateThread(NULL, 0, InjectThread, hModule, 0, &threadID);
 
         title = std::format("Star Wars Episode I Racer Archipelago Client - {}", SWRGame::GetVersionString());
         if (DialogBox(hModule, MAKEINTRESOURCE(IDD_FORMVIEW), NULL, APLoginDialog) == 1)
