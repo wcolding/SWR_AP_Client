@@ -234,8 +234,9 @@ namespace SWRGame
 		int locationOffset = 145 + courseIndex;
 		SendAPItem(locationOffset);
 
-		if (invitationalCircuitPass && (circuit == 3))
+		if (circuit == 3)
 		{
+			// todo: use SaveManager::GiveInvitationalCourse ?
 			int unlockFlag = 1 << (course + 1);
 			progress.cachedSave.trackUnlocks[3] |= (char)unlockFlag;
 		}
@@ -388,12 +389,10 @@ namespace SWRGame
 		if (!isSaveDataReady())
 			return;
 
-		if (invitationalCircuitPass)
-		{
-			// Unlock any invitational tracks unlocked on a previous load
-			swrSaveData->trackUnlocks[3] |= progress.cachedSave.trackUnlocks[3];
-			progress.cachedSave.trackUnlocks[3] = swrSaveData->trackUnlocks[3];
-		}
+		// Unlock any invitational tracks unlocked on a previous load
+		// todo: check if this is necessary anymore?
+		swrSaveData->trackUnlocks[3] |= progress.cachedSave.trackUnlocks[3];
+		progress.cachedSave.trackUnlocks[3] = swrSaveData->trackUnlocks[3];
 
 		// Racer Unlock Checks
 		if (swrSaveData->racerUnlocks != progress.cachedSave.racerUnlocks)

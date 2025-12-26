@@ -234,7 +234,6 @@ namespace SWRGame
 		courseUnlockMode = (CourseUnlockMode)value;
 		if (courseUnlockMode == CourseUnlockMode::CircuitPassInvitational)
 		{
-			invitationalCircuitPass = true;
 			Patches::DisableVanillaInvitationalUnlocks();
 		}
 		else if (courseUnlockMode == CourseUnlockMode::Shuffle)

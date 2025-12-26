@@ -67,7 +67,6 @@ namespace SWRGame
 
 	CourseUnlockMode courseUnlockMode;
 	bool progressiveCircuits = false;
-	bool invitationalCircuitPass = false;
 	bool shuffledCourseUnlocks = false;
 	bool hintShop = false;
 	bool deathLink = false;
