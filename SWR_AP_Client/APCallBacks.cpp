@@ -52,27 +52,21 @@ namespace SWRGame
 		// Progression items
 		switch (courseUnlockMode)
 		{
-		case CourseUnlockMode::CircuitPassInvitational:
-			if (progressiveCircuits)
-				items.push_back(69);
-			else
-				items.push_back(68);
-			[[fallthrough]];
-		case CourseUnlockMode::CircuitPassNoInv:
-			if (progressiveCircuits)
-			{
-				items.push_back(69);
-				items.push_back(69);
-			}
-			else
-			{
-				items.push_back(66);
-				items.push_back(67);
-			}
+		case CourseUnlockMode::ProgressiveCircuits:
+			items.push_back(69); // Progressive Circuit Pass x3
+			items.push_back(69); // todo: make this nicer
+			items.push_back(69);
 			break;
-		case CourseUnlockMode::Shuffle:
+
+		case CourseUnlockMode::Circuits:
+			items.push_back(66); // Semi-pro
+			items.push_back(67); // Galactic
+			items.push_back(68); // Invitational
+			break;
+
+		case CourseUnlockMode::FullShuffle:
 			for (int i = 78; i < 81; i++)
-				items.push_back(i);
+				items.push_back(i); // Course unlocks
 			break;
 		default:
 			break;
@@ -227,17 +221,19 @@ namespace SWRGame
 	void SetCourseUnlockMode(int value)
 	{
 		courseUnlockMode = (CourseUnlockMode)value;
-		if (courseUnlockMode == CourseUnlockMode::CircuitPassInvitational)
-		{
-			Patches::DisableVanillaInvitationalUnlocks();
-		}
-		else if (courseUnlockMode == CourseUnlockMode::Shuffle)
-		{
-			shuffledCourseUnlocks = true; 
-			Patches::DisableVanillaCourseUnlocks();
-			Patches::DisableVanillaInvitationalUnlocks();
-		}
+		Patches::DisableVanillaInvitationalUnlocks();
 
+		switch (courseUnlockMode) {
+
+		case (CourseUnlockMode::ProgressiveCircuits):
+			progressiveCircuits = true;
+			break;
+
+		case (CourseUnlockMode::FullShuffle):
+			shuffledCourseUnlocks = true;
+			Patches::DisableVanillaCourseUnlocks();
+			break;
+		}
 	}
 
 	void SetAIScaling(int value)
