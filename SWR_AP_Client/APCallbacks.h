@@ -38,7 +38,6 @@ namespace SWRGame
 	void QueueDeath();
 	void ProcessMessages();
 
-	void SetProgressiveCircuits(int value);
 	void SetStartingRacers(int value);
 	void SetDisablePartDamage(int value);
 	void SetCourseUnlockMode(int value);

@@ -212,11 +212,6 @@ namespace SWRGame
 		}
 	}
 
-	void SetProgressiveCircuits(int value)
-	{
-		progressiveCircuits = value != 0;
-	}
-
 	void SetStartingRacers(int value)
 	{
 		saveManager.apRacerUnlocks = static_cast<SWRMemTools::RacerUnlocks>(value);
