@@ -10,6 +10,7 @@
 
 namespace SWRGame
 {
+    int shopDisplayMask = 0xFFFFFFA0;
     extern AP_ProgressData progress;
     extern AP_ServerInfo serverInfo;
     extern SWRGameState gamestate;
@@ -20,6 +21,7 @@ namespace SWRGame
 }
 
 bool debugConsole = false;
+bool hidePurchases = false;
 std::string title = "";
 DWORD waitTime = 1000;
 
@@ -94,6 +96,8 @@ INT_PTR WINAPI APLoginDialog(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             std::string pwStr = ini.get("Archipelago").get("Password");
             std::string consoleStr = ini.get("Client").get("UseDebugConsole");
             std::string waitTimeStr = ini.get("Client").get("WaitTime");
+            std::string hidePurchasesStr = ini.get("Client").get("HidePurchases");
+
             if (!waitTimeStr.empty())
             {
                 waitTime = std::stoi(waitTimeStr);
@@ -103,6 +107,15 @@ INT_PTR WINAPI APLoginDialog(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             {
                 if ((consoleStr.compare("True") == 0) || (consoleStr.compare("true") == 0) || (consoleStr.compare("TRUE") == 0))
                     debugConsole = true;
+            }
+
+            if (!hidePurchasesStr.empty())
+            {
+                if ((hidePurchasesStr.compare("True") == 0) || (hidePurchasesStr.compare("true") == 0) || (hidePurchasesStr.compare("TRUE") == 0))
+                {
+                    SWRGame::shopDisplayMask = 0xFFFFFF20;
+                    hidePurchases = true;
+                }
             }
 
             SetDlgItemTextA(hwnd, IDC_SERVER_BOX, serverStr.c_str());
@@ -125,6 +138,7 @@ INT_PTR WINAPI APLoginDialog(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             ini["Archipelago"]["Password"] = SWRGame::serverInfo.pw;
             ini["Client"]["UseDebugConsole"] = debugConsole ? "true" : "false";
             ini["Client"]["WaitTime"] = std::format("{}", waitTime);
+            ini["Client"]["HidePurchases"] = hidePurchases ? "true" : "false";
             file.write(ini, true);
 
             EndDialog(hwnd, 1);

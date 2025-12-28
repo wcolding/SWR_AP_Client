@@ -72,7 +72,6 @@ namespace SWRGame
 	bool deathLink = false;
 	int deathLinkAmnesty = 0;
 	int livesRemaining = 0;
-	int shopDisplayMask = 0xFFFFFFA0;
 
 	SWRGameState gamestate;
 	std::vector <QueuedItem> itemQueue;
