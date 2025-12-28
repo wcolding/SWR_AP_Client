@@ -21,6 +21,7 @@ namespace SWRGame
 
 bool debugConsole = false;
 std::string title = "";
+DWORD waitTime = 1000;
 
 DWORD WINAPI ModThread(LPVOID hModule)
 {
@@ -54,7 +55,7 @@ DWORD WINAPI ModThread(LPVOID hModule)
         printf("done!\n");
     }
 
-    Sleep(1000);
+    Sleep(waitTime);
 
     SWRGame::Init();
 
@@ -92,6 +93,12 @@ INT_PTR WINAPI APLoginDialog(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             std::string playerStr = ini.get("Archipelago").get("Player");
             std::string pwStr = ini.get("Archipelago").get("Password");
             std::string consoleStr = ini.get("Client").get("UseDebugConsole");
+            std::string waitTimeStr = ini.get("Client").get("WaitTime");
+            if (!waitTimeStr.empty())
+            {
+                waitTime = std::stoi(waitTimeStr);
+            }
+
             if (!consoleStr.empty())
             {
                 if ((consoleStr.compare("True") == 0) || (consoleStr.compare("true") == 0) || (consoleStr.compare("TRUE") == 0))
@@ -117,7 +124,8 @@ INT_PTR WINAPI APLoginDialog(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             ini["Archipelago"]["Player"] = SWRGame::serverInfo.player;
             ini["Archipelago"]["Password"] = SWRGame::serverInfo.pw;
             ini["Client"]["UseDebugConsole"] = debugConsole ? "true" : "false";
-            file.write(ini);
+            ini["Client"]["WaitTime"] = std::format("{}", waitTime);
+            file.write(ini, true);
 
             EndDialog(hwnd, 1);
             return TRUE;
