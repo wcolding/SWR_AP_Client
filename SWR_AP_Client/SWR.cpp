@@ -600,18 +600,17 @@ namespace SWRGame
 				apShopData.entries[i].requiredRaces = 0xC0; // mark base items so the shop doesn't display them
 		}
 
-		//// Apply patches we don't need an AP callback for
-		Patches::HookSaveFiles();
-		Patches::HookDraw();
-		//Patches::HookInput();
-		Patches::FixCourseSelection();
-		Patches::RewriteWattoShop();
-		Patches::HookRaceRewards();
-		Patches::HookDroidShop();
-		Patches::DisableJunkyard();
-		Patches::DisableAwardsCeremony();
-		Patches::SetAPModeString();
-		Patches::EnableMirroredCourses();
+		// Queue patches we don't need an AP callback for
+		Patches::QueuePatch(Patches::HookSaveFiles);
+		Patches::QueuePatch(Patches::HookDraw);
+		Patches::QueuePatch(Patches::FixCourseSelection); 
+		Patches::QueuePatch(Patches::RewriteWattoShop);
+		Patches::QueuePatch(Patches::HookRaceRewards);
+		Patches::QueuePatch(Patches::HookDroidShop);
+		Patches::QueuePatch(Patches::DisableJunkyard);
+		Patches::QueuePatch(Patches::DisableAwardsCeremony);
+		Patches::QueuePatch(Patches::SetAPModeString);
+		Patches::QueuePatch(Patches::EnableMirroredCourses);
 
 		APSetup();
 	}
@@ -639,6 +638,8 @@ namespace SWRGame
 			// Wait for game to load
 			if (isSaveDataReady())
 			{
+				Patches::ExecuteAll();
+
 				if (swrSaveData->apPartialSeed == partialSeed) 
 				{
 					saveManager.ResetSaveData();

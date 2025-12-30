@@ -13,6 +13,8 @@
 #define DEFAULT_FIRST_COURSE_INJECT 0x3B379
 #define SKIP_ITEM_INJECT 0x3E8EF
 
+std::vector<void*> PatchCallbacks;
+
 void Patches::MakePageWritable(const void* addr)
 {
 	MEMORY_BASIC_INFORMATION mbi;
@@ -838,4 +840,22 @@ void __declspec(naked) ProcessInputWrapper()
 void Patches::HookInput()
 {
 	HookFunction(0x5A6EF, &ProcessInputWrapper, 2);
+}
+
+void Patches::QueuePatch(void* patch)
+{
+	PatchCallbacks.push_back(patch);
+}
+
+typedef void(*_Patch)();
+void Patches::ExecuteAll()
+{
+	_Patch currentPatch;
+	for (auto patch : PatchCallbacks)
+	{
+		currentPatch = reinterpret_cast<_Patch>(patch);
+		currentPatch();
+	}
+
+	PatchCallbacks.clear();
 }

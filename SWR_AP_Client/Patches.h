@@ -72,4 +72,7 @@ public:
 
 	static void HookSaveFiles();
 	static void SetAPModeString();
+
+	static void QueuePatch(void* patch);
+	static void ExecuteAll();
 };
