@@ -2,6 +2,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <direct.h>
 
 #define DEFAULT_RACERS_OPCODE 0x3DA37
 #define CHECK_PIT_DROIDS_OPCODE 0x3D845
@@ -494,6 +495,23 @@ void Patches::HookSaveFiles()
 {
 	SWRGame::Log("Applying patch: Hook Save Files");
 	
+	// Change save directory
+	_mkdir("ArchipelagoSaves");
+	_mkdir(SWRGame::saveDirectory);
+
+	void* saveRedirect = &SWRGame::saveDirectory;
+	WritePatch(0xC519, &saveRedirect, 4);
+	WritePatch(0x21862, &saveRedirect, 4);
+	WritePatch(0x21960, &saveRedirect, 4);
+	WritePatch(0x21A15, &saveRedirect, 4);
+	WritePatch(0x21B9E, &saveRedirect, 4);
+	WritePatch(0x21CBF, &saveRedirect, 4);
+	WritePatch(0x21CD5, &saveRedirect, 4);
+
+	// Deselect profile to prevent incorrect initialization of an old profile
+	int* selectedProfile = reinterpret_cast<int*>(SWRGame::baseAddress + 0xA364B4);
+	*selectedProfile = 0;
+
 	// Default racers to 0
 	char defaultRacers[10] = {
 		0xC7, 0x80, 0x94, 0x5A, 0xE3, 0x00, 0x00, 0x00, 0x00, 0x00 // mov [eax + E35A94], 0

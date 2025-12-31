@@ -64,6 +64,7 @@ namespace SWRGame
 	std::string fullSeedName = "";
 	std::string versionString = "";
 	uint64_t partialSeed = 0;
+	char saveDirectory[128]= ".\\ArchipelagoSaves\\";
 
 	CourseUnlockMode courseUnlockMode;
 	bool progressiveCircuits = false;

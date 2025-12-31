@@ -628,6 +628,8 @@ namespace SWRGame
 				AP_RoomInfo roomInfo;
 				AP_GetRoomInfo(&roomInfo);
 				fullSeedName = "Seed: " + roomInfo.seed_name;
+				std::string saveDirectoryStr = std::format(".\\ArchipelagoSaves\\{0}_{1}\\", serverInfo.player, roomInfo.seed_name);
+				memcpy(&saveDirectory, saveDirectoryStr.c_str(), saveDirectoryStr.length());
 				std::string partialSeedStr = roomInfo.seed_name.substr(0, 8);
 				partialSeed = (uint64_t)strtoll(partialSeedStr.c_str(), nullptr, 10);
 			}
