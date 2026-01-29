@@ -472,11 +472,9 @@ void Patches::DisableJunkyard()
 
 void __fastcall InitAPSave(int offset)
 {
-	SWR_SaveData* saveData = (SWR_SaveData*)(SWRGame::baseAddress + 0xA35A60 + offset);
-	saveData->cutscenesBitfield = 0xFFFFFFFF;
-	saveData->apPartialSeed = SWRGame::partialSeed;
-	saveData->progressivePasses = 0;
-	saveData->racesCompleted = 0;
+	SWRGame::saveManager.InitializeSaveData();
+	SWRGame::saveManager.SetPartialSeed(SWRGame::partialSeed);
+	SWRGame::saveManager.SyncOfflineSaveData();
 }
 
 void __declspec(naked) APSavePatch()

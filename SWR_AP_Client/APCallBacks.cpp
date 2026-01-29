@@ -11,6 +11,7 @@ namespace SWRGame
 	void ResetSaveData()
 	{
 		Log("ResetSaveData called by AP");
+		SWRGame::saveManager.ResetSaveData();
 	}
 
 	void ReceiveItem(int64_t itemID, bool notify)
