@@ -29,7 +29,18 @@ namespace SWRGame
 		if (locationTable.contains(localID))
 			Log("Setting location '%s' as checked", locationTable[localID].c_str());
 
-		// For race completions (145 - 169), do nothing
+		// For race completions (145 - 169), mark progress
+		if ((144 < localID) && (localID < 152))
+			SWRGame::saveManager.SetCourseAsCompleted(AMATEUR_CIRCUIT, localID - 145);
+
+		if ((151 < localID) && (localID < 159))
+			SWRGame::saveManager.SetCourseAsCompleted(SEMIPRO_CIRCUIT, localID - 145);
+
+		if ((158 < localID) && (localID < 166))
+			SWRGame::saveManager.SetCourseAsCompleted(GALACTIC_CIRCUIT, localID - 145);
+
+		if ((165 < localID) && (localID < 170))
+			SWRGame::saveManager.SetCourseAsCompleted(INVITATIONAL_CIRCUIT, localID - 145);
 
 		// Watto
 		if (wattoShopLocationToOffset.contains(localID))
@@ -221,20 +232,12 @@ namespace SWRGame
 
 	void SetCourseUnlockMode(int value)
 	{
-		courseUnlockMode = (CourseUnlockMode)value;
+		courseUnlockMode = static_cast<CourseUnlockMode>(value);
+		Patches::DisableVanillaCourseUnlocks();
 		Patches::DisableVanillaInvitationalUnlocks();
 
-		switch (courseUnlockMode) {
-
-		case (CourseUnlockMode::ProgressiveCircuits):
+		if (courseUnlockMode == CourseUnlockMode::ProgressiveCircuits)
 			progressiveCircuits = true;
-			break;
-
-		case (CourseUnlockMode::FullShuffle):
-			shuffledCourseUnlocks = true;
-			Patches::DisableVanillaCourseUnlocks();
-			break;
-		}
 	}
 
 	void SetAIScaling(int value)

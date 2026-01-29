@@ -241,11 +241,8 @@ namespace SWRGame
 			progress.cachedSave.trackUnlocks[3] |= (char)unlockFlag;
 		}
 
-		if (shuffledCourseUnlocks)
-		{
 			if (courseClearToUnlock.contains(locationOffset))
 				SendAPItem(courseClearToUnlock[locationOffset]);
-		}
 
 		int courseFlag = 1 << courseIndex;
 		swrSaveData->racesCompleted |= courseFlag;
