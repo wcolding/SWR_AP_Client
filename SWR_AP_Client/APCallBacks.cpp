@@ -190,6 +190,10 @@ namespace SWRGame
 
 		auto msg = AP_GetLatestMessage();
 		if (msg == nullptr)
+		{
+			Log("Unable to get latest AP message");
+			return;
+		}
 
 		switch (msg->type)
 		{
