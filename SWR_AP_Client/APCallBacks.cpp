@@ -189,6 +189,7 @@ namespace SWRGame
 			return;
 
 		auto msg = AP_GetLatestMessage();
+		if (msg == nullptr)
 
 		switch (msg->type)
 		{
