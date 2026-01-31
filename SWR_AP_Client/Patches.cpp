@@ -517,8 +517,9 @@ void Patches::HookSaveFiles()
 
 	WritePatch(0x3EADC, &defaultRacers, 10);
 
-	// Overwrite planet cutscenes
+	// On new profile creation, run AP code
 	HookFunction(0x3EAE6, &APSavePatch, 1);
+	NOP(0x3EB00, 24); // Disable some vanilla code
 
 	// Lock semi-pro and galactic circuits
 	// Just change a cl to a bl to lock both like invitational
