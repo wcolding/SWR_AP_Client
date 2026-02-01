@@ -34,13 +34,13 @@ namespace SWRGame
 			SWRGame::saveManager.SetCourseAsCompleted(AMATEUR_CIRCUIT, localID - 145);
 
 		if ((151 < localID) && (localID < 159))
-			SWRGame::saveManager.SetCourseAsCompleted(SEMIPRO_CIRCUIT, localID - 145);
+			SWRGame::saveManager.SetCourseAsCompleted(SEMIPRO_CIRCUIT, localID - 152);
 
 		if ((158 < localID) && (localID < 166))
-			SWRGame::saveManager.SetCourseAsCompleted(GALACTIC_CIRCUIT, localID - 145);
+			SWRGame::saveManager.SetCourseAsCompleted(GALACTIC_CIRCUIT, localID - 159);
 
 		if ((165 < localID) && (localID < 170))
-			SWRGame::saveManager.SetCourseAsCompleted(INVITATIONAL_CIRCUIT, localID - 145);
+			SWRGame::saveManager.SetCourseAsCompleted(INVITATIONAL_CIRCUIT, localID - 166);
 
 		// Watto
 		if (wattoShopLocationToOffset.contains(localID))
