@@ -228,9 +228,9 @@ namespace SWRGame
 		AP_SendLocationScouts(locations, 1);
 	}
 
-	void __fastcall MarkRaceCompletion(int circuit, int course)
+	void __fastcall MarkRaceCompletion(char circuit, char course)
 	{
-		int courseIndex = circuit * 7 + course;
+		int courseIndex = static_cast<int>(circuit) * 7 + static_cast<int>(course);
 		int locationOffset = 145 + courseIndex;
 		SendAPItem(locationOffset);
 

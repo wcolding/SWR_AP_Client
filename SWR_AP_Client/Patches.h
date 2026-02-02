@@ -12,7 +12,7 @@ namespace SWRGame
 	extern void Log(const char* format, ...);
 	extern char saveDirectory[128];
 	extern void OnDraw();
-	extern void __fastcall MarkRaceCompletion(int circuit, int course);
+	extern void __fastcall MarkRaceCompletion(char circuit, char course);
 	extern void __fastcall MarkShopPurchase();
 	extern void __fastcall MarkPitDroidPurchase();
 	extern int __fastcall CalculateRacesCompleted();
