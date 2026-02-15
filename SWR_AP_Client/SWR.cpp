@@ -333,6 +333,7 @@ namespace SWRGame
 
 		int locationOffset = 141 + progress.pitDroidCounter;
 		SendAPItem(locationOffset);
+		progress.pitDroidCounter++;
 	}
 
 	PodParts partsCache = { 0,0,0,0,0,0,0 };

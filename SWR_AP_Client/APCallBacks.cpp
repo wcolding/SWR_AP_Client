@@ -49,8 +49,9 @@ namespace SWRGame
 		}
 
 		// Pit droid
-		if ((141 < localID) && (localID < 145))
-			SWRGame::progress.pitDroidCounter++;
+		// Temporary, need to figure out a better way to handle these checks
+		//if ((141 < localID) && (localID < 145))
+			//SWRGame::progress.pitDroidCounter++;
 	}
 
 	std::vector<int> GetDisguiseItems()
