@@ -3,6 +3,7 @@
 #include <format>
 
 #include "mini/ini.h"
+#include "CrashCatch/CrashCatch.hpp"
 
 #include "resource.h"
 #include "Structs.h"
@@ -35,6 +36,10 @@ DWORD WINAPI ModThread(LPVOID hModule)
     }
     else
         freopen_s(&pFile, "SWR_AP_Client_log.txt", "w", stdout);
+
+    CrashCatch::Config cfg;
+    cfg.appVersion = SWRGame::GetVersionString();
+    CrashCatch::initialize(cfg);
     
     int pattern = 0x0424448B;
     int* searchArea = reinterpret_cast<int*>(0x423CC0);
