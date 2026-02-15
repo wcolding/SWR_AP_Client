@@ -240,9 +240,9 @@ namespace SWRGame
 			int unlockFlag = 1 << (course + 1);
 			progress.cachedSave.trackUnlocks[3] |= (char)unlockFlag;
 		}
-
-			if (courseClearToUnlock.contains(locationOffset))
-				SendAPItem(courseClearToUnlock[locationOffset]);
+		
+		if (courseClearToUnlock.contains(locationOffset))
+			SendAPItem(courseClearToUnlock[locationOffset]);
 
 		int courseFlag = 1 << courseIndex;
 		swrSaveData->racesCompleted |= courseFlag;
@@ -641,8 +641,6 @@ namespace SWRGame
 
 				if (swrSaveData->apPartialSeed == partialSeed) 
 				{
-					saveManager.ResetSaveData();
-					Log("Save data reset");
 					gamestate = SWRGameState::Save_Initialized;
 				}
 			}
