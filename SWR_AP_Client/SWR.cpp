@@ -493,8 +493,6 @@ namespace SWRGame
 				saveManager.GivePitDroid();
 				break;
 			case ItemType::CircuitPass:
-				if ((itemInfo.param1 == PROGRESSIVE_CIRCUIT) && (!item.notify))
-					break;
 				saveManager.GiveCircuitPass(itemInfo.param1);
 				break;
 			case ItemType::Money:
