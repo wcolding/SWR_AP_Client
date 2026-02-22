@@ -641,6 +641,7 @@ namespace SWRGame
 
 				if (swrSaveData->apPartialSeed == partialSeed) 
 				{
+					ResetSaveData();
 					gamestate = SWRGameState::Save_Initialized;
 				}
 			}
