@@ -331,6 +331,10 @@ namespace SWRGame
 		if (progress.pitDroidCounter >= 4)
 			return;
 
+		int pitDroidFlag = 1 << (progress.pitDroidCounter - 1);
+		if ((saveManager.pitDroidLocationsChecked & pitDroidFlag) == 0)
+			saveManager.GiveMoney(-1000); // only deduct money if this check hasn't been sent
+
 		int locationOffset = 141 + progress.pitDroidCounter;
 		SendAPItem(locationOffset);
 		progress.pitDroidCounter++;

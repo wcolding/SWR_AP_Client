@@ -49,9 +49,11 @@ namespace SWRGame
 		}
 
 		// Pit droid
-		// Temporary, need to figure out a better way to handle these checks
-		//if ((141 < localID) && (localID < 145))
-			//SWRGame::progress.pitDroidCounter++;
+		if ((141 < localID) && (localID < 145))
+		{
+			int pitDroidFlag = (1 << (localID - 142));
+			saveManager.pitDroidLocationsChecked |= pitDroidFlag;
+		}
 	}
 
 	std::vector<int> GetDisguiseItems()

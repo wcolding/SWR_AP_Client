@@ -461,6 +461,7 @@ void Patches::HookDroidShop()
 	for (auto offset : offsets)
 		WritePatch(offset, &redirect, 4);
 
+	NOP(0x37B82, 6);
 	HookFunction(0x37B88, &MarkPitDroidPurchaseWrapper, 0);
 }
 
