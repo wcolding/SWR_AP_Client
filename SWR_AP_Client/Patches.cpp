@@ -2,6 +2,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <direct.h>
 
 #define DEFAULT_RACERS_OPCODE 0x3DA37
 #define CHECK_PIT_DROIDS_OPCODE 0x3D845
@@ -12,6 +13,8 @@
 
 #define DEFAULT_FIRST_COURSE_INJECT 0x3B379
 #define SKIP_ITEM_INJECT 0x3E8EF
+
+std::vector<void*> PatchCallbacks;
 
 void Patches::MakePageWritable(const void* addr)
 {
@@ -458,6 +461,7 @@ void Patches::HookDroidShop()
 	for (auto offset : offsets)
 		WritePatch(offset, &redirect, 4);
 
+	NOP(0x37B82, 6);
 	HookFunction(0x37B88, &MarkPitDroidPurchaseWrapper, 0);
 }
 
@@ -469,11 +473,9 @@ void Patches::DisableJunkyard()
 
 void __fastcall InitAPSave(int offset)
 {
-	SWR_SaveData* saveData = (SWR_SaveData*)(SWRGame::baseAddress + 0xA35A60 + offset);
-	saveData->cutscenesBitfield = 0xFFFFFFFF;
-	saveData->apPartialSeed = SWRGame::partialSeed;
-	saveData->progressivePasses = 0;
-	saveData->racesCompleted = 0;
+	SWRGame::saveManager.InitializeSaveData();
+	SWRGame::saveManager.SetPartialSeed(SWRGame::partialSeed);
+	SWRGame::saveManager.SyncOfflineSaveData();
 }
 
 void __declspec(naked) APSavePatch()
@@ -492,6 +494,23 @@ void Patches::HookSaveFiles()
 {
 	SWRGame::Log("Applying patch: Hook Save Files");
 	
+	// Change save directory
+	_mkdir("ArchipelagoSaves");
+	_mkdir(SWRGame::saveDirectory);
+
+	void* saveRedirect = &SWRGame::saveDirectory;
+	WritePatch(0xC519, &saveRedirect, 4);
+	WritePatch(0x21862, &saveRedirect, 4);
+	WritePatch(0x21960, &saveRedirect, 4);
+	WritePatch(0x21A15, &saveRedirect, 4);
+	WritePatch(0x21B9E, &saveRedirect, 4);
+	WritePatch(0x21CBF, &saveRedirect, 4);
+	WritePatch(0x21CD5, &saveRedirect, 4);
+
+	// Deselect profile to prevent incorrect initialization of an old profile
+	int* selectedProfile = reinterpret_cast<int*>(SWRGame::baseAddress + 0xA364B4);
+	*selectedProfile = 0;
+
 	// Default racers to 0
 	char defaultRacers[10] = {
 		0xC7, 0x80, 0x94, 0x5A, 0xE3, 0x00, 0x00, 0x00, 0x00, 0x00 // mov [eax + E35A94], 0
@@ -499,8 +518,9 @@ void Patches::HookSaveFiles()
 
 	WritePatch(0x3EADC, &defaultRacers, 10);
 
-	// Overwrite planet cutscenes
+	// On new profile creation, run AP code
 	HookFunction(0x3EAE6, &APSavePatch, 1);
+	NOP(0x3EB00, 24); // Disable some vanilla code
 
 	// Lock semi-pro and galactic circuits
 	// Just change a cl to a bl to lock both like invitational
@@ -838,4 +858,22 @@ void __declspec(naked) ProcessInputWrapper()
 void Patches::HookInput()
 {
 	HookFunction(0x5A6EF, &ProcessInputWrapper, 2);
+}
+
+void Patches::QueuePatch(void* patch)
+{
+	PatchCallbacks.push_back(patch);
+}
+
+typedef void(*_Patch)();
+void Patches::ExecuteAll()
+{
+	_Patch currentPatch;
+	for (auto patch : PatchCallbacks)
+	{
+		currentPatch = reinterpret_cast<_Patch>(patch);
+		currentPatch();
+	}
+
+	PatchCallbacks.clear();
 }

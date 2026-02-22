@@ -10,9 +10,9 @@ namespace SWRGame
 	extern AP_ProgressData progress;
 	extern SWRMemTools::SaveManager saveManager;
 	extern void Log(const char* format, ...);
-	extern char saveDirectory[64];
+	extern char saveDirectory[128];
 	extern void OnDraw();
-	extern void __fastcall MarkRaceCompletion(int circuit, int course);
+	extern void __fastcall MarkRaceCompletion(char circuit, char course);
 	extern void __fastcall MarkShopPurchase();
 	extern void __fastcall MarkPitDroidPurchase();
 	extern int __fastcall CalculateRacesCompleted();
@@ -72,4 +72,7 @@ public:
 
 	static void HookSaveFiles();
 	static void SetAPModeString();
+
+	static void QueuePatch(void* patch);
+	static void ExecuteAll();
 };

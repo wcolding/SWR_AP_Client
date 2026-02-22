@@ -19,7 +19,6 @@ namespace SWRGame
 	extern void QueueNotifyMsg(std::string _msg);
 	extern CourseUnlockMode courseUnlockMode;
 	extern bool progressiveCircuits;
-	extern bool invitationalCircuitPass;
 	extern bool shuffledCourseUnlocks;
 	extern float aiModifier;
 	extern bool modifierControl;
@@ -39,7 +38,6 @@ namespace SWRGame
 	void QueueDeath();
 	void ProcessMessages();
 
-	void SetProgressiveCircuits(int value);
 	void SetStartingRacers(int value);
 	void SetDisablePartDamage(int value);
 	void SetCourseUnlockMode(int value);

@@ -79,7 +79,7 @@ enum SWRTextColor : int
 
 enum CourseUnlockMode : int
 {
-	CircuitPassNoInv = 0,
-	CircuitPassInvitational = 1,
-	Shuffle = 2
+	FullShuffle = 0,
+	Circuits = 1,
+	ProgressiveCircuits = 2
 };

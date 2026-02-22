@@ -3,12 +3,15 @@
 #include <format>
 
 #include "mini/ini.h"
+#include "CrashCatch/CrashCatch.hpp"
 
 #include "resource.h"
 #include "Structs.h"
+#include "DsoundProxy.h"
 
 namespace SWRGame
 {
+    int shopDisplayMask = 0xFFFFFFA0;
     extern AP_ProgressData progress;
     extern AP_ServerInfo serverInfo;
     extern SWRGameState gamestate;
@@ -19,7 +22,9 @@ namespace SWRGame
 }
 
 bool debugConsole = false;
+bool hidePurchases = false;
 std::string title = "";
+DWORD waitTime = 1000;
 
 DWORD WINAPI ModThread(LPVOID hModule)
 {
@@ -31,6 +36,33 @@ DWORD WINAPI ModThread(LPVOID hModule)
     }
     else
         freopen_s(&pFile, "SWR_AP_Client_log.txt", "w", stdout);
+
+    CrashCatch::Config cfg;
+    cfg.appVersion = SWRGame::GetVersionString();
+    CrashCatch::initialize(cfg);
+    
+    int pattern = 0x0424448B;
+    int* searchArea = reinterpret_cast<int*>(0x423CC0);
+
+    if (*searchArea == pattern) {
+        printf("Game is loaded\n");
+    }
+    else {
+        printf("Game is not loaded, checking for steamclient.dll...");
+        HMODULE steamClient = nullptr;
+
+        while (steamClient == nullptr) {
+            steamClient = GetModuleHandle(L"steamclient.dll");
+        }
+
+        printf("found!\nWaiting for rest of game to load...");
+
+        while (*searchArea != pattern) {}
+
+        printf("done!\n");
+    }
+
+    Sleep(waitTime);
 
     SWRGame::Init();
 
@@ -68,10 +100,27 @@ INT_PTR WINAPI APLoginDialog(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             std::string playerStr = ini.get("Archipelago").get("Player");
             std::string pwStr = ini.get("Archipelago").get("Password");
             std::string consoleStr = ini.get("Client").get("UseDebugConsole");
+            std::string waitTimeStr = ini.get("Client").get("WaitTime");
+            std::string hidePurchasesStr = ini.get("Client").get("HidePurchases");
+
+            if (!waitTimeStr.empty())
+            {
+                waitTime = std::stoi(waitTimeStr);
+            }
+
             if (!consoleStr.empty())
             {
                 if ((consoleStr.compare("True") == 0) || (consoleStr.compare("true") == 0) || (consoleStr.compare("TRUE") == 0))
                     debugConsole = true;
+            }
+
+            if (!hidePurchasesStr.empty())
+            {
+                if ((hidePurchasesStr.compare("True") == 0) || (hidePurchasesStr.compare("true") == 0) || (hidePurchasesStr.compare("TRUE") == 0))
+                {
+                    SWRGame::shopDisplayMask = 0xFFFFFF20;
+                    hidePurchases = true;
+                }
             }
 
             SetDlgItemTextA(hwnd, IDC_SERVER_BOX, serverStr.c_str());
@@ -93,7 +142,9 @@ INT_PTR WINAPI APLoginDialog(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             ini["Archipelago"]["Player"] = SWRGame::serverInfo.player;
             ini["Archipelago"]["Password"] = SWRGame::serverInfo.pw;
             ini["Client"]["UseDebugConsole"] = debugConsole ? "true" : "false";
-            file.write(ini);
+            ini["Client"]["WaitTime"] = std::format("{}", waitTime);
+            ini["Client"]["HidePurchases"] = hidePurchases ? "true" : "false";
+            file.write(ini, true);
 
             EndDialog(hwnd, 1);
             return TRUE;
@@ -122,13 +173,14 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     {
     case DLL_PROCESS_ATTACH:
     {
+        DWORD threadID = 0;
+
         title = std::format("Star Wars Episode I Racer Archipelago Client - {}", SWRGame::GetVersionString());
         if (DialogBox(hModule, MAKEINTRESOURCE(IDD_FORMVIEW), NULL, APLoginDialog) == 1)
         {
-            DWORD threadID = 0;
             CreateThread(NULL, 0, ModThread, hModule, 0, &threadID);
         }
-        
+
 
         break;
     }
@@ -138,5 +190,4 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         break;
     }
     return TRUE;
-}
-
+    }

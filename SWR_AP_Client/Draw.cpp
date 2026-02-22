@@ -187,7 +187,8 @@ namespace SWRGame
 				WriteTextWrapper(fullSeedName, SWRFont::Medium, 625, 10, SWRTextColor::Yellow, SWRTextAlign::Right);
 				break;
 			case 2: // Profile select
-				WriteTextWrapper("IMPORTANT : Create a new save for each new seed!", SWRFont::Medium, 310, 120, SWRTextColor::LightBlue, SWRTextAlign::Center);
+				WriteTextWrapper("IMPORTANT : Archipelago uses different save folders for each seed", SWRFont::Medium, 310, 120, SWRTextColor::LightBlue, SWRTextAlign::Center);
+				WriteTextWrapper("You must create a new save when starting a seed!", SWRFont::Medium, 310, 130, SWRTextColor::LightBlue, SWRTextAlign::Center);
 				break;
 			default:
 				break;

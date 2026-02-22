@@ -22,7 +22,7 @@ typedef void(__cdecl* _DrawStats)(void* obj, float x, float y);
 
 namespace SWRGame
 {
-	AP_NetworkVersion version = { 0, 7, 1 };
+	AP_NetworkVersion version = { 0, 8, 0 };
 
 	void Log(const char* format, ...);
 	void SyncProgress();
@@ -64,16 +64,15 @@ namespace SWRGame
 	std::string fullSeedName = "";
 	std::string versionString = "";
 	uint64_t partialSeed = 0;
+	char saveDirectory[128]= ".\\ArchipelagoSaves\\";
 
 	CourseUnlockMode courseUnlockMode;
 	bool progressiveCircuits = false;
-	bool invitationalCircuitPass = false;
 	bool shuffledCourseUnlocks = false;
 	bool hintShop = false;
 	bool deathLink = false;
 	int deathLinkAmnesty = 0;
 	int livesRemaining = 0;
-	int shopDisplayMask = 0xFFFFFFA0;
 
 	SWRGameState gamestate;
 	std::vector <QueuedItem> itemQueue;

@@ -1,0 +1,14 @@
+LIBRARY "SWR_AP_Client"
+EXPORTS
+    DirectSoundCaptureCreate = DirectSoundCaptureCreate @6
+    DirectSoundCaptureCreate8 = DirectSoundCaptureCreate8 @12
+    DirectSoundCaptureEnumerateA = DirectSoundCaptureEnumerateA @7
+    DirectSoundCaptureEnumerateW = DirectSoundCaptureEnumerateW @8
+    DirectSoundCreate = DirectSoundCreate @1
+    DirectSoundCreate8 = DirectSoundCreate8 @11
+    DirectSoundEnumerateA = DirectSoundEnumerateA @2
+    DirectSoundEnumerateW = DirectSoundEnumerateW @3
+    DirectSoundFullDuplexCreate = DirectSoundFullDuplexCreate @10
+    DllCanUnloadNow = DllCanUnloadNow @4 PRIVATE
+    DllGetClassObject = DllGetClassObject @5 PRIVATE
+    GetDeviceID = GetDeviceID @9

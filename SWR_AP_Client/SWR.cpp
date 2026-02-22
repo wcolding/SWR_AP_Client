@@ -228,23 +228,21 @@ namespace SWRGame
 		AP_SendLocationScouts(locations, 1);
 	}
 
-	void __fastcall MarkRaceCompletion(int circuit, int course)
+	void __fastcall MarkRaceCompletion(char circuit, char course)
 	{
-		int courseIndex = circuit * 7 + course;
+		int courseIndex = static_cast<int>(circuit) * 7 + static_cast<int>(course);
 		int locationOffset = 145 + courseIndex;
 		SendAPItem(locationOffset);
 
-		if (invitationalCircuitPass && (circuit == 3))
+		if (circuit == 3)
 		{
+			// todo: use SaveManager::GiveInvitationalCourse ?
 			int unlockFlag = 1 << (course + 1);
 			progress.cachedSave.trackUnlocks[3] |= (char)unlockFlag;
 		}
-
-		if (shuffledCourseUnlocks)
-		{
-			if (courseClearToUnlock.contains(locationOffset))
-				SendAPItem(courseClearToUnlock[locationOffset]);
-		}
+		
+		if (courseClearToUnlock.contains(locationOffset))
+			SendAPItem(courseClearToUnlock[locationOffset]);
 
 		int courseFlag = 1 << courseIndex;
 		swrSaveData->racesCompleted |= courseFlag;
@@ -333,8 +331,13 @@ namespace SWRGame
 		if (progress.pitDroidCounter >= 4)
 			return;
 
+		int pitDroidFlag = 1 << (progress.pitDroidCounter - 1);
+		if ((saveManager.pitDroidLocationsChecked & pitDroidFlag) == 0)
+			saveManager.GiveMoney(-1000); // only deduct money if this check hasn't been sent
+
 		int locationOffset = 141 + progress.pitDroidCounter;
 		SendAPItem(locationOffset);
+		progress.pitDroidCounter++;
 	}
 
 	PodParts partsCache = { 0,0,0,0,0,0,0 };
@@ -388,12 +391,10 @@ namespace SWRGame
 		if (!isSaveDataReady())
 			return;
 
-		if (invitationalCircuitPass)
-		{
-			// Unlock any invitational tracks unlocked on a previous load
-			swrSaveData->trackUnlocks[3] |= progress.cachedSave.trackUnlocks[3];
-			progress.cachedSave.trackUnlocks[3] = swrSaveData->trackUnlocks[3];
-		}
+		// Unlock any invitational tracks unlocked on a previous load
+		// todo: check if this is necessary anymore?
+		swrSaveData->trackUnlocks[3] |= progress.cachedSave.trackUnlocks[3];
+		progress.cachedSave.trackUnlocks[3] = swrSaveData->trackUnlocks[3];
 
 		// Racer Unlock Checks
 		if (swrSaveData->racerUnlocks != progress.cachedSave.racerUnlocks)
@@ -475,7 +476,8 @@ namespace SWRGame
 
 	void ProcessItemQueue()
 	{
-		if (!itemQueue.empty() && saveManager.isSaveReady())
+		size_t queueSize = itemQueue.size();
+		for (int i = 0; i < queueSize; i++)
 		{
 			QueuedItem item = itemQueue.front();
 			ItemInfo itemInfo = item.info;
@@ -495,8 +497,6 @@ namespace SWRGame
 				saveManager.GivePitDroid();
 				break;
 			case ItemType::CircuitPass:
-				if ((itemInfo.param1 == PROGRESSIVE_CIRCUIT) && (!item.notify))
-					break;
 				saveManager.GiveCircuitPass(itemInfo.param1);
 				break;
 			case ItemType::Money:
@@ -601,18 +601,17 @@ namespace SWRGame
 				apShopData.entries[i].requiredRaces = 0xC0; // mark base items so the shop doesn't display them
 		}
 
-		//// Apply patches we don't need an AP callback for
-		Patches::HookSaveFiles();
-		Patches::HookDraw();
-		//Patches::HookInput();
-		Patches::FixCourseSelection();
-		Patches::RewriteWattoShop();
-		Patches::HookRaceRewards();
-		Patches::HookDroidShop();
-		Patches::DisableJunkyard();
-		Patches::DisableAwardsCeremony();
-		Patches::SetAPModeString();
-		Patches::EnableMirroredCourses();
+		// Queue patches we don't need an AP callback for
+		Patches::QueuePatch(Patches::HookSaveFiles);
+		Patches::QueuePatch(Patches::HookDraw);
+		Patches::QueuePatch(Patches::FixCourseSelection); 
+		Patches::QueuePatch(Patches::RewriteWattoShop);
+		Patches::QueuePatch(Patches::HookRaceRewards);
+		Patches::QueuePatch(Patches::HookDroidShop);
+		Patches::QueuePatch(Patches::DisableJunkyard);
+		Patches::QueuePatch(Patches::DisableAwardsCeremony);
+		Patches::QueuePatch(Patches::SetAPModeString);
+		Patches::QueuePatch(Patches::EnableMirroredCourses);
 
 		APSetup();
 	}
@@ -630,6 +629,8 @@ namespace SWRGame
 				AP_RoomInfo roomInfo;
 				AP_GetRoomInfo(&roomInfo);
 				fullSeedName = "Seed: " + roomInfo.seed_name;
+				std::string saveDirectoryStr = std::format(".\\ArchipelagoSaves\\{0}_{1}\\", serverInfo.player, roomInfo.seed_name);
+				memcpy(&saveDirectory, saveDirectoryStr.c_str(), saveDirectoryStr.length());
 				std::string partialSeedStr = roomInfo.seed_name.substr(0, 8);
 				partialSeed = (uint64_t)strtoll(partialSeedStr.c_str(), nullptr, 10);
 			}
@@ -640,10 +641,11 @@ namespace SWRGame
 			// Wait for game to load
 			if (isSaveDataReady())
 			{
+				Patches::ExecuteAll();
+
 				if (swrSaveData->apPartialSeed == partialSeed) 
 				{
-					saveManager.ResetSaveData();
-					Log("Save data reset");
+					ResetSaveData();
 					gamestate = SWRGameState::Save_Initialized;
 				}
 			}

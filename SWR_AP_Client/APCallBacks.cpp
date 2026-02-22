@@ -11,6 +11,7 @@ namespace SWRGame
 	void ResetSaveData()
 	{
 		Log("ResetSaveData called by AP");
+		SWRGame::saveManager.ResetSaveData();
 	}
 
 	void ReceiveItem(int64_t itemID, bool notify)
@@ -28,7 +29,18 @@ namespace SWRGame
 		if (locationTable.contains(localID))
 			Log("Setting location '%s' as checked", locationTable[localID].c_str());
 
-		// For race completions (145 - 169), do nothing
+		// For race completions (145 - 169), mark progress
+		if ((144 < localID) && (localID < 152))
+			SWRGame::saveManager.SetCourseAsCompleted(AMATEUR_CIRCUIT, localID - 145);
+
+		if ((151 < localID) && (localID < 159))
+			SWRGame::saveManager.SetCourseAsCompleted(SEMIPRO_CIRCUIT, localID - 152);
+
+		if ((158 < localID) && (localID < 166))
+			SWRGame::saveManager.SetCourseAsCompleted(GALACTIC_CIRCUIT, localID - 159);
+
+		if ((165 < localID) && (localID < 170))
+			SWRGame::saveManager.SetCourseAsCompleted(INVITATIONAL_CIRCUIT, localID - 166);
 
 		// Watto
 		if (wattoShopLocationToOffset.contains(localID))
@@ -38,7 +50,10 @@ namespace SWRGame
 
 		// Pit droid
 		if ((141 < localID) && (localID < 145))
-			SWRGame::progress.pitDroidCounter++;
+		{
+			int pitDroidFlag = (1 << (localID - 142));
+			saveManager.pitDroidLocationsChecked |= pitDroidFlag;
+		}
 	}
 
 	std::vector<int> GetDisguiseItems()
@@ -52,27 +67,21 @@ namespace SWRGame
 		// Progression items
 		switch (courseUnlockMode)
 		{
-		case CourseUnlockMode::CircuitPassInvitational:
-			if (progressiveCircuits)
-				items.push_back(69);
-			else
-				items.push_back(68);
-			[[fallthrough]];
-		case CourseUnlockMode::CircuitPassNoInv:
-			if (progressiveCircuits)
-			{
-				items.push_back(69);
-				items.push_back(69);
-			}
-			else
-			{
-				items.push_back(66);
-				items.push_back(67);
-			}
+		case CourseUnlockMode::ProgressiveCircuits:
+			items.push_back(69); // Progressive Circuit Pass x3
+			items.push_back(69); // todo: make this nicer
+			items.push_back(69);
 			break;
-		case CourseUnlockMode::Shuffle:
+
+		case CourseUnlockMode::Circuits:
+			items.push_back(66); // Semi-pro
+			items.push_back(67); // Galactic
+			items.push_back(68); // Invitational
+			break;
+
+		case CourseUnlockMode::FullShuffle:
 			for (int i = 78; i < 81; i++)
-				items.push_back(i);
+				items.push_back(i); // Course unlocks
 			break;
 		default:
 			break;
@@ -183,6 +192,11 @@ namespace SWRGame
 			return;
 
 		auto msg = AP_GetLatestMessage();
+		if (msg == nullptr)
+		{
+			Log("Unable to get latest AP message");
+			return;
+		}
 
 		switch (msg->type)
 		{
@@ -212,11 +226,6 @@ namespace SWRGame
 		}
 	}
 
-	void SetProgressiveCircuits(int value)
-	{
-		progressiveCircuits = value != 0;
-	}
-
 	void SetStartingRacers(int value)
 	{
 		saveManager.apRacerUnlocks = static_cast<SWRMemTools::RacerUnlocks>(value);
@@ -231,19 +240,12 @@ namespace SWRGame
 
 	void SetCourseUnlockMode(int value)
 	{
-		courseUnlockMode = (CourseUnlockMode)value;
-		if (courseUnlockMode == CourseUnlockMode::CircuitPassInvitational)
-		{
-			invitationalCircuitPass = true;
-			Patches::DisableVanillaInvitationalUnlocks();
-		}
-		else if (courseUnlockMode == CourseUnlockMode::Shuffle)
-		{
-			shuffledCourseUnlocks = true; 
-			Patches::DisableVanillaCourseUnlocks();
-			Patches::DisableVanillaInvitationalUnlocks();
-		}
+		courseUnlockMode = static_cast<CourseUnlockMode>(value);
+		Patches::DisableVanillaCourseUnlocks();
+		Patches::DisableVanillaInvitationalUnlocks();
 
+		if (courseUnlockMode == CourseUnlockMode::ProgressiveCircuits)
+			progressiveCircuits = true;
 	}
 
 	void SetAIScaling(int value)
