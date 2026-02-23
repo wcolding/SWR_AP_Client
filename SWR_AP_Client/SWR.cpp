@@ -391,11 +391,6 @@ namespace SWRGame
 		if (!isSaveDataReady())
 			return;
 
-		// Unlock any invitational tracks unlocked on a previous load
-		// todo: check if this is necessary anymore?
-		swrSaveData->trackUnlocks[3] |= progress.cachedSave.trackUnlocks[3];
-		progress.cachedSave.trackUnlocks[3] = swrSaveData->trackUnlocks[3];
-
 		// Racer Unlock Checks
 		if (swrSaveData->racerUnlocks != progress.cachedSave.racerUnlocks)
 		{
