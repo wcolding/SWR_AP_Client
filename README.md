@@ -19,7 +19,7 @@ You will need the following to play this randomizer:
 3. Click `Log In`. If all goes well you should see "Connected to AP" and a seed number in the upper right hand corner of the game
 
 #### Note for Steam Deck/Proton/Wine users:
-You will need to run the Windows copy of the game with a DLL override in order for the mod to load. You can add `WINEDLLOVERRIDES="dinput=n,b" %command%` to the launch options in the game properties in Steam to do this. If using `dsound`, put that instead. **As of client version 0.7.0 you may also need to install `vcrun2022` using Protontricks/Winetricks.**
+You will need to run the Windows copy of the game with a DLL override in order for the mod to load. You can add `WINEDLLOVERRIDES="dsound=n,b" %command%` to the launch options in the game properties in Steam to do this. **As of client version 0.7.0 you may also need to install `vcrun2022` using Protontricks/Winetricks.**
 
 ### Anything else I should know?
 * You need to create a new profile for each new seed you play. The client creates new save folders per seed but you will still need to start a new profile to play
